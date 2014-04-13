@@ -53,7 +53,7 @@ namespace Jeden
         void LoadContent() 
         {
             //set ActiveGameState to the initial GameState
-            ActiveGameState = new InGameState();
+            ActiveGameState = new InGameState(this);
             ActiveGameState.LoadContent(this);
         }
         void Update()

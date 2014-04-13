@@ -8,6 +8,6 @@ namespace Jeden
 {
     public class CollisionManager
     {
-
+        //checks all registred collisioncomponents and adds the colliding game objects to the collisionComponent's list
     }
 }

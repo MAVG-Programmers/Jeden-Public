@@ -9,6 +9,10 @@ namespace Jeden
     public class InGameState : GameState
     {
         //public Level ActiveLevel { get; set; }
+        public InGameState(JedenGame game) : base(game) 
+        {
+            
+        }
 
         public override void LoadContent(JedenGame game)
         {

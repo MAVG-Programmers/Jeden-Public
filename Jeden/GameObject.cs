@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SFML;
+using SFML.Window;
 
 namespace Jeden
 {
@@ -10,10 +12,9 @@ namespace Jeden
     public class GameObject
     {
         public Dictionary<Type, Component> Components { get; set; }
-        public int x { get; set; }
-        public int y { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
+        public Vector2i Position { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         public virtual void LoadContent(JedenGame game)
         {

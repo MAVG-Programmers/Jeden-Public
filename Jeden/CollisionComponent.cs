@@ -28,21 +28,13 @@ namespace Jeden
             CollidingGameObjects.Clear();
         }
 
-        public void LoadContent(JedenGame game) 
-        {
-            
-        }
-        public void Update(JedenGame game)
+        public override void Update(JedenGame game)
         {
 
         }
-        public void Draw(JedenGame game) 
+        public override void Draw(JedenGame game) 
         {
-
-        }
-        public void UnloadContent(JedenGame game) 
-        {
-            
+            //It might be useful for debugging to allow bounding boxes to draw
         }
     }
 }

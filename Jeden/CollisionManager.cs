@@ -37,16 +37,16 @@ namespace Jeden
             {
                 for (int j = i; j < CollisionComponents.Count; j++)
                 {
-                    GameObject o1 = CollisionComponents[i].Parent;
-                    GameObject o2 = CollisionComponents[j].Parent;
-                    if( !(o1.x+o1.width < o2.x ||
-                        o1.y < o2.y+o2.height ||
-                        o1.x > o2.x+o2.width ||
-                        o1.y + o1.height > o2.y))
+                    GameObject gameObject1 = CollisionComponents[i].Parent;
+                    GameObject gameObject2 = CollisionComponents[j].Parent;
+                    if( !(gameObject1.Position.X + gameObject1.Width < gameObject2.Position.X ||
+                        gameObject1.Position.Y < gameObject2.Position.Y + gameObject2.Height ||
+                        gameObject1.Position.X > gameObject2.Position.X + gameObject2.Width ||
+                        gameObject1.Position.Y + gameObject1.Height > gameObject2.Position.Y))
                     {
                         //Register collision
-                        CollisionComponents[i].AddCollision(o2);
-                        CollisionComponents[j].AddCollision(o1);
+                        CollisionComponents[i].AddCollision(gameObject2);
+                        CollisionComponents[j].AddCollision(gameObject1);
                     }
                 }
             }

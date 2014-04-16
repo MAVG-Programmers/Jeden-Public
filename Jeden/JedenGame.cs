@@ -25,6 +25,9 @@ namespace Jeden
             Window = new RenderWindow(new VideoMode(800, 600), title);
             UserInput = new InputManager(this);
 
+            //Serialization Tests
+            Console.WriteLine("Vector2I: " + typeof(Vector2i).IsSerializable);
+
             Window.Closed += Window_Closed;
 
             LoadContent();

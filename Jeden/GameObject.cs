@@ -12,9 +12,15 @@ namespace Jeden
     public class GameObject
     {
         public Dictionary<Type, Component> Components { get; set; }
-        public Vector2i Position { get; set; }
+        public Vector2 Position { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+
+        public GameObject() 
+        {
+            Components = new Dictionary<Type, Component>();
+            Position = new Vector2();
+        }
 
         public virtual void LoadContent(JedenGame game)
         {

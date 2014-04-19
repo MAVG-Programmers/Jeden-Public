@@ -65,8 +65,10 @@
     <Compile Include="PlayerCharacter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectangleCollider.cs" />
     <Compile Include="RenderableComponent.cs" />
     <Compile Include="UserInputComponent.cs" />
+    <Compile Include="Vector2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

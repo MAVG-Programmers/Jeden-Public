@@ -11,6 +11,7 @@ namespace Jeden
     public class Level
     {
         public List<GameObject> GameObjects { get; set; }
+        public List<RectangleCollider> Colliders { get; set; }
 
         public Level() 
         {
@@ -44,6 +45,11 @@ namespace Jeden
             {
                 gameObject.UnloadContent(game);
             }
+        }
+
+        public static Level GetDebugLevel() 
+        {
+            return null;
         }
     }
 }

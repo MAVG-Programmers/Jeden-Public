@@ -9,28 +9,43 @@ using SFML.Audio;
 using SFML.Graphics;
 using System.Diagnostics;
 
-namespace Jeden
+namespace Jeden.Engine
 {
-    public class JedenGame : IDisposable
+    public class GameEngine : IDisposable
     {
         public RenderWindow Window { get; set; }
-        public GameTime DeltaTime { get; set; }
-        public GameState ActiveGameState { get; set; }
-        public InputManager UserInput { get; set; }
+        private GameTime DeltaTime;
+        private Stack<GameState> GameStates;
+        private InputManager InputMgr;
+
+        public GameEngine()
+        {
+            GameStates = new Stack<GameState>();
+            InputMgr = new InputManager(this);
+            DeltaTime = new GameTime();
+        }
+
+        public void PushState(GameState state)
+        {
+            GameStates.Push(state);
+        }
+
+        public void PopState()
+        {
+            //Non-empty
+            if (GameStates.Count > 0)
+            {
+                //TODO: allow state to call transition code
+                GameStates.Pop();
+            }
+        }
 
         public void Run(String title) 
         {
-            Stopwatch stopwatch = new Stopwatch();
-            DeltaTime = new GameTime();
             Window = new RenderWindow(new VideoMode(800, 600), title);
-            UserInput = new InputManager(this);
-
-            //Serialization Tests
-            Console.WriteLine("Vector2I: " + typeof(Vector2i).IsSerializable);
+            Stopwatch stopwatch = new Stopwatch();
 
             Window.Closed += Window_Closed;
-
-            LoadContent();
 
             stopwatch.Start();
 
@@ -40,44 +55,32 @@ namespace Jeden
 
                 DeltaTime.ElapsedGameTime = DeltaTime.TotalGameTime - stopwatch.Elapsed;
                 DeltaTime.TotalGameTime = stopwatch.Elapsed;
-                Update();
+                Update(DeltaTime.ElapsedGameTime.Milliseconds);
                 Draw();
                 
             }
             stopwatch.Stop();
-            UnloadContent();
         }
 
         void Window_Closed(object sender, EventArgs e)
         {
             Window.Close();
         }
-
-        void LoadContent() 
+        void Update(int dTime)
         {
-            //set ActiveGameState to the initial GameState
-            ActiveGameState = new InGameState(this);
-            ActiveGameState.LoadContent(this);
-        }
-        void Update()
-        {
-            UserInput.Update(this);
-            ActiveGameState.Update(this);
+            InputMgr.Update(this);
+            GameStates.Peek().Update(dTime);
         }
         void Draw()
         {
             Window.Clear(Color.Magenta);
-            ActiveGameState.Draw(this);
+            GameStates.Peek().Render(Window);
             Window.Display();
-        }
-        void UnloadContent()
-        {
-            ActiveGameState.UnloadContent(this);
         }
 
         public void Dispose()
         {
-            
+
         }
     }
 }

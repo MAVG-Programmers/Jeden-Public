@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SFML;
 using SFML.Window;
 
-namespace Jeden
+namespace Jeden.Engine
 {
     public class InputManager
     {
@@ -23,7 +23,7 @@ namespace Jeden
         public Vector2i MousePosition { get; set; }
         public Vector2i PreviousMousePosition { get; set; }
 
-        public InputManager(JedenGame game) 
+        public InputManager(GameEngine engine) 
         {
             KeyboardState = new Dictionary<Keyboard.Key,bool>();
             PreviousKeyboardState = new Dictionary<Keyboard.Key,bool>();
@@ -49,7 +49,7 @@ namespace Jeden
             }
         }
 
-        public void Update(JedenGame game) 
+        public void Update(GameEngine engine) 
         {
             //Console.WriteLine(DeltaScrollWheel);
             //DeltaScrollWheel = 0; //we only want the difference for each frame, the total value is irrelevant
@@ -58,7 +58,7 @@ namespace Jeden
             PreviousMouseState.Clear();
             PreviousMousePosition = MousePosition;
 
-            MousePosition = Mouse.GetPosition(game.Window);
+            MousePosition = Mouse.GetPosition(engine.Window);
             foreach (KeyValuePair<Keyboard.Key,bool> valuePair in KeyboardState) 
             {
                 PreviousKeyboardState.Add(valuePair.Key, valuePair.Value);

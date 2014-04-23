@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Jeden.Engine;
+using Jeden.Game;
 
 namespace Jeden
 {
@@ -10,9 +12,10 @@ namespace Jeden
     {
         static void Main(string[] args)
         {
-            using (JedenGame game = new JedenGame()) 
+            using (GameEngine engine = new GameEngine()) 
             {
-                game.Run("Jeden");
+                engine.PushState(new JedenGameState());
+                engine.Run("Jeden");
             }
         }
     }

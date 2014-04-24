@@ -16,7 +16,7 @@ Open it and press `Build`.
 
 Install
 =======
-The game has no installer at the moment, see [Build](Build).
+The game has no installer at the moment, see build instructions.
 
 Run
 ===

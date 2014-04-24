@@ -11,13 +11,34 @@ using System.Diagnostics;
 
 namespace Jeden.Engine
 {
+    /// <summary>
+    /// Represents the Project Jeden game engine.
+    /// </summary>
     public class GameEngine : IDisposable
     {
+        /// <summary>
+        /// The RenderWindow of the GameEngine.
+        /// </summary>
         public RenderWindow Window { get; set; }
+
+        /// <summary>
+        /// The GameTime of the game.
+        /// </summary>
         private GameTime DeltaTime;
+
+        /// <summary>
+        /// The stack of usable GameStates.
+        /// </summary>
         private Stack<GameState> GameStates;
+
+        /// <summary>
+        /// The InputManager of the game.
+        /// </summary>
         private InputManager InputMgr;
 
+        /// <summary>
+        /// A new instance of GameEngine.
+        /// </summary>
         public GameEngine()
         {
             GameStates = new Stack<GameState>();
@@ -25,11 +46,18 @@ namespace Jeden.Engine
             DeltaTime = new GameTime();
         }
 
-        public void PushState(GameState state)
+        /// <summary>
+        /// Pushes a new state to the GameState stack.
+        /// </summary>
+        /// <param name="state">The pushed GameState</param>
+        public void PushState(GameState gameState)
         {
-            GameStates.Push(state);
+            GameStates.Push(gameState);
         }
 
+        /// <summary>
+        /// Poppidy pop.
+        /// </summary>
         public void PopState()
         {
             //Non-empty
@@ -40,6 +68,10 @@ namespace Jeden.Engine
             }
         }
 
+        /// <summary>
+        /// Runs the GameEngine.
+        /// </summary>
+        /// <param name="title">The title of the game's window.</param>
         public void Run(String title) 
         {
             Window = new RenderWindow(new VideoMode(800, 600), title);
@@ -49,28 +81,43 @@ namespace Jeden.Engine
 
             stopwatch.Start();
 
+            //gameloop
             while (Window.IsOpen())
             {
                 Window.DispatchEvents();
 
                 DeltaTime.ElapsedGameTime = DeltaTime.TotalGameTime - stopwatch.Elapsed;
                 DeltaTime.TotalGameTime = stopwatch.Elapsed;
-                Update(DeltaTime.ElapsedGameTime.Milliseconds);
+                Update(DeltaTime);
                 Draw();
                 
             }
             stopwatch.Stop();
         }
 
+        /// <summary>
+        /// Handles the closing of the window.
+        /// </summary>
+        /// <param name="sender">The event's sender.</param>
+        /// <param name="e">The EventArgs of the even.</param>
         void Window_Closed(object sender, EventArgs e)
         {
             Window.Close();
         }
-        void Update(int dTime)
+
+        /// <summary>
+        /// Updates the GameEngine.
+        /// </summary>
+        /// <param name="gameTime">The time difference to the last frame.</param>
+        void Update(GameTime gameTime)
         {
             InputMgr.Update(this);
-            GameStates.Peek().Update(dTime);
+            GameStates.Peek().Update(gameTime);
         }
+
+        /// <summary>
+        /// Draws the active GameState
+        /// </summary>
         void Draw()
         {
             Window.Clear(Color.Magenta);
@@ -78,6 +125,9 @@ namespace Jeden.Engine
             Window.Display();
         }
 
+        /// <summary>
+        /// Disposes the GameEngine.
+        /// </summary>
         public void Dispose()
         {
 

@@ -7,8 +7,14 @@ using Jeden.Engine;
 
 namespace Jeden.Game
 {
+    /// <summary>
+    /// The ingame IControlMap.
+    /// </summary>
     class JedenPlayerInput : IControlMap
     {
+        /// <summary>
+        /// The InputManager this IControlMap is watching
+        /// </summary>
         public InputManager InputMgr { get; set; }
     }
 }

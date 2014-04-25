@@ -4,21 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SFML.Graphics;
+using Jeden.Engine.Object;
 
 namespace Jeden.Engine.Render
 {
-    public class RenderComponent : Drawable
+    //Wrapper around SFML sprites as components
+    public class RenderComponent : Component
     {
-        //TODO: Draw, add textures once resource management works
-        //Drawable to window
-        /// <summary>
-        /// Draws the GameObject's sprites.
-        /// </summary>
-        /// <param name="target">The render target to be drawn onto.</param>
-        /// <param name="states">The render state.</param>
-        public void Draw(RenderTarget target, RenderStates states)
+        public Sprite Sprite { get; set; }
+
+        public RenderComponent(GameObject parent, Texture texture) : base(parent)
         {
-            
+            Sprite = new Sprite(texture);
+            Sprite.Position = Parent.Position;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            //Update position from parent
+            Sprite.Position = Parent.Position;
         }
     }
 }

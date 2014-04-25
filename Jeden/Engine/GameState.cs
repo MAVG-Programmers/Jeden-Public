@@ -22,12 +22,12 @@ namespace Jeden.Engine
         /// <summary>
         /// The control map for this GameState.
         /// </summary>
-        protected IControlMap ControlMap;
+        public RenderManager RenderMgr;
 
         /// <summary>
         /// The RenderManager of this GameState
         /// </summary>
-        protected RenderManager RenderMgr;
+        protected IControlMap ControlMap;
 
         /// <summary>
         /// A new instance of GameState.
@@ -38,13 +38,13 @@ namespace Jeden.Engine
             RenderMgr = new RenderManager();
         }
 
-        //Update all GameObjects attached to this GameState
         /// <summary>
         /// Update all GameObjects attached to this GameState
         /// </summary>
         /// <param name="gameTime">The time difference to the last frame.</param>
         public virtual void Update(GameTime gameTime)
         {
+            //Health components tied directly to GameObjects receive update here
             foreach (GameObject gameObject in GameObjects)
             {
                 gameObject.Update(gameTime);
@@ -57,9 +57,9 @@ namespace Jeden.Engine
         /// <param name="window">The RenderWindow of the GameEngine</param>
         public virtual void Render(RenderWindow window)
         {
-            foreach (RenderComponent renderComponent in RenderMgr.GetDrawables())
+            foreach (RenderComponent rComp in RenderMgr.GetDrawables())
             {
-                window.Draw(renderComponent);
+                window.Draw(rComp.Sprite);
             }
         }
 
@@ -67,9 +67,9 @@ namespace Jeden.Engine
         /// Sets the InputManager that this GameState's ControlMap watches
         /// </summary>
         /// <param name="inputmgr">The watched InputManager</param>
-        public void SetInputManager(InputManager inputManager)
+        public void SetInputManager(InputManager inputmgr)
         {
-            ControlMap.InputMgr = inputManager;
+            ControlMap.InputMgr = inputmgr;
         }
     }
 }

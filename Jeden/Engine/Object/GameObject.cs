@@ -22,14 +22,17 @@ namespace Jeden.Engine.Object
         /// <summary>
         /// The position of the GameObject in the game world.
         /// </summary>
-        public Vector2i Position { get; set; }
+        public Vector2f Position;
+        public GameState OwningState { get; set; }
 
         /// <summary>
         /// A new instance of GameObject.
         /// </summary>
-        public GameObject()
+        public GameObject(GameState owner)
         {
             Components = new Dictionary<Type, Component>();
+            OwningState = owner;
+            Position = new Vector2f(0.0f, 0.0f);
         }
 
         /// <summary>

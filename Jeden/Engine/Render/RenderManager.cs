@@ -26,12 +26,12 @@ namespace Jeden.Engine.Render
         }
 
         public void Update(int dTime)
- +      {
- +          foreach (var comp in Components)
- +          {
- +              comp.Update(dTime);
- +          }
- +      }
+        {
+            foreach (var comp in Components)
+            {
+                comp.Update(dTime);
+            }
+        }
 
         //TODO: sort Drawables, only return what needs drawing on screen
         /// <summary>

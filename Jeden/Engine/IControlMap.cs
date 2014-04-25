@@ -8,7 +8,7 @@ namespace Jeden.Engine
 {
     /// <summary>
     /// Interface for custom behavior on input.
-    /// </summary>
+    /// </summary> 
     public interface IControlMap
     {
         /// <summary>

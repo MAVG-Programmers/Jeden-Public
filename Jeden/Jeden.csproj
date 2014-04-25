@@ -60,12 +60,15 @@
     <Compile Include="Engine\GameTime.cs" />
     <Compile Include="Engine\Object\HealthComponent.cs" />
     <Compile Include="Engine\Render\RenderManager.cs" />
+    <Compile Include="Game\HealthComponent.cs" />
+    <Compile Include="Game\HealthManager.cs" />
     <Compile Include="Game\JedenGameState.cs" />
     <Compile Include="Game\JedenPlayerInput.cs" />
     <Compile Include="Game\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\InputManager.cs" />
     <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="Game\Physics\PhysicsComponent.cs" />
+    <Compile Include="Game\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Render\RenderComponent.cs" />

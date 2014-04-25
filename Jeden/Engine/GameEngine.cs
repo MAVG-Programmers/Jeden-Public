@@ -50,13 +50,13 @@ namespace Jeden.Engine
         /// Pushes a new state to the GameState stack.
         /// </summary>
         /// <param name="state">The pushed GameState</param>
-        public void PushState(GameState gameState)
+        public void PushState(GameState state)
         {
-            GameStates.Push(gameState);
+            GameStates.Push(state);
         }
 
         /// <summary>
-        /// Poppidy pop.
+        /// Pop the current state off the GameState stack.
         /// </summary>
         public void PopState()
         {
@@ -81,7 +81,6 @@ namespace Jeden.Engine
 
             stopwatch.Start();
 
-            //gameloop
             while (Window.IsOpen())
             {
                 Window.DispatchEvents();

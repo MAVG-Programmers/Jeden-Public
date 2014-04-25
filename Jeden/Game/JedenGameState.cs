@@ -25,6 +25,21 @@ namespace Jeden.Game
             ControlMap = new JedenPlayerInput();
             PhysicsMgr = new PhysicsManager();
             HealthMgr = new HealthManager();
+            GenTestLevel();
+        }
+
+        public void GenTestLevel()
+        {
+            GameObjects.Add(new Player(this));
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            HealthMgr.Update(gameTime);
+            PhysicsMgr.Update(gameTime);
+            //Draw frame last
+            RenderMgr.Update(gameTime);
         }
 
     }

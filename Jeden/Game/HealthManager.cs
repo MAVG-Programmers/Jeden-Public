@@ -1,15 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jeden.Engine.Object;
+using Jeden.Engine;
 
 namespace Jeden.Game
 {
-	class HealthManager
+    class HealthManager
     {
-    	private List<HealthComponent> Components;
+        private List<HealthComponent> Components;
 
         public HealthManager()
         {
@@ -17,11 +18,11 @@ namespace Jeden.Game
         }
 
         //Update tick all components owned by this manager
-        public void Update(int dTime)
+        public void Update(GameTime gameTime)
         {
             foreach (var comp in Components)
             {
-                comp.Update(dTime);
+                comp.Update(gameTime);
             }
         }
 

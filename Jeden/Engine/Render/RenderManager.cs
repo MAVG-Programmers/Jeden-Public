@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Jeden.Engine.Object;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SFML.Graphics;
 
 namespace Jeden.Engine.Render
 {
@@ -25,11 +27,12 @@ namespace Jeden.Engine.Render
             Components = new List<RenderComponent>();
         }
 
-        public void Update(int dTime)
+        //Update tick all components owned by this manager
+        public void Update(GameTime gameTime)
         {
             foreach (var comp in Components)
             {
-                comp.Update(dTime);
+                comp.Update(gameTime);
             }
         }
 
@@ -41,6 +44,18 @@ namespace Jeden.Engine.Render
         public List<RenderComponent> GetDrawables()
         {
             return Components.ToList<RenderComponent>();
+        }
+
+        /// <summary>
+        ///Creates a render component for a GameObject to use
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
+        public RenderComponent MakeNewComponent(GameObject owner, Texture texture)
+        {
+            RenderComponent component = new RenderComponent(owner, texture);
+            Components.Add(component);
+            return component;
         }
     }
 }

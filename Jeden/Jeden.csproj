@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FarseerPhysics, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FarseerPhysics.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SFML64\SFML.Net-2.1\lib\sfmlnet-audio-2.dll</HintPath>
@@ -58,7 +62,6 @@
     <Compile Include="Engine\Object\GameObject.cs" />
     <Compile Include="Engine\GameState.cs" />
     <Compile Include="Engine\GameTime.cs" />
-    <Compile Include="Engine\Object\HealthComponent.cs" />
     <Compile Include="Engine\Render\RenderManager.cs" />
     <Compile Include="Game\HealthComponent.cs" />
     <Compile Include="Game\HealthManager.cs" />

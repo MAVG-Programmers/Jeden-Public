@@ -30,7 +30,6 @@ namespace Jeden.Engine.Object
         public GameObject()
         {
             Components = new Dictionary<Type, Component>();
-            AddComponent(new HealthComponent(this, 1, 0.1f)); //Default hp 1
         }
 
         /// <summary>

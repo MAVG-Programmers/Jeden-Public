@@ -14,7 +14,8 @@ namespace Jeden.Game
     /// </summary>
     class JedenGameState : GameState
     {
-        private PhysicsManager PhysicsMgr;
+        public PhysicsManager PhysicsMgr;
+        public HealthManager HealthMgr;
 
         /// <summary>
         /// A new instance of JedenGameState.
@@ -22,6 +23,8 @@ namespace Jeden.Game
         public JedenGameState()
         {
             ControlMap = new JedenPlayerInput();
+            PhysicsMgr = new PhysicsManager();
+            HealthMgr = new HealthManager();
         }
 
     }

@@ -25,6 +25,14 @@ namespace Jeden.Engine.Render
             Components = new List<RenderComponent>();
         }
 
+        public void Update(int dTime)
+ +      {
+ +          foreach (var comp in Components)
+ +          {
+ +              comp.Update(dTime);
+ +          }
+ +      }
+
         //TODO: sort Drawables, only return what needs drawing on screen
         /// <summary>
         /// Returns the visible drawables.

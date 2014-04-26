@@ -85,7 +85,7 @@ namespace Jeden.Engine
             {
                 Window.DispatchEvents();
 
-                DeltaTime.ElapsedGameTime = DeltaTime.TotalGameTime - stopwatch.Elapsed;
+                DeltaTime.ElapsedGameTime = stopwatch.Elapsed - DeltaTime.TotalGameTime;
                 DeltaTime.TotalGameTime = stopwatch.Elapsed;
                 Update(DeltaTime);
                 Draw();

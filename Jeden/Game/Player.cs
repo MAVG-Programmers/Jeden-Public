@@ -19,11 +19,10 @@ namespace Jeden.Game
             SpriteRenderComponent src = owner.RenderMgr.MakeNewSpriteComponent(this, texture);
 
             AddComponent<RenderComponent>(src);
+
             AddComponent<HealthComponent>(owner.HealthMgr.MakeNewComponent(this, 100));
 
-            Position.X = 100.0f;
-            Position.Y = 10.0f;
-            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 100.0f, 50.0f, 10.0f, 10.0f, true));
+            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 300.0f, 50.0f, 10.0f, 10.0f, true));
 
         }
     }

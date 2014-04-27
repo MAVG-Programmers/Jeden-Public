@@ -10,14 +10,21 @@ namespace Jeden.Engine.Render
 {
     class AnimationRenderComponent : RenderComponent 
     {
+        Animation Animation;
 
-        AnimationRenderComponent(GameObject parent) : base(parent) { }
+        AnimationRenderComponent(GameObject parent) : base(parent) 
+        {
+            Animation = new Animation();
+        }
+
+        void AddFrame(Texture texture, IntRect subImageRect)
+        {
+            Animation.AddFrame(texture, subImageRect);
+        }
 
         public override void Draw(Renderer renderer)
         {
-           
-
-            //target.Draw();
+            Animation.Draw(renderer, Position, ViewWidth, ViewHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
         }
 
 

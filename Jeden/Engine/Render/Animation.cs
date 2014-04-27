@@ -13,28 +13,42 @@ namespace Jeden.Engine.Render
 
     class Animation 
     {
-        public struct Frame
+        public struct SubImage
         {
             public Texture Texture;
             public IntRect SubImageRect;
         }
 
 
-        Animation()
+        public Animation()
         {
             FrameTime = 0;
             CurrentFrame = 0;
             TimeAccum = 0.0f;
+            Frames = new List<SubImage>();
         }
 
-
-        public void Draw(RenderTarget target, Vector2f position)
+        public void AddFrame(Texture texture, IntRect subImageRect)
         {
-            RenderStates rs;
-            rs.BlendMode = BlendMode.Alpha;
-            rs.Texture = Frames[CurrentFrame].Texture;
-            rs.Transform = new Transform();
-            rs.Transform.Translate(position);
+            SubImage subImage;
+            subImage.Texture = texture;
+            subImage.SubImageRect = subImageRect;
+
+            Frames.Add(subImage);
+        }
+
+        public void Draw(Renderer renderer, 
+                                Vector2f centerPos,
+                                float viewWidth,
+                                float viewHeight,
+                                float angle,
+                                Vector2f rotationCenter,
+                                bool flipX,
+                                bool flipY,
+                                Color tint)
+        {
+            renderer.DrawSprite(Frames[CurrentFrame].Texture, Frames[CurrentFrame].SubImageRect,
+                centerPos, viewWidth, viewHeight, angle, rotationCenter, flipX, flipY, tint);
         }
 
         public void Update(float deltaTime)
@@ -58,6 +72,6 @@ namespace Jeden.Engine.Render
         int CurrentFrame;
         float TimeAccum;
         float FrameTime;
-        List<Frame> Frames;
+        List<SubImage> Frames;
     }
 }

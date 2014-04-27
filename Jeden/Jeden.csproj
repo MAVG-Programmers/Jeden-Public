@@ -62,7 +62,6 @@
     <Compile Include="Engine\Object\GameObject.cs" />
     <Compile Include="Engine\GameState.cs" />
     <Compile Include="Engine\GameTime.cs" />
-    <Compile Include="Engine\Object\HealthComponent.cs" />
     <Compile Include="Engine\Render\Animation.cs" />
     <Compile Include="Engine\Render\AnimationRenderComponent.cs" />
     <Compile Include="Engine\Render\AnimationSetRenderComponent.cs" />

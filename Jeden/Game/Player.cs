@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Jeden.Engine.Object;
 using Jeden.Engine.Render;
+using Jeden.Game.Physics;
 using SFML.Graphics;
 
 namespace Jeden.Game
@@ -15,9 +16,10 @@ namespace Jeden.Game
         {
             Texture texture = new Texture("assets/Test.png");
             AddComponent<HealthComponent>(owner.HealthMgr.MakeNewComponent(this, 100));
-            AddComponent<RenderComponent>((RenderComponent)owner.RenderMgr.MakeNewComponent(this, texture));
+            AddComponent<RenderComponent>(owner.RenderMgr.MakeNewComponent(this, texture));
             Position.X = 100.0f;
             Position.Y = 10.0f;
+            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 100.0f, 50.0f, 10.0f, 10.0f, true));
         }
     }
 }

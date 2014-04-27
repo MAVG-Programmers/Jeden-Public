@@ -36,11 +36,11 @@ namespace Jeden.Game.Physics
             }
         }
 
-        public PhysicsComponent MakeNewComponent(GameObject owner, float x, float y, float width, float height, bool dynamic)
+        public PhysicsComponent MakeNewComponent(GameObject owner, float width, float height, bool dynamic)
         {
             //Fixed density of 1.0
             var body = BodyFactory.CreateRectangle(_world, width, height, 1.0f);
-            body.Position = new Vector2(x, y);
+            body.Position = new Vector2(owner.Position.X, owner.Position.Y);
             if (dynamic)
             {
                 body.BodyType = BodyType.Dynamic;

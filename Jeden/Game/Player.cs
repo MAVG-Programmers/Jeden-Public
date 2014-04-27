@@ -15,14 +15,19 @@ namespace Jeden.Game
         public Player(JedenGameState owner) : base(owner)
         {
             Texture texture = new Texture("assets/player.png");
+            Texture texture2 = new Texture("assets/test.png");
 
-            SpriteRenderComponent src = owner.RenderMgr.MakeNewSpriteComponent(this, texture);
+            AnimationRenderComponent arc = owner.RenderMgr.MakeNewAnimationComponent(this);
+            arc.AddFrame(texture);
+            arc.AddFrame(texture2);
+            arc.WorldWidth = 64;
+            arc.WorldHeight = 64;
 
-            AddComponent<RenderComponent>(src);
+            AddComponent<RenderComponent>(arc);
 
             AddComponent<HealthComponent>(owner.HealthMgr.MakeNewComponent(this, 100));
 
-            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 300.0f, 50.0f, 10.0f, 10.0f, true));
+            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 10.0f, 10.0f, true));
 
         }
     }

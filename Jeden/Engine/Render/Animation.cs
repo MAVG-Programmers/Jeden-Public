@@ -63,7 +63,7 @@ namespace Jeden.Engine.Render
         }
 
 
-        void Reset()
+        public void Reset()
         {
             TimeAccum = 0.0f;
             CurrentFrame = 0;

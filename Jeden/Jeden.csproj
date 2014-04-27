@@ -61,6 +61,7 @@
     <Compile Include="Engine\Object\HealthComponent.cs" />
     <Compile Include="Engine\Render\Animation.cs" />
     <Compile Include="Engine\Render\AnimationRenderComponent.cs" />
+    <Compile Include="Engine\Render\AnimationSetRenderComponent.cs" />
     <Compile Include="Engine\Render\Renderer.cs" />
     <Compile Include="Engine\Render\RenderManager.cs" />
     <Compile Include="Engine\Render\SpriteRenderComponent.cs" />

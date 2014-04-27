@@ -10,7 +10,7 @@ namespace Jeden.Engine.Render
 {
     public class Renderer
     {
-        public RenderTarget Target;
+        public RenderTarget Target; //TODO, this is kind of a hack since each game state RenderManager
 
         public Renderer(RenderTarget target) 
         {
@@ -22,7 +22,7 @@ namespace Jeden.Engine.Render
             return x.X * y.X + x.Y * y.Y; 
         }
 
-        public void DrawSprite(        Texture texture, 
+        public void DrawSprite( Texture texture, 
                                 IntRect subImageRect, 
                                 Vector2f centerPos, 
 								float viewWidth, 

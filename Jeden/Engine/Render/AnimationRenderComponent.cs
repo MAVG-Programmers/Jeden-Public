@@ -22,6 +22,14 @@ namespace Jeden.Engine.Render
             Animation.AddFrame(texture, subImageRect);
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            Position = Parent.Position;
+            Animation.Update((float)gameTime.ElapsedGameTime.Milliseconds / 1000.0f);
+        }
+
         public override void Draw(Renderer renderer)
         {
             Animation.Draw(renderer, Position, ViewWidth, ViewHeight, Angle, RotationCenter, FlipX, FlipY, Tint);

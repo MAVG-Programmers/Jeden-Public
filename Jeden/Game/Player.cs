@@ -14,10 +14,11 @@ namespace Jeden.Game
     {
         public Player(JedenGameState owner) : base(owner)
         {
-            Texture texture = new Texture("assets/Test.png");
+            Texture texture = new Texture("assets/player.png");
 
             SpriteRenderComponent src = owner.RenderMgr.MakeNewSpriteComponent(this, texture);
 
+            AddComponent<RenderComponent>(src);
             AddComponent<HealthComponent>(owner.HealthMgr.MakeNewComponent(this, 100));
 
             Position.X = 100.0f;

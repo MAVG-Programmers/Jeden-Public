@@ -10,7 +10,7 @@ using SFML.Graphics;
 
 namespace Jeden.Engine.Render
 {
-    class AnimationSetRenderComponent : RenderComponent 
+    public class AnimationSetRenderComponent : RenderComponent 
     {
         Dictionary<String, Animation> AnimationSet;
         Animation CurrentAnimation;
@@ -67,7 +67,7 @@ namespace Jeden.Engine.Render
 
         public override void Draw(Renderer renderer)
         {
-            CurrentAnimation.Draw(renderer, Position, ViewWidth, ViewHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
+            CurrentAnimation.Draw(renderer, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
         }
     }
 }

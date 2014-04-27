@@ -26,8 +26,8 @@ namespace Jeden.Engine.Render
             SubImageRect.Left = 0;
             SubImageRect.Width = (int)texture.Size.X;
             SubImageRect.Height = (int)texture.Size.Y;
-            ViewWidth = SubImageRect.Width;
-            ViewHeight = SubImageRect.Height;
+            WorldWidth = SubImageRect.Width;
+            WorldHeight = SubImageRect.Height;
             Angle = 0.0f;
             RotationCenter = new Vector2f(0,0);
             FlipX = false;
@@ -41,8 +41,8 @@ namespace Jeden.Engine.Render
             Texture = texture;
             Position = parent.Position;
             SubImageRect = subImageRect;
-            ViewWidth = SubImageRect.Width;
-            ViewHeight = SubImageRect.Height;
+            WorldWidth = SubImageRect.Width;
+            WorldHeight = SubImageRect.Height;
             Angle = 0.0f;
             RotationCenter = new Vector2f(0, 0);
             FlipX = false;
@@ -59,7 +59,7 @@ namespace Jeden.Engine.Render
 
         public override void Draw(Renderer renderer)
         {
-            renderer.DrawSprite(Texture, SubImageRect, Position, ViewWidth, ViewHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
+            renderer.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
         }
     }
 }

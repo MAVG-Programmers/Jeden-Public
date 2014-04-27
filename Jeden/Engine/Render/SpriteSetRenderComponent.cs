@@ -18,8 +18,6 @@ namespace Jeden.Engine.Render
         }
         Dictionary<String, SubImage> SpriteSet;
         SubImage CurrentSprite;
-        Texture CurrentTexture;
-        IntRect CurrentSubImageRect;
 
         public String CurrentKey;
 
@@ -71,8 +69,8 @@ namespace Jeden.Engine.Render
                 CurrentSprite.Texture, 
                 CurrentSprite.SubImageRect, 
                 Position, 
-                ViewWidth, 
-                ViewHeight,
+                WorldWidth, 
+                WorldHeight,
                 Angle,
                 RotationCenter, 
                 FlipX, 

@@ -8,18 +8,36 @@ using System.Threading.Tasks;
 
 namespace Jeden.Engine.Render
 {
-    class AnimationRenderComponent : RenderComponent 
+    /// <summary>
+    /// RenderComponent for a looped animation sequence.
+    /// </summary>
+    public class AnimationRenderComponent : RenderComponent 
     {
         Animation Animation;
 
-        AnimationRenderComponent(GameObject parent) : base(parent) 
+        public AnimationRenderComponent(GameObject parent) : base(parent) 
         {
             Animation = new Animation();
         }
 
-        void AddFrame(Texture texture, IntRect subImageRect)
+        /// <summary>
+        /// Adds a frame to the end of the animation sequence.
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="subImageRect"></param>
+        public void AddFrame(Texture texture, IntRect subImageRect)
         {
             Animation.AddFrame(texture, subImageRect);
+        }
+
+        /// <summary>
+        /// Adds a frame to the end of the animation sequence.
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="subImageRect"></param>
+        public void AddFrame(Texture texture)
+        {
+            Animation.AddFrame(texture);
         }
 
         public override void Update(GameTime gameTime)
@@ -32,7 +50,7 @@ namespace Jeden.Engine.Render
 
         public override void Draw(Renderer renderer)
         {
-            Animation.Draw(renderer, Position, ViewWidth, ViewHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
+            Animation.Draw(renderer, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
         }
 
 

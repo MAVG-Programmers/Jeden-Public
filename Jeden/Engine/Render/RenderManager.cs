@@ -60,6 +60,11 @@ namespace Jeden.Engine.Render
             return component;
         }
 
+        /// <summary>
+        ///Creates a set of images component for a GameObject to use
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
         public SpriteSetRenderComponent MakeNewSpriteSetComponent(GameObject owner)
         {
             SpriteSetRenderComponent component = new SpriteSetRenderComponent(owner);
@@ -67,5 +72,28 @@ namespace Jeden.Engine.Render
             return component;
         }
 
+        /// <summary>
+        ///Creates a single animation component for a GameObject to use
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
+        public AnimationRenderComponent MakeNewAnimationComponent(GameObject owner)
+        {
+            AnimationRenderComponent component = new AnimationRenderComponent(owner);
+            Components.Add((RenderComponent)component);
+            return component;
+        }
+
+        /// <summary>
+        ///Creates a set of animations component for a GameObject to use
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
+        public AnimationSetRenderComponent MakeNewAnimationSetComponent(GameObject owner)
+        {
+            AnimationSetRenderComponent component = new AnimationSetRenderComponent(owner);
+            Components.Add((RenderComponent)component);
+            return component;
+        }
     }
 }

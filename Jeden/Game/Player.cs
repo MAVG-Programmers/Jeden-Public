@@ -25,7 +25,6 @@ namespace Jeden.Game
 
             AddComponent<RenderComponent>(arc);
 
-            AddComponent<HealthComponent>(owner.HealthMgr.MakeNewComponent(this, 100));
 
             AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 10.0f, 10.0f, true));
 

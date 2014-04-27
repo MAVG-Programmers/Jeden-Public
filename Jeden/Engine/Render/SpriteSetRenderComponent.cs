@@ -18,17 +18,10 @@ namespace Jeden.Engine.Render
         }
         Dictionary<String, SubImage> SpriteSet;
         SubImage CurrentSprite;
-        
+        Texture CurrentTexture;
+        IntRect CurrentSubImageRect;
 
         public String CurrentKey;
-        public Texture CurrentTexture
-        {
-            get { return CurrentSprite.Texture; }
-        }
-        public IntRect CurrentSubImageRect
-        {
-            get { return CurrentSprite.SubImageRect; }
-        }
 
         public SpriteSetRenderComponent(GameObject parent)
             : base(parent)
@@ -44,7 +37,6 @@ namespace Jeden.Engine.Render
             subImage.SubImageRect.Top = 0;
             subImage.SubImageRect.Width = (int)texture.Size.X;
             subImage.SubImageRect.Height = (int)texture.Size.Y;
-
 
             SpriteSet.Add(key, subImage);
         }

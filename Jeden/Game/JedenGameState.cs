@@ -38,6 +38,7 @@ namespace Jeden.Game
             base.Update(gameTime);
             HealthMgr.Update(gameTime);
             PhysicsMgr.Update(gameTime);
+            
             //Draw frame last
             RenderMgr.Update(gameTime);
         }

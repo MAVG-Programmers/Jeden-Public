@@ -75,6 +75,8 @@ namespace Jeden.Engine
         public void Run(String title) 
         {
             Window = new RenderWindow(new VideoMode(800, 600), title);
+            
+
             Stopwatch stopwatch = new Stopwatch();
 
             Window.Closed += Window_Closed;

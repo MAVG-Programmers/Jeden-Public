@@ -59,7 +59,12 @@
     <Compile Include="Engine\GameState.cs" />
     <Compile Include="Engine\GameTime.cs" />
     <Compile Include="Engine\Object\HealthComponent.cs" />
+    <Compile Include="Engine\Render\Animation.cs" />
+    <Compile Include="Engine\Render\AnimationRenderComponent.cs" />
+    <Compile Include="Engine\Render\Renderer.cs" />
     <Compile Include="Engine\Render\RenderManager.cs" />
+    <Compile Include="Engine\Render\SpriteRenderComponent.cs" />
+    <Compile Include="Engine\Render\SpriteSetRenderComponent.cs" />
     <Compile Include="Game\HealthComponent.cs" />
     <Compile Include="Game\HealthManager.cs" />
     <Compile Include="Game\JedenGameState.cs" />

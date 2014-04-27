@@ -19,13 +19,14 @@ namespace Jeden.Engine
         /// </summary>
         public List<GameObject> GameObjects { get; set; }
 
+
         /// <summary>
-        /// The control map for this GameState.
+        /// The RenderManager of this GameState
         /// </summary>
         public RenderManager RenderMgr;
 
         /// <summary>
-        /// The RenderManager of this GameState
+        /// The control map for this GameState.
         /// </summary>
         protected IControlMap ControlMap;
 
@@ -57,9 +58,13 @@ namespace Jeden.Engine
         /// <param name="window">The RenderWindow of the GameEngine</param>
         public virtual void Render(RenderWindow window)
         {
+            RenderMgr.Renderer.Target = window; // TODO: this should only be set once.
+                                                // Should the render manager only belong to a game state or the whole game?
+
+
             foreach (RenderComponent rComp in RenderMgr.GetDrawables())
             {
-                window.Draw(rComp.Sprite);
+                rComp.Draw(RenderMgr.Renderer);
             }
         }
 

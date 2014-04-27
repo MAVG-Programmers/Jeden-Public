@@ -14,6 +14,7 @@ namespace Jeden.Engine.Render
     /// </summary>
     public class RenderManager
     {
+        public Renderer Renderer;
         /// <summary>
         /// The list of RenderComponents that are maintained by the RenderManager.
         /// </summary>
@@ -25,6 +26,7 @@ namespace Jeden.Engine.Render
         public RenderManager()
         {
             Components = new List<RenderComponent>();
+            Renderer = new Renderer(null);
         }
 
         //Update tick all components owned by this manager
@@ -47,15 +49,23 @@ namespace Jeden.Engine.Render
         }
 
         /// <summary>
-        ///Creates a render component for a GameObject to use
+        ///Creates a single fixed image component for a GameObject to use
         ///Also adds the new component to the list of those in use
         ///</summary>
         ///<returns> The new component.</returns>
-        public RenderComponent MakeNewComponent(GameObject owner, Texture texture)
+        public SpriteRenderComponent MakeNewSpriteComponent(GameObject owner, Texture texture)
         {
-            RenderComponent component = new RenderComponent(owner, texture);
-            Components.Add(component);
+            SpriteRenderComponent component = new SpriteRenderComponent(owner, texture);
+            Components.Add((RenderComponent)component);
             return component;
         }
+
+        public SpriteSetRenderComponent MakeNewSpriteSetComponent(GameObject owner)
+        {
+            SpriteSetRenderComponent component = new SpriteSetRenderComponent(owner);
+            Components.Add((RenderComponent)component);
+            return component;
+        }
+
     }
 }

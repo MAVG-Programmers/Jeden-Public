@@ -23,7 +23,7 @@ namespace Jeden.Engine.Render
             AnimationSet = new Dictionary<string, Animation>();
         }
 
-        void AddFrame(String key, Texture texture, IntRect subImageRect)
+        public void AddFrame(String key, Texture texture, IntRect subImageRect)
         {
             Animation anim;
             if(AnimationSet.TryGetValue(key, out anim))
@@ -38,7 +38,7 @@ namespace Jeden.Engine.Render
             }
         }
 
-        void SetAnimation(String key)
+        public void SetAnimation(String key)
         {   
             Animation anim;
 

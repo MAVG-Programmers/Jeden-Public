@@ -15,6 +15,12 @@ namespace Jeden.Engine.Render
     {
         Animation Animation;
 
+        public float FrameTime
+        {
+
+            get { return Animation.FrameTime; }
+            set { Animation.FrameTime = value; }
+        }
         public AnimationRenderComponent(GameObject parent) : base(parent) 
         {
             Animation = new Animation();

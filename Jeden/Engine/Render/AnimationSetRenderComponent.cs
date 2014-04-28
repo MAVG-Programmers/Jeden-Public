@@ -23,6 +23,18 @@ namespace Jeden.Engine.Render
             AnimationSet = new Dictionary<string, Animation>();
         }
 
+        public void SetFrameTime(String key, float frameTime)
+        {
+            Animation anim;
+            if (AnimationSet.TryGetValue(key, out anim))
+            {
+                anim.FrameTime = frameTime;
+            }
+            else
+            {
+                //TODO: Throw and exception or something...
+            }
+        }
         public void AddFrame(String key, Texture texture, IntRect subImageRect)
         {
             Animation anim;

@@ -8,6 +8,8 @@ using Jeden.Game.Physics;
 using Jeden.Engine.Object;
 using Jeden.Engine.Render;
 using SFML.Graphics;
+using SFML.Window;
+using Microsoft.Xna.Framework;
 
 namespace Jeden.Game
 {
@@ -17,6 +19,7 @@ namespace Jeden.Game
     /// </summary>
     class JedenGameState : GameState
     {
+        Player player;
         public PhysicsManager PhysicsMgr;
 
         /// <summary>
@@ -24,15 +27,15 @@ namespace Jeden.Game
         /// </summary>
         public JedenGameState()
         {
-            ControlMap = new JedenPlayerInput();
+            ControlMap = new JedenPlayerInput(); // TODO: not setting the InputMap
             PhysicsMgr = new PhysicsManager();
             GenTestLevel();
         }
 
         public void GenTestLevel()
         {
-            
-            GameObjects.Add(new Player(this));
+            player = new Player(this);
+            GameObjects.Add(player);
             RenderMgr.Camera.Target = GameObjects[0];
 
 
@@ -43,8 +46,6 @@ namespace Jeden.Game
             prc.ZIndex = 2;
             prc.ParallaxFactor = 0.5f;
             go.AddComponent<ParallaxRenderComponent>(prc);
-
-
 
             go = new GameObject(this);
             texture = new SFML.Graphics.Texture("assets/parallax2.png");
@@ -61,10 +62,43 @@ namespace Jeden.Game
             prc.ZIndex = 1;
             prc.ParallaxFactor = 0.2f;
             go.AddComponent<ParallaxRenderComponent>(prc);
+
+            go = new GameObject(this);
+            go.Position = new Vector2f(0.0f, 200.0f);
+            PhysicsComponent pc = PhysicsMgr.MakeNewComponent(go, 800, 50, false);
+            go.AddComponent(pc);
+            SpriteRenderComponent src = RenderMgr.MakeNewSpriteComponent(go, texture);
+            src.WorldWidth = 800;
+            src.WorldHeight = 50;
+            src.ZIndex = 100;
+            go.AddComponent(src);
+           
+
+        }
+
+        void InputHack()
+        {
+            //Temp hack until CommandMap is implemented
+            if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Left))
+            {
+                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(-10.0f, 0));
+                player.GetComponent<RenderComponent>().FlipX = true;
+            }
+            if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Right))
+            {
+                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(10.0f, 0));
+                player.GetComponent<RenderComponent>().FlipX = false;
+            }
+            if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Up))
+            {
+                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -10));
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
+            InputHack();
+
             base.Update(gameTime);
             PhysicsMgr.Update(gameTime);
             

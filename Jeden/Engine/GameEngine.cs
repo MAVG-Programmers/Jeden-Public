@@ -53,6 +53,7 @@ namespace Jeden.Engine
         public void PushState(GameState state)
         {
             GameStates.Push(state);
+            state.SetInputManager(InputMgr);
         }
 
         /// <summary>

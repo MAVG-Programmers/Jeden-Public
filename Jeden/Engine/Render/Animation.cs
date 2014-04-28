@@ -104,7 +104,7 @@ namespace Jeden.Engine.Render
 
         int CurrentFrame;
         float TimeAccum;
-        float FrameTime;
+        public float FrameTime { get; set; }
         List<SubImage> Frames;
     }
 }

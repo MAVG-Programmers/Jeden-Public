@@ -71,10 +71,11 @@ namespace Jeden.Engine.Render
                                 Vector2f rotationCenter,
                                 bool flipX,
                                 bool flipY,
-                                Color tint)
+                                Color tint,
+                                int zIndex)
         {
             renderer.DrawSprite(Frames[CurrentFrame].Texture, Frames[CurrentFrame].SubImageRect,
-                centerPos, viewWidth, viewHeight, angle, rotationCenter, flipX, flipY, tint);
+                centerPos, viewWidth, viewHeight, angle, rotationCenter, flipX, flipY, tint, zIndex);
         }
 
         /// <summary>

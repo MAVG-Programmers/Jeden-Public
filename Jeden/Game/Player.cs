@@ -22,6 +22,7 @@ namespace Jeden.Game
             arc.AddFrame(texture2);
             arc.WorldWidth = 64;
             arc.WorldHeight = 64;
+            arc.ZIndex = 1000;
 
             AddComponent<RenderComponent>(arc);
 

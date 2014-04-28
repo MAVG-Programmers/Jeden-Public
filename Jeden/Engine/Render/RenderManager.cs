@@ -14,7 +14,9 @@ namespace Jeden.Engine.Render
     /// </summary>
     public class RenderManager
     {
-        public Renderer Renderer;
+        public Renderer Renderer { get; set; }
+        public Camera Camera { get; set; }
+
         /// <summary>
         /// The list of RenderComponents that are maintained by the RenderManager.
         /// </summary>
@@ -27,11 +29,14 @@ namespace Jeden.Engine.Render
         {
             Components = new List<RenderComponent>();
             Renderer = new Renderer(null);
+            Camera = new Camera();
         }
 
         //Update tick all components owned by this manager
         public void Update(GameTime gameTime)
         {
+            Camera.Update(gameTime);
+
             foreach (var comp in Components)
             {
                 comp.Update(gameTime);
@@ -46,6 +51,21 @@ namespace Jeden.Engine.Render
         public List<RenderComponent> GetDrawables()
         {
             return Components.ToList<RenderComponent>();
+        }
+
+        public void Draw()
+        {
+            Renderer.ClearDrawList();
+
+            Renderer.Target.SetView(Camera);
+
+            foreach (RenderComponent rComp in Components)
+            {
+                rComp.Draw(Renderer, Camera);
+            }
+
+           
+            Renderer.Draw();
         }
 
         /// <summary>
@@ -95,5 +115,19 @@ namespace Jeden.Engine.Render
             Components.Add((RenderComponent)component);
             return component;
         }
+
+        /// <summary>
+        ///Creates a parallax image for the GameObject to use
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
+        public ParallaxRenderComponent MakeNewParallaxComponent(GameObject owner, Texture texture, float factor)
+        {
+            ParallaxRenderComponent component = new ParallaxRenderComponent(owner, texture, factor);
+            Components.Add((RenderComponent)component);
+            return component;
+        }
+
+
     }
 }

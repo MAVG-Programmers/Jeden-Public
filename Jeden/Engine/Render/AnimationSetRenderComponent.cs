@@ -65,9 +65,9 @@ namespace Jeden.Engine.Render
             CurrentAnimation.Update((float)gameTime.ElapsedGameTime.Milliseconds / 1000.0f);
         }
 
-        public override void Draw(Renderer renderer)
+        public override void Draw(Renderer renderer, Camera camera)
         {
-            CurrentAnimation.Draw(renderer, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
+            CurrentAnimation.Draw(renderer, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

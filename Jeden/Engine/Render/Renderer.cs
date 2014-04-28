@@ -15,11 +15,12 @@ namespace Jeden.Engine.Render
         public Renderer(RenderTarget target) 
         {
             Target = target;
+            Renderables = new List<Renderable>();
         }
 
-        float Vector2Dot(Vector2f x, Vector2f y) // temporary, this need to be global
+        public void ClearDrawList()
         {
-            return x.X * y.X + x.Y * y.Y; 
+            Renderables.Clear();
         }
 
         public void DrawSprite( Texture texture, 
@@ -31,7 +32,8 @@ namespace Jeden.Engine.Render
                                 Vector2f rotationCenter,
 								bool flipX, 
                                 bool flipY, 
-                                Color tint)
+                                Color tint,
+                                int zIndex)
         {
             Vertex[] vertices = new Vertex[4];
 
@@ -93,9 +95,53 @@ namespace Jeden.Engine.Render
             rs.Transform = Transform.Identity;
             rs.Shader = null;
 
-            Target.Draw(vertices, PrimitiveType.Quads, rs);
+            Renderable renderable;
+            renderable.Vertices = vertices;
+            renderable.RenderStates = rs;
+            renderable.ZIndex = zIndex;
+
+            Renderables.Add(renderable);
+            //Target.Draw(vertices, PrimitiveType.Quads, rs);
 
         }
+
+        public void Draw()
+        {
+            Renderables.Sort(new ZComparer());
+
+            foreach(Renderable renderable in Renderables)
+            {
+                Target.Draw(renderable.Vertices, PrimitiveType.Quads, renderable.RenderStates);
+            }
+        }
+
+        float Vector2Dot(Vector2f x, Vector2f y) // temporary, this need to be global
+        {
+            return x.X * y.X + x.Y * y.Y;
+        }
+
+        struct Renderable
+        {
+
+
+            public int ZIndex;
+            public Vertex[] Vertices;
+            public RenderStates RenderStates;
+        }
+
+        class ZComparer : IComparer<Renderable>
+        {
+            public int Compare(Renderable a, Renderable b)
+            {
+                if (a.ZIndex == b.ZIndex)
+                    return 0;
+                if (a.ZIndex < b.ZIndex)
+                    return -1;
+                return 1;
+            }
+        }
+
+        List<Renderable> Renderables;
 
     }
 }

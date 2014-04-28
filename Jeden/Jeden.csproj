@@ -65,12 +65,12 @@
     <Compile Include="Engine\Render\Animation.cs" />
     <Compile Include="Engine\Render\AnimationRenderComponent.cs" />
     <Compile Include="Engine\Render\AnimationSetRenderComponent.cs" />
+    <Compile Include="Engine\Render\Camera.cs" />
+    <Compile Include="Engine\Render\ParallaxRenderComponent.cs" />
     <Compile Include="Engine\Render\Renderer.cs" />
     <Compile Include="Engine\Render\RenderManager.cs" />
     <Compile Include="Engine\Render\SpriteRenderComponent.cs" />
     <Compile Include="Engine\Render\SpriteSetRenderComponent.cs" />
-    <Compile Include="Game\HealthComponent.cs" />
-    <Compile Include="Game\HealthManager.cs" />
     <Compile Include="Game\JedenGameState.cs" />
     <Compile Include="Game\JedenPlayerInput.cs" />
     <Compile Include="Game\Physics\PhysicsManager.cs" />

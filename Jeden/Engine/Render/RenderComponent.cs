@@ -22,13 +22,14 @@ namespace Jeden.Engine.Render
         public bool FlipX { get; set; }
         public bool FlipY { get; set; }
         public Color Tint { get; set; }
+        public int ZIndex { get; set; }
 
         public RenderComponent(GameObject parent) : base(parent)
         {
             Tint = new Color(255, 255, 255, 255);
         }
         
-        public virtual void Draw(Renderer renderer)
+        public virtual void Draw(Renderer renderer, Camera camera)
         {
 
         }

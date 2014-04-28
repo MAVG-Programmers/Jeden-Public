@@ -58,14 +58,11 @@ namespace Jeden.Engine
         /// <param name="window">The RenderWindow of the GameEngine</param>
         public virtual void Render(RenderWindow window)
         {
-            RenderMgr.Renderer.Target = window; // TODO: this should only be set once.
-                                                // Should the render manager only belong to a game state or the whole game?
+            RenderMgr.Renderer.Target = window; // TODO: this is a hack, should only be set once.
 
 
-            foreach (RenderComponent rComp in RenderMgr.GetDrawables())
-            {
-                rComp.Draw(RenderMgr.Renderer);
-            }
+            RenderMgr.Draw();
+
         }
 
         /// <summary>

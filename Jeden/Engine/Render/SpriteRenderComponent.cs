@@ -13,8 +13,8 @@ namespace Jeden.Engine.Render
     //Wrapper around SFML sprites as components
     public class SpriteRenderComponent : RenderComponent
     {
-        Texture Texture;
-        IntRect SubImageRect;
+        protected Texture Texture;
+        protected IntRect SubImageRect;
 
         public SpriteRenderComponent(GameObject parent, Texture texture)
             : base(parent)
@@ -57,9 +57,9 @@ namespace Jeden.Engine.Render
             Position = Parent.Position;
         }
 
-        public override void Draw(Renderer renderer)
+        public override void Draw(Renderer renderer, Camera camera)
         {
-            renderer.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint);
+            renderer.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

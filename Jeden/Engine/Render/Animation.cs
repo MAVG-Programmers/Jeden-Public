@@ -34,6 +34,8 @@ namespace Jeden.Engine.Render
             Frames = new List<SubImage>();
         }
 
+        public float FrameTime { get; set; }
+
         /// <summary>
         /// Adds a frame as the last frame of the animation.
         /// </summary>
@@ -104,7 +106,7 @@ namespace Jeden.Engine.Render
 
         int CurrentFrame;
         float TimeAccum;
-        public float FrameTime { get; set; }
+
         List<SubImage> Frames;
     }
 }

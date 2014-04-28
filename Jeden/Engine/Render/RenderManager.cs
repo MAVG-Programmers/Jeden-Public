@@ -55,9 +55,9 @@ namespace Jeden.Engine.Render
 
         public void Draw()
         {
-            Renderer.ClearDrawList();
-
             Renderer.Target.SetView(Camera);
+
+            Components.Sort(new ZComparer());
 
             foreach (RenderComponent rComp in Components)
             {
@@ -65,7 +65,19 @@ namespace Jeden.Engine.Render
             }
 
            
-            Renderer.Draw();
+           // Renderer.Draw();
+        }
+
+        class ZComparer : IComparer<RenderComponent>
+        {
+            public int Compare(RenderComponent a, RenderComponent b)
+            {
+                if (a.ZIndex == b.ZIndex)
+                    return 0;
+                if (a.ZIndex < b.ZIndex)
+                    return -1;
+                return 1;
+            }
         }
 
         /// <summary>

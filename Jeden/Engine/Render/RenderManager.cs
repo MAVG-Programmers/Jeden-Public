@@ -16,6 +16,17 @@ namespace Jeden.Engine.Render
     {
         public Renderer Renderer { get; set; }
         public Camera Camera { get; set; }
+        
+        RenderTarget target;
+        public RenderTarget Target
+        {
+            get { return target; }
+            set
+            {
+                target = value;
+                Renderer.Target = value;
+            }
+        }
 
         /// <summary>
         /// The list of RenderComponents that are maintained by the RenderManager.
@@ -25,7 +36,7 @@ namespace Jeden.Engine.Render
         /// <summary>
         /// A new instance of RenderManager.
         /// </summary>
-        public RenderManager()
+        public RenderManager(/*RenderTarget target*/)
         {
             Components = new List<RenderComponent>();
             Renderer = new Renderer(null);
@@ -43,40 +54,28 @@ namespace Jeden.Engine.Render
             }
         }
 
-        //TODO: sort Drawables, only return what needs drawing on screen
-        /// <summary>
-        /// Returns the visible drawables.
-        /// </summary>
-        /// <returns>The Drawables to draw.</returns>
-        public List<RenderComponent> GetDrawables()
-        {
-            return Components.ToList<RenderComponent>();
-        }
-
         public void Draw()
         {
             Renderer.Target.SetView(Camera);
 
+            
             Components.Sort(new ZComparer());
 
             foreach (RenderComponent rComp in Components)
             {
                 rComp.Draw(Renderer, Camera);
             }
-
-           
-           // Renderer.Draw();
         }
 
         class ZComparer : IComparer<RenderComponent>
         {
             public int Compare(RenderComponent a, RenderComponent b)
             {
-                if (a.ZIndex == b.ZIndex)
-                    return 0;
+                if (a.ZIndex > b.ZIndex)
+                    return 1;
                 if (a.ZIndex < b.ZIndex)
                     return -1;
-                return 1;
+                return 0;
             }
         }
 
@@ -140,6 +139,17 @@ namespace Jeden.Engine.Render
             return component;
         }
 
+        /// <summary>
+        ///Creates a new tile map component for the GameObject to use, this still need to be loaded with data from the tile map loader
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
+        public TileMapRenderComponent MakeNewTileMapComponent(GameObject owner)
+        {
+            TileMapRenderComponent component = new TileMapRenderComponent(owner);
+            Components.Add((RenderComponent)component);
+            return component;
+        }
 
     }
 }

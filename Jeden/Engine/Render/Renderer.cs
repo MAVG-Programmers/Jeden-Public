@@ -94,6 +94,122 @@ namespace Jeden.Engine.Render
 
         }
 
+        /*
+                 public void DrawCylinder(Vector2 A, Vector2 B, float radius, Color4 fillColor, Color4 outlineColor)
+        {
+
+
+            Vector2 AB = B - A;
+            float ang0 = (float)System.Math.Atan2(AB.Y, AB.X) + (float)MathFunctions.PI / 2.0f;
+
+            const float N = 8;
+
+            if (fillColor.A > 0.0f)
+            {
+                SetColor(fillColor);
+                GL.Begin(PrimitiveType.TriangleFan);
+                for (int n = 0; n <= N; n++)
+                {
+                    float f = ang0 + ((float)n / (float)N) * (float)MathFunctions.PI;
+                    Vector2 v = A + radius * new Vector2((float)MathFunctions.Cos(f), (float)MathFunctions.Sin(f));
+                    GL.Vertex2(v.X, v.Y);
+                }
+                for (int n = 0; n <= N; n++)
+                {
+                    float f = ang0 + (float)MathFunctions.PI + ((float)n / (float)N) * (float)MathFunctions.PI;
+                    Vector2 v = B + radius * new Vector2((float)MathFunctions.Cos(f), (float)MathFunctions.Sin(f));
+                    GL.Vertex2(v.X, v.Y);
+                }
+                GL.End();
+
+
+            }
+
+            if (outlineColor.A > 0.0f)
+            {
+                SetColor(outlineColor);
+                GL.Begin(PrimitiveType.LineLoop);
+                for (int n = 0; n <= N; n++)
+                {
+                    float f = ang0 + ((float)n / (float)N) * (float)MathFunctions.PI;
+                    Vector2 v = A + radius * new Vector2((float)MathFunctions.Cos(f), (float)MathFunctions.Sin(f));
+                    GL.Vertex2(v.X, v.Y);
+                }
+                for (int n = 0; n <= N; n++)
+                {
+                    float f = ang0 + (float)MathFunctions.PI + ((float)n / (float)N) * (float)MathFunctions.PI;
+                    Vector2 v = B + radius * new Vector2((float)MathFunctions.Cos(f), (float)MathFunctions.Sin(f));
+                    GL.Vertex2(v.X, v.Y);
+                }
+                GL.End();
+            }
+
+
+
+        }
+
+        public void DrawBox(Box2 box, Color4 fillColor, Color4 outlineColor)
+        {
+            if (fillColor.A > 0.0f)
+            {
+                SetColor(fillColor);
+                GL.Begin(PrimitiveType.Quads);
+
+                GL.Vertex2(box.Left, box.Bottom);
+                GL.Vertex2(box.Right, box.Bottom);
+                GL.Vertex2(box.Right, box.Top);
+                GL.Vertex2(box.Left, box.Top);
+
+                GL.End();
+            }
+
+            if (outlineColor.A > 0.0f)
+            {
+                SetColor(outlineColor);
+                GL.Begin(PrimitiveType.LineLoop);
+
+                GL.Vertex2(box.Left, box.Bottom);
+                GL.Vertex2(box.Right, box.Bottom);
+                GL.Vertex2(box.Right, box.Top);
+                GL.Vertex2(box.Left, box.Top);
+
+                GL.End();
+            }
+        }
+        */
+        public void DrawCircle(Vector2f center, float radius, Color fillColor, Color outlineColor)
+        {
+            const int NumCircleVerts = 16;
+            Vertex[] vertices = new Vertex[16];
+
+            for (int i = 0; i < NumCircleVerts; i++)
+            {
+                Vector2f v = center + radius * new Vector2f(
+                    (float)Math.Cos(2.0f * Math.PI * (float)i / (float)NumCircleVerts),
+                    (float)Math.Sin(2.0f * Math.PI * (float)i / (float)NumCircleVerts));
+
+                vertices[i].Position = v;
+                vertices[i].Color = fillColor;
+
+            }
+            Target.Draw(vertices, PrimitiveType.TrianglesFan);
+
+            for (int i = 0; i < NumCircleVerts; i++)
+                vertices[i].Color = outlineColor;
+            Target.Draw(vertices, PrimitiveType.LinesStrip);
+        }
+        
+        public void DrawLine(Vector2f A, Vector2f B, Color color)
+        {
+            Vertex[] vertices = new Vertex[2];
+            vertices[0].Color = color;
+            vertices[1].Color = color;
+            vertices[0].Position = A;
+            vertices[1].Position = B;
+            Target.Draw(vertices, PrimitiveType.Lines);
+        }
+         
+
 
         float Vector2Dot(Vector2f x, Vector2f y) // temporary, this need to be global
         {

@@ -58,11 +58,7 @@ namespace Jeden.Engine
         /// <param name="window">The RenderWindow of the GameEngine</param>
         public virtual void Render(RenderWindow window)
         {
-            RenderMgr.Renderer.Target = window; // TODO: this is a hack, should only be set once.
-
-
             RenderMgr.Draw();
-
         }
 
         /// <summary>
@@ -72,6 +68,11 @@ namespace Jeden.Engine
         public void SetInputManager(InputManager inputmgr)
         {
             ControlMap.InputMgr = inputmgr;
+        }
+
+        public void SetRenderTarget(RenderTarget target)
+        {
+            RenderMgr.Target = target;
         }
     }
 }

@@ -44,6 +44,7 @@ namespace Jeden.Engine
             GameStates = new Stack<GameState>();
             InputMgr = new InputManager(this);
             DeltaTime = new GameTime();
+            Window = new RenderWindow(new VideoMode(800, 600), "Jeden");
         }
 
         /// <summary>
@@ -54,6 +55,7 @@ namespace Jeden.Engine
         {
             GameStates.Push(state);
             state.SetInputManager(InputMgr);
+            state.SetRenderTarget(Window);
         }
 
         /// <summary>
@@ -73,11 +75,8 @@ namespace Jeden.Engine
         /// Runs the GameEngine.
         /// </summary>
         /// <param name="title">The title of the game's window.</param>
-        public void Run(String title) 
+        public void Run() 
         {
-            Window = new RenderWindow(new VideoMode(800, 600), title);
-            
-
             Stopwatch stopwatch = new Stopwatch();
 
             Window.Closed += Window_Closed;

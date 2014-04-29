@@ -71,6 +71,27 @@
     <Compile Include="Engine\Render\RenderManager.cs" />
     <Compile Include="Engine\Render\SpriteRenderComponent.cs" />
     <Compile Include="Engine\Render\SpriteSetRenderComponent.cs" />
+    <Compile Include="Engine\Render\TileMapRenderComponent.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\ImageLayer.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\Layer.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\Map.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\ObjectGroup.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\TiledCore.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\CRC32.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\Deflate.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\DeflateStream.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\GZipStream.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\Inflate.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\InfTree.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\ParallelDeflateOutputStream.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\Tree.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\Zlib.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\ZlibBaseStream.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\ZlibCodec.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\ZlibConstants.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\zlib\ZlibStream.cs" />
+    <Compile Include="Engine\TileMap\TileMap.cs" />
+    <Compile Include="Engine\TileMap\TiledSharp\Tileset.cs" />
     <Compile Include="Game\JedenGameState.cs" />
     <Compile Include="Game\JedenPlayerInput.cs" />
     <Compile Include="Game\Physics\PhysicsManager.cs" />
@@ -95,6 +116,8 @@
     <Content Include="csfml-window-2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Engine\TileMap\TiledSharp\zlib\License.txt" />
+    <Content Include="Engine\TileMap\TiledSharp\zlib\License.zlib.txt" />
     <Content Include="libsndfile-1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

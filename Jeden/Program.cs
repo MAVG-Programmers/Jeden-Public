@@ -15,7 +15,7 @@ namespace Jeden
             using (GameEngine engine = new GameEngine()) 
             {
                 engine.PushState(new JedenGameState());
-                engine.Run("Jeden");
+                engine.Run();
             }
         }
     }

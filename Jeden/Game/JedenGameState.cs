@@ -10,6 +10,7 @@ using Jeden.Engine.Render;
 using SFML.Graphics;
 using SFML.Window;
 using Microsoft.Xna.Framework;
+using Jeden.Engine.TileMap;
 
 namespace Jeden.Game
 {
@@ -20,6 +21,8 @@ namespace Jeden.Game
     class JedenGameState : GameState
     {
         Player player;
+
+
         public PhysicsManager PhysicsMgr;
 
         /// <summary>
@@ -37,6 +40,15 @@ namespace Jeden.Game
             player = new Player(this);
             GameObjects.Add(player);
             RenderMgr.Camera.Target = GameObjects[0];
+
+            TileMap tileMap = new TileMap("assets/testmap.tmx");
+
+            GameObject tileMapGo = new GameObject(this);
+            GameObjects.Add(tileMapGo);
+            TileMapRenderComponent tmrc = RenderMgr.MakeNewTileMapComponent(tileMapGo);
+            tileMap.SetRenderComponent(tmrc);
+            tileMapGo.AddComponent<RenderComponent>(tmrc);
+            tmrc.ZIndex = 40;
 
 
             GameObject go = new GameObject(this);
@@ -72,7 +84,7 @@ namespace Jeden.Game
             src.WorldHeight = 50;
             src.ZIndex = 100;
             go.AddComponent(src);
-           
+                       
 
         }
 
@@ -95,13 +107,19 @@ namespace Jeden.Game
             }
         }
 
+        public override void Render(RenderWindow Target)
+        {
+            RenderMgr.Draw();
+        }
+
         public override void Update(GameTime gameTime)
         {
             InputHack();
 
             base.Update(gameTime);
             PhysicsMgr.Update(gameTime);
-            
+
+
             //Draw frame last
             RenderMgr.Update(gameTime);
         }

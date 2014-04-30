@@ -50,7 +50,7 @@ namespace Jeden.Engine.Render
             base.Update(gameTime);
 
             Position = Parent.Position;
-            Animation.Update((float)gameTime.ElapsedGameTime.Milliseconds / 1000.0f);
+            Animation.Update(gameTime.ElapsedGameTime.Milliseconds / 1000.0);
         }
 
         public override void Draw(Renderer renderer, Camera camera)

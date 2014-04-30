@@ -84,7 +84,7 @@ namespace Jeden.Engine.Render
         /// Updates the animation[frame counter].
         /// </summary>
         /// <param name="deltaTime"></param>
-        public void Update(float deltaTime)
+        public void Update(double deltaTime)
         {
             TimeAccum += deltaTime;
 
@@ -105,7 +105,7 @@ namespace Jeden.Engine.Render
         }
 
         int CurrentFrame;
-        float TimeAccum;
+        double TimeAccum;
 
         List<SubImage> Frames;
     }

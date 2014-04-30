@@ -9,6 +9,7 @@ using SFML.Window;
 using Jeden.Engine.Render;
 using TiledSharp;
 using System.Diagnostics;
+using System.IO;
 
 namespace Jeden.Engine.TileMap
 {
@@ -66,7 +67,9 @@ namespace Jeden.Engine.TileMap
 
             foreach (TmxTileset ts in map.Tilesets)
             {
-                var newSheet = new Texture(ts.Image.Source);
+                String filename = Path.GetFileName(ts.Image.Source);
+
+                var newSheet = new Texture("assets/" + filename);
                 spriteSheets.Add(ts, newSheet);
 
                 // Loop hoisting

@@ -23,8 +23,8 @@ namespace Jeden.Engine
 
         //public int DeltaScrollWheel { get; set; } //not really needed
 
-        public Vector2i MousePosition { get; set; }
-        public Vector2i PreviousMousePosition { get; set; }
+        public Vector2i MousePosition { get; private set; }
+        public Vector2i PreviousMousePosition { get; private set; }
 
         public InputManager(GameEngine engine) 
         {

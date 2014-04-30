@@ -17,7 +17,6 @@ namespace Jeden.Engine.Render
 
         public float FrameTime
         {
-
             get { return Animation.FrameTime; }
             set { Animation.FrameTime = value; }
         }

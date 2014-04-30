@@ -58,33 +58,38 @@ namespace Jeden.Game
             prc.ZIndex = 2;
             prc.ParallaxFactor = 0.5f;
             go.AddComponent<ParallaxRenderComponent>(prc);
+            GameObjects.Add(go);
 
             go = new GameObject(this);
             texture = new SFML.Graphics.Texture("assets/parallax2.png");
-
             prc = RenderMgr.MakeNewParallaxComponent(go, texture, 0.5f);
             prc.ZIndex = 0;
             prc.ParallaxFactor = 0.05f;
             go.AddComponent<ParallaxRenderComponent>(prc);
+            GameObjects.Add(go);
 
             go = new GameObject(this);
             texture = new SFML.Graphics.Texture("assets/parallax1.png");
-
             prc = RenderMgr.MakeNewParallaxComponent(go, texture, 0.5f);
             prc.ZIndex = 1;
             prc.ParallaxFactor = 0.2f;
             go.AddComponent<ParallaxRenderComponent>(prc);
+            GameObjects.Add(go);
 
-            go = new GameObject(this);
-            go.Position = new Vector2f(0.0f, 200.0f);
-            PhysicsComponent pc = PhysicsMgr.MakeNewComponent(go, 800, 50, false);
-            go.AddComponent(pc);
-            SpriteRenderComponent src = RenderMgr.MakeNewSpriteComponent(go, texture);
-            src.WorldWidth = 800;
-            src.WorldHeight = 50;
-            src.ZIndex = 100;
-            go.AddComponent(src);
-                       
+            foreach (TileMap.PhysicsObject pobj in tileMap.PhysicsObjects)
+            {
+
+                Vector2f Position = new Vector2f(pobj.Position.X, pobj.Position.Y);
+
+                go = new GameObject(this);
+                go.Position = pobj.Position;
+                PhysicsComponent pc = PhysicsMgr.MakeNewComponent(go, pobj.Width, pobj.Height, false);
+                //SpriteRenderComponent src = RenderMgr.MakeNewSpriteComponent(go, texture);
+
+                //src.ZIndex = 100;
+               // go.AddComponent(src);
+                GameObjects.Add(go);
+            }           
 
         }
 
@@ -93,17 +98,17 @@ namespace Jeden.Game
             //Temp hack until CommandMap is implemented
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Left))
             {
-                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(-10.0f, 0));
+                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(-1000.0f, 0));
                 player.GetComponent<RenderComponent>().FlipX = true;
             }
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Right))
             {
-                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(10.0f, 0));
+                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(1000.0f, 0));
                 player.GetComponent<RenderComponent>().FlipX = false;
             }
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Up))
             {
-                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -10));
+                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -1000));
             }
         }
 

@@ -21,6 +21,7 @@ namespace Jeden.Engine.Render
         {
             if(Target != null)
                 Center = Target.Position;
+           
         }
 
         public GameObject Target { get; set; }

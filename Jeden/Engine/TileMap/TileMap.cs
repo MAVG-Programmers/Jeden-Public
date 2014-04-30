@@ -22,18 +22,29 @@ namespace Jeden.Engine.TileMap
 
         TmxMap map;
 
-        Dictionary<TmxTileset, Texture> spriteSheet;
+        Dictionary<TmxTileset, Texture> spriteSheets;
         Dictionary<int, IntRect> subImageRects;
         Dictionary<int, TmxTileset> idSheet;
         List<int[,]> layerID;     // for future use, 1 layer only for now
 
-        struct RenderTile
+        struct ParallaxSprite
         {
+            public Vector2f Position;
             public Texture Texture;
-            public IntRect SubImageRect;
+            IntRect SubImageRect;
+            float ParallaxFactor;
         }
 
+        public struct PhysicsObject
+        {
+            public Vector2f Position;
+            public float Width;
+            public float Height;
+        }
+
+        List<ParallaxSprite> ParallaxSprites;
         TileMapRenderComponent.Tile[,] RenderTiles;
+        public List<PhysicsObject> PhysicsObjects;
 
         public TileMap(string mapName) 
         {
@@ -45,16 +56,18 @@ namespace Jeden.Engine.TileMap
             TileWidth = map.TileWidth;
             TileHeight = map.TileHeight;
             RenderTiles = new TileMapRenderComponent.Tile[MapWidth, MapHeight];
+            PhysicsObjects = new List<PhysicsObject>();
+            ParallaxSprites = new List<ParallaxSprite>();
 
             // Load spritesheets
-            spriteSheet = new Dictionary<TmxTileset, Texture>();
+            spriteSheets = new Dictionary<TmxTileset, Texture>();
             subImageRects = new Dictionary<int, IntRect>();
             idSheet = new Dictionary<int, TmxTileset>();
 
             foreach (TmxTileset ts in map.Tilesets)
             {
                 var newSheet = new Texture(ts.Image.Source);
-                spriteSheet.Add(ts, newSheet);
+                spriteSheets.Add(ts, newSheet);
 
                 // Loop hoisting
                 var wStart = ts.Margin;
@@ -94,11 +107,34 @@ namespace Jeden.Engine.TileMap
                 var idMap = new int[MapWidth, MapHeight];
                 foreach (TmxLayerTile t in layer.Tiles)
                 {
+                    
                     idMap[t.X, t.Y] = t.Gid;
                 }
                 layerID.Add(idMap);
 
+                if(layer.Name == "tiles")
+                {
+
+
+                }
                 // Ignore properties for now
+            }
+
+            foreach(TmxObjectGroup objectGroup in map.ObjectGroups)
+            {
+                if (objectGroup.Name == "objects")
+                {
+                    foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
+                    {
+                        PhysicsObject pobj;
+                        pobj.Position.X = obj.X + obj.Width / 2; // move xy from top left to center of shape
+                        pobj.Position.Y = obj.Y + obj.Height / 2;
+                        pobj.Width = obj.Width;
+                        pobj.Height = obj.Height;
+
+                        PhysicsObjects.Add(pobj);
+                    }
+                }
             }
 
             //!!Only 1 layer supported for now!!.
@@ -124,7 +160,7 @@ namespace Jeden.Engine.TileMap
                             continue;
                         }
 
-                        RenderTiles[i, j].Texture = spriteSheet[idSheet[id]];
+                        RenderTiles[i, j].Texture = spriteSheets[idSheet[id]];
                         RenderTiles[i, j].SubImageRect = subImageRects[id];
                     }
                 }
@@ -136,5 +172,10 @@ namespace Jeden.Engine.TileMap
             tmrc.Set(MapWidth, MapHeight, TileWidth, TileHeight, RenderTiles);
         }
 
+        void ParseTileLayer()
+        {
+
+        }
     }
+
 }

@@ -29,7 +29,7 @@ namespace Jeden.Game
             AddComponent<RenderComponent>(arc);
 
 
-            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 10.0f, 10.0f, true));
+            AddComponent<PhysicsComponent>(owner.PhysicsMgr.MakeNewComponent(this, 64, 128, true));
 
         }
     }

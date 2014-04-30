@@ -20,9 +20,9 @@ namespace Jeden.Engine.Render
             ParallaxFactor = factor;
         }
 
-        public override void Draw(Renderer renderer, Camera camera)
+        public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            renderer.DrawSprite(Texture, SubImageRect, (camera.Center - Position) * ParallaxFactor, 
+            renderMgr.DrawSprite(Texture, SubImageRect, (camera.Center - Position) * ParallaxFactor, 
                 WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
         }
     }

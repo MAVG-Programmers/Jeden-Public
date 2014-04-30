@@ -65,7 +65,7 @@ namespace Jeden.Engine.Render
         /// <summary>
         /// Draws the animation.
         /// </summary>
-        public void Draw(Renderer renderer, 
+        public void Draw(RenderManager renderMgr, 
                                 Vector2f centerPos,
                                 float viewWidth,
                                 float viewHeight,
@@ -76,7 +76,7 @@ namespace Jeden.Engine.Render
                                 Color tint,
                                 int zIndex)
         {
-            renderer.DrawSprite(Frames[CurrentFrame].Texture, Frames[CurrentFrame].SubImageRect,
+            renderMgr.DrawSprite(Frames[CurrentFrame].Texture, Frames[CurrentFrame].SubImageRect,
                 centerPos, viewWidth, viewHeight, angle, rotationCenter, flipX, flipY, tint, zIndex);
         }
 

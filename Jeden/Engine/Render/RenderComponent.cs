@@ -29,7 +29,7 @@ namespace Jeden.Engine.Render
             Tint = new Color(255, 255, 255, 255);
         }
         
-        public virtual void Draw(Renderer renderer, Camera camera)
+        public virtual void Draw(RenderManager renderMgr, Camera camera)
         {
 
         }

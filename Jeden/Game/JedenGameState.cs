@@ -51,30 +51,21 @@ namespace Jeden.Game
             tmrc.ZIndex = 40;
 
 
-            GameObject go = new GameObject(this);
-            SFML.Graphics.Texture texture = new SFML.Graphics.Texture("assets/parallax0.png");
+            GameObject go;
 
-            ParallaxRenderComponent prc = RenderMgr.MakeNewParallaxComponent(go, texture, 0.5f);
-            prc.ZIndex = 2;
-            prc.ParallaxFactor = 0.5f;
-            go.AddComponent<ParallaxRenderComponent>(prc);
-            GameObjects.Add(go);
+            foreach (TileMap.ParallaxSprite sprite in tileMap.ParallaxSprites)
+            {
+                go = new GameObject(this);
+                ParallaxRenderComponent prc;
+                go.Position = sprite.Position;
+                prc = RenderMgr.MakeNewParallaxComponent(go, sprite.Texture, sprite.ParallaxFactor);
+                prc.WorldWidth = sprite.Width;
+                prc.WorldHeight = sprite.Height;
+                prc.ZIndex = 20;
+                go.AddComponent<ParallaxRenderComponent>(prc);
+                GameObjects.Add(go);
 
-            go = new GameObject(this);
-            texture = new SFML.Graphics.Texture("assets/parallax2.png");
-            prc = RenderMgr.MakeNewParallaxComponent(go, texture, 0.5f);
-            prc.ZIndex = 0;
-            prc.ParallaxFactor = 0.05f;
-            go.AddComponent<ParallaxRenderComponent>(prc);
-            GameObjects.Add(go);
-
-            go = new GameObject(this);
-            texture = new SFML.Graphics.Texture("assets/parallax1.png");
-            prc = RenderMgr.MakeNewParallaxComponent(go, texture, 0.5f);
-            prc.ZIndex = 1;
-            prc.ParallaxFactor = 0.2f;
-            go.AddComponent<ParallaxRenderComponent>(prc);
-            GameObjects.Add(go);
+            }
 
             foreach (TileMap.PhysicsObject pobj in tileMap.PhysicsObjects)
             {

@@ -28,12 +28,14 @@ namespace Jeden.Engine.TileMap
         Dictionary<int, TmxTileset> idSheet;
         List<int[,]> layerID;     // for future use, 1 layer only for now
 
-        struct ParallaxSprite
+        public struct ParallaxSprite
         {
             public Vector2f Position;
+            public float Width;
+            public float Height;
             public Texture Texture;
-            IntRect SubImageRect;
-            float ParallaxFactor;
+            public IntRect SubImageRect;
+            public float ParallaxFactor;
         }
 
         public struct PhysicsObject
@@ -43,7 +45,7 @@ namespace Jeden.Engine.TileMap
             public float Height;
         }
 
-        List<ParallaxSprite> ParallaxSprites;
+        public List<ParallaxSprite> ParallaxSprites;
         TileMapRenderComponent.Tile[,] RenderTiles;
         public List<PhysicsObject> PhysicsObjects;
 
@@ -69,30 +71,31 @@ namespace Jeden.Engine.TileMap
             {
                 String filename = Path.GetFileName(ts.Image.Source);
 
+                //Tiled stores the full path name of the tileset
                 var newSheet = new Texture("assets/" + filename);
                 spriteSheets.Add(ts, newSheet);
 
                 // Loop hoisting
                 var wStart = ts.Margin;
                 var wInc = ts.TileWidth + ts.Spacing;
-                var wEnd = ts.Image.Width;
+                var wEnd = ts.Image.Width / (ts.TileWidth + ts.Spacing); // don't want an ID for a partial tile
 
                 var hStart = ts.Margin;
                 var hInc = ts.TileHeight + ts.Spacing;
-                var hEnd = ts.Image.Height;
+                var hEnd = ts.Image.Height / (ts.TileHeight + ts.Spacing);
 
                 // Pre-compute sub image rectangles
                 var id = ts.FirstGid;
-                for (var h = hStart; h < hEnd; h += hInc)
+                for (var h = hStart; h < hEnd; h += 1)
                 {
-                    for (var w = wStart; w < wEnd; w += wInc)
+                    for (var w = wStart; w < wEnd; w += 1)
                     {
                         var rect = new IntRect();
 
-                        rect.Left = w;
+                        rect.Left = w * wInc;
                         rect.Width = ts.TileWidth;
                         rect.Height = ts.TileHeight;
-                        rect.Top = h;
+                        rect.Top = h * hInc;
 
                         idSheet.Add(id, ts);
                         subImageRects.Add(id, rect);
@@ -115,15 +118,12 @@ namespace Jeden.Engine.TileMap
                 }
                 layerID.Add(idMap);
 
-                if(layer.Name == "tiles")
-                {
+               // if(layer.Name == "tiles")
 
-
-                }
                 // Ignore properties for now
             }
 
-            foreach(TmxObjectGroup objectGroup in map.ObjectGroups)
+            foreach (TmxObjectGroup objectGroup in map.ObjectGroups)
             {
                 if (objectGroup.Name == "objects")
                 {
@@ -138,9 +138,24 @@ namespace Jeden.Engine.TileMap
                         PhysicsObjects.Add(pobj);
                     }
                 }
-            }
 
-            //!!Only 1 layer supported for now!!.
+                if(objectGroup.Name == "parallax")
+                {
+                    foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
+                    {
+                        ParallaxSprite sprite;
+                        sprite.Position.X = obj.X + obj.Width / 2; // move xy from top left to center of shape
+                        sprite.Position.Y = obj.Y + obj.Height / 2;
+                        sprite.Texture = spriteSheets[idSheet[obj.Tile.Gid]];
+                        sprite.Width = sprite.Texture.Size.X;
+                        sprite.Height = sprite.Texture.Size.Y;
+                        sprite.SubImageRect = subImageRects[obj.Tile.Gid];
+                        sprite.ParallaxFactor = float.Parse(objectGroup.Properties["ParallaxFactor"]);
+
+                        ParallaxSprites.Add(sprite);
+                    }
+                }
+            }
             Debug.Assert(layerID.Count == 1);
 
             int iStart = 0;

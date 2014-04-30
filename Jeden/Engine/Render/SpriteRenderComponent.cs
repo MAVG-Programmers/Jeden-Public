@@ -57,9 +57,9 @@ namespace Jeden.Engine.Render
             Position = Parent.Position;
         }
 
-        public override void Draw(Renderer renderer, Camera camera)
+        public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            renderer.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
+            renderMgr.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

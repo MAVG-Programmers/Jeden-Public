@@ -40,7 +40,7 @@ namespace Jeden.Engine.Render
         Tile[,] Tiles;
 
 
-        public override void Draw(Renderer renderer, Camera camera)
+        public override void Draw(RenderManager renderMgr, Camera camera)
         {
 
             int xStart = (int)((camera.Center.X - camera.Size.X * 0.5f) / TileWidth);
@@ -69,7 +69,7 @@ namespace Jeden.Engine.Render
                                     TileWidth * i + TileWidth * 0.5f,
                                     TileHeight * j + TileHeight * 0.5f);
 
-                    renderer.DrawSprite(Tiles[i, j].Texture, Tiles[i, j].SubImageRect, position + Position, TileWidth, TileHeight, Angle, RotationCenter + position, false, false, Tint, ZIndex);
+                    renderMgr.DrawSprite(Tiles[i, j].Texture, Tiles[i, j].SubImageRect, position + Position, TileWidth, TileHeight, Angle, RotationCenter + position, false, false, Tint, ZIndex);
 
                 }
             }

@@ -36,6 +36,7 @@ namespace Jeden.Engine.TileMap
             public Texture Texture;
             public IntRect SubImageRect;
             public float ParallaxFactor;
+            public int ZIndex;
         }
 
         public struct PhysicsObject
@@ -127,35 +128,25 @@ namespace Jeden.Engine.TileMap
             {
                 if (objectGroup.Name == "objects")
                 {
-                    foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
-                    {
-                        PhysicsObject pobj;
-                        pobj.Position.X = obj.X + obj.Width / 2; // move xy from top left to center of shape
-                        pobj.Position.Y = obj.Y + obj.Height / 2;
-                        pobj.Width = obj.Width;
-                        pobj.Height = obj.Height;
-
-                        PhysicsObjects.Add(pobj);
-                    }
+                    ParseCollisionLayer(objectGroup);
                 }
 
                 if(objectGroup.Name == "parallax")
                 {
-                    foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
-                    {
-                        ParallaxSprite sprite;
-                        sprite.Position.X = obj.X + obj.Width / 2; // move xy from top left to center of shape
-                        sprite.Position.Y = obj.Y + obj.Height / 2;
-                        sprite.Texture = spriteSheets[idSheet[obj.Tile.Gid]];
-                        sprite.Width = sprite.Texture.Size.X;
-                        sprite.Height = sprite.Texture.Size.Y;
-                        sprite.SubImageRect = subImageRects[obj.Tile.Gid];
-                        sprite.ParallaxFactor = float.Parse(objectGroup.Properties["ParallaxFactor"]);
-
-                        ParallaxSprites.Add(sprite);
-                    }
+                    ParseParallaxLayer(objectGroup);
                 }
             }
+
+            ParseTileLayer();
+        }
+
+        public void SetRenderComponent(TileMapRenderComponent tmrc)
+        {
+            tmrc.Set(MapWidth, MapHeight, TileWidth, TileHeight, RenderTiles);
+        }
+
+        void ParseTileLayer()
+        {
             Debug.Assert(layerID.Count == 1);
 
             int iStart = 0;
@@ -185,14 +176,59 @@ namespace Jeden.Engine.TileMap
             }
         }
 
-        public void SetRenderComponent(TileMapRenderComponent tmrc)
+        void ParseCollisionLayer(TmxObjectGroup objectGroup)
         {
-            tmrc.Set(MapWidth, MapHeight, TileWidth, TileHeight, RenderTiles);
+            foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
+            {
+                PhysicsObject pobj;
+                pobj.Position.X = obj.X + obj.Width / 2; // move xy from top left to center of shape
+                pobj.Position.Y = obj.Y + obj.Height / 2;
+                pobj.Width = obj.Width;
+                pobj.Height = obj.Height;
+
+                PhysicsObjects.Add(pobj);
+            }
         }
 
-        void ParseTileLayer()
+        void ParseParallaxLayer(TmxObjectGroup objectGroup)
         {
+            foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
+            {
+                ParallaxSprite sprite;
+                sprite.Texture = spriteSheets[idSheet[obj.Tile.Gid]];
+                sprite.Position.X = obj.X + sprite.Texture.Size.X / 2; // move xy from top left to center of shape
+                sprite.Position.Y = obj.Y + sprite.Texture.Size.Y / 2;
 
+                sprite.Width = sprite.Texture.Size.X;
+                sprite.Height = sprite.Texture.Size.Y;
+                sprite.SubImageRect = subImageRects[obj.Tile.Gid];
+
+
+                float parallaxFactor;
+
+                if (objectGroup.Properties.ContainsKey("parallax_factor"))
+                {
+                    if (float.TryParse(objectGroup.Properties["parallax_factor"], out parallaxFactor))
+                        sprite.ParallaxFactor = parallaxFactor;
+                    else
+                        sprite.ParallaxFactor = 1.0f;
+                }
+                else
+                    sprite.ParallaxFactor = 1.0f;
+
+                if (objectGroup.Properties.ContainsKey("zindex"))
+                {
+                    int zIndex;
+                    if (int.TryParse(objectGroup.Properties["zindex"], out zIndex))
+                        sprite.ZIndex = zIndex;
+                    else
+                        sprite.ZIndex = 0;
+                }
+                else
+                    sprite.ZIndex = 0;
+
+                ParallaxSprites.Add(sprite);
+            }
         }
     }
 

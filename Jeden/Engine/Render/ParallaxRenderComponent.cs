@@ -22,7 +22,10 @@ namespace Jeden.Engine.Render
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            renderMgr.DrawSprite(Texture, SubImageRect, (camera.Center - Position) * ParallaxFactor, 
+            // have pfinal = position - cameraPostion
+            // want pfinal = position - cameraPosition * parallaxFactor
+
+            renderMgr.DrawSprite(Texture, SubImageRect, (Position - camera.Center) * ParallaxFactor, 
                 WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
         }
     }

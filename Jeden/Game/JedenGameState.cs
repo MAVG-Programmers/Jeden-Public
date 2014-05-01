@@ -61,7 +61,7 @@ namespace Jeden.Game
                 prc = RenderMgr.MakeNewParallaxComponent(go, sprite.Texture, sprite.ParallaxFactor);
                 prc.WorldWidth = sprite.Width;
                 prc.WorldHeight = sprite.Height;
-                prc.ZIndex = 20;
+                prc.ZIndex = sprite.ZIndex;
                 go.AddComponent<ParallaxRenderComponent>(prc);
                 GameObjects.Add(go);
 

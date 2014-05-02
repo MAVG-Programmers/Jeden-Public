@@ -22,10 +22,8 @@ namespace Jeden.Engine.Render
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            // have pfinal = position - cameraPostion
-            // want pfinal = position - cameraPosition * parallaxFactor
-
-            renderMgr.DrawSprite(Texture, SubImageRect, (Position - camera.Center) * ParallaxFactor, 
+            //add camera position to where we want to draw on the screen, and let the view transform just subtract it back off
+            renderMgr.DrawSprite(Texture, SubImageRect, (Position - camera.Center) * ParallaxFactor + camera.Center, 
                 WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
         }
     }

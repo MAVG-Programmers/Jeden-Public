@@ -17,15 +17,21 @@
    <property name="parallax_factor" value="0"/>
    <property name="zindex" value="2"/>
   </properties>
-  <object gid="39" x="-227" y="450"/>
+  <object gid="39" x="140" y="359"/>
+ </objectgroup>
+ <objectgroup name="parallax" width="100" height="100">
+  <properties>
+   <property name="parallax_factor" value="0.2"/>
+   <property name="zindex" value="10"/>
+  </properties>
+  <object gid="38" x="481" y="533"/>
  </objectgroup>
  <objectgroup name="parallax" width="100" height="100">
   <properties>
    <property name="parallax_factor" value="0.6"/>
-   <property name="zindex" value="3"/>
+   <property name="zindex" value="19"/>
   </properties>
-  <object gid="37" x="1" y="383"/>
-  <object gid="37" x="491" y="614"/>
+  <object gid="37" x="402" y="538"/>
  </objectgroup>
  <layer name="tiles" width="100" height="100">
   <data encoding="base64" compression="zlib">
@@ -33,7 +39,7 @@
   </data>
  </layer>
  <objectgroup name="objects" width="100" height="100">
-  <object x="221" y="320" width="898" height="33"/>
+  <object x="225" y="321" width="898" height="33"/>
   <object x="1119" y="510" width="481" height="33"/>
   <object x="1376" y="480" width="608" height="33"/>
   <object x="1600" y="449" width="320" height="30"/>

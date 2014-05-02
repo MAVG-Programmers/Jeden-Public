@@ -5,12 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+
 
 namespace Jeden.Engine.Render
 {
     /// <summary>
     /// RenderComponent for a looped animation sequence.
     /// </summary>
+    
+    [DataContract]
     public class AnimationRenderComponent : RenderComponent 
     {
         Animation Animation;
@@ -20,6 +25,7 @@ namespace Jeden.Engine.Render
             get { return Animation.FrameTime; }
             set { Animation.FrameTime = value; }
         }
+
         public AnimationRenderComponent(GameObject parent) : base(parent) 
         {
             Animation = new Animation();
@@ -50,7 +56,7 @@ namespace Jeden.Engine.Render
             base.Update(gameTime);
 
             Position = Parent.Position;
-            Animation.Update(gameTime.ElapsedGameTime.TotalSeconds);
+            Animation.Update(gameTime.TotalGameTime.TotalSeconds);
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)

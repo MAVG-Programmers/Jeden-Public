@@ -74,7 +74,7 @@ namespace Jeden.Engine.Render
             base.Update(gameTime);
 
             Position = Parent.Position;
-            CurrentAnimation.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            CurrentAnimation.Update(gameTime.TotalGameTime.TotalSeconds);
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)

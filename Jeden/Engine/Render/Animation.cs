@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using SFML.Window;
 using Jeden.Engine.Object;
 using SFML.Graphics;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 
 namespace Jeden.Engine.Render
@@ -14,11 +16,13 @@ namespace Jeden.Engine.Render
     /// Internal animation class to share code between AnimationRenderComponent and AnimationSetRenderComponent.
     /// </summary>
     /// 
+    [DataContract]
     class Animation 
     {
         /// <summary>
         /// The image part of a frame. 
         /// </summary>
+
         public struct SubImage
         {
             public Texture Texture;
@@ -30,11 +34,16 @@ namespace Jeden.Engine.Render
         {
             FrameTime = 0;
             CurrentFrame = 0;
-            TimeAccum = 0.0f;
             Frames = new List<SubImage>();
         }
 
         public float FrameTime { get; set; }
+        List<SubImage> Frames;
+
+        int CurrentFrame;
+        double NextUpdate;
+        double Time;
+
 
         /// <summary>
         /// Adds a frame as the last frame of the animation.
@@ -84,13 +93,13 @@ namespace Jeden.Engine.Render
         /// Updates the animation[frame counter].
         /// </summary>
         /// <param name="deltaTime"></param>
-        public void Update(double deltaTime)
+        public void Update(double time)
         {
-            TimeAccum += deltaTime;
+            Time = time;
 
-            if (TimeAccum > FrameTime)
+            if (Time > NextUpdate)
             {
-                TimeAccum -= FrameTime;
+                NextUpdate += FrameTime;
                 CurrentFrame = (CurrentFrame + 1) % Frames.Count;
             }
         }
@@ -100,13 +109,9 @@ namespace Jeden.Engine.Render
         /// </summary>
         public void Reset()
         {
-            TimeAccum = 0.0f;
+            NextUpdate = Time;
             CurrentFrame = 0;
         }
 
-        int CurrentFrame;
-        double TimeAccum;
-
-        List<SubImage> Frames;
     }
 }

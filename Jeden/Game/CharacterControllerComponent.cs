@@ -35,6 +35,8 @@ namespace Jeden.Game
             AnimationRenderComponent = (AnimationRenderComponent) Parent.GetComponent<RenderComponent>();
             PhysicsComponent = Parent.GetComponent<PhysicsComponent>();
 
+            FeetColliders = new List<GameObject>();
+
             Debug.Assert(AnimationRenderComponent != null);
             Debug.Assert(PhysicsComponent != null);
         }
@@ -54,11 +56,37 @@ namespace Jeden.Game
             }
             if(message is JumpMessage)
             {
-                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -1000));
+                if (FeetColliders.Count > 0)
+                {
+                    PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -300000));
+                }
             }
+            if(message is CollisionMessage)
+            {
+                CollisionMessage collisionMsg = message as CollisionMessage;
+                if(collisionMsg.Contact.Manifold.LocalNormal.Y > 0)
+                {
+                    FeetColliders.Add(collisionMsg.GameObject);
+                }
+            }
+            if (message is SeperationMessage)
+            {
+                SeperationMessage seperationMsg = message as SeperationMessage;
+                if (FeetColliders.Contains(seperationMsg.GameObject))
+                {
+                    FeetColliders.Remove(seperationMsg.GameObject);
+                }
+            }
+        }
+
+        public override void Update(Engine.GameTime gameTime)
+        {
+            base.Update(gameTime);
         }
 
         AnimationRenderComponent AnimationRenderComponent; // should be animSet
         PhysicsComponent PhysicsComponent;
+
+        List<GameObject> FeetColliders;
     }
 }

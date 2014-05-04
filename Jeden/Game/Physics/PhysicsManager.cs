@@ -26,6 +26,17 @@ namespace Jeden.Game.Physics
         public Contact Contact;
     }
 
+    class SeperationMessage : Message
+    {
+        public SeperationMessage(GameObject gameObject, Object sender)
+            : base(sender)
+        {
+            GameObject = gameObject;
+        }
+
+        public GameObject GameObject;
+    }
+
     class PhysicsManager
     {
         //TODO: integrate Farseer physics
@@ -70,6 +81,7 @@ namespace Jeden.Game.Physics
             PhysicsComponent comp = new PhysicsComponent(owner, body);
             body.UserData = owner;
             body.OnCollision += OnFixtureCollision;
+            body.OnSeparation += OnFixtureSeperation;
             Components.Add(comp);
             return comp;
         }
@@ -96,6 +108,14 @@ namespace Jeden.Game.Physics
             gameObjectA.HandleMessage(new CollisionMessage(gameObjectB, contact, this));
 
             return true;
+        }
+
+        void OnFixtureSeperation(Fixture fixtureA, Fixture fixtureB)
+        {
+            GameObject gameObjectA = (GameObject)fixtureA.Body.UserData;
+            GameObject gameObjectB = (GameObject)fixtureB.Body.UserData;
+
+            gameObjectA.HandleMessage(new SeperationMessage(gameObjectB, this));
         }
     }
 }

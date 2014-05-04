@@ -15,9 +15,9 @@ namespace Jeden.Game
 {
     class GameObjectFactory
     {
-        public static Player CreatePlayer(Vector2f position)
+        public static GameObject CreatePlayer(Vector2f position)
         {
-            Player player = new Player(GameState);
+            GameObject player = new GameObject(GameState);
 
             Texture texture = new Texture("assets/player.png");
             Texture texture2 = new Texture("assets/test.png");

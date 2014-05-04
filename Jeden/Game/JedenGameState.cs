@@ -24,7 +24,7 @@ namespace Jeden.Game
     /// </summary>
     class JedenGameState : GameState
     {
-        Player player;
+        GameObject player;
         GameObject weapon;
 
         public PhysicsManager PhysicsMgr;
@@ -47,7 +47,7 @@ namespace Jeden.Game
         {
             GameObjectFactory.RenderMgr = RenderMgr; // TODO: put somewhere better
 
-            player = GameObjectFactory.CreatePlayer(new Vector2f(0, 0));
+            player = GameObjectFactory.CreatePlayer(new Vector2f(100, 0));
             RenderMgr.Camera.Target = player;
 
             weapon = new GameObject(this);
@@ -94,7 +94,7 @@ namespace Jeden.Game
             }
 
             for (int i = 0; i < 10; i++)
-                GameObjectFactory.CreateEnemy(new Vector2f(i * 100, 100));
+                GameObjectFactory.CreateEnemy(new Vector2f(i * 100 + 500, 100));
 
             
         }
@@ -147,10 +147,10 @@ namespace Jeden.Game
 
         public override void Update(GameTime gameTime)
         {
-            InputHack();
-
-            base.Update(gameTime);
             PhysicsMgr.Update(gameTime);
+            InputHack();
+            base.Update(gameTime);
+
 
 
             //Draw frame last

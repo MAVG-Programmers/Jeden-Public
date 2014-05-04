@@ -1,5 +1,12 @@
 
 
 Setting GameOject position - this doesn't really work with PhysicsComponents since the physics component will just overwrite the position.
+
 Game state initialization -  GameState gets some of it's managers set by GameEngine but this is after the constructor is called. Needs an Initialize function or something.
- 
+
+Components without Managers. Need to update these in GameObject, but not update those with managers. Should a component with a manager hold a refrence to it's manger?
+This way if the Manager is not null, it is known to have a manager. This would make things like deletion of GameObjects easier as well.
+
+GameTime - TimeSpan.Milliseconds is deceptive as it if ofter 0, or if you sum the Milliseconds for a second it will be much less than 1000.
+Should this not be exposed(I'm new to C# so it might just be me). I've already made this error and I just noticed it in HealthComponent...]
+

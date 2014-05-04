@@ -14,8 +14,6 @@ namespace Jeden.Game
     {
         public Player(JedenGameState owner) : base(owner)
         {
-
-
         }
     }
 }

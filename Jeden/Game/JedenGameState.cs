@@ -93,7 +93,7 @@ namespace Jeden.Game
                 GameObjects.Add(go);
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
                 GameObjectFactory.CreateEnemy(new Vector2f(i * 100 + 500, 100));
 
             
@@ -107,6 +107,7 @@ namespace Jeden.Game
             // Manager m = comp.Manager;
             // m.RemoveComponenct(comp);
             // ??
+            /*
             foreach(Component comp in obj.Components.Values)
             {
                 if(comp is RenderComponent)
@@ -117,6 +118,8 @@ namespace Jeden.Game
             }
 
             GameObjects.Remove(obj);
+             */
+            obj.Valid = false;
         }
 
         void InputHack()
@@ -155,6 +158,31 @@ namespace Jeden.Game
 
             //Draw frame last
             RenderMgr.Update(gameTime);
+
+            int removed = 0;
+
+            for (int i = 0; i < GameObjects.Count; i++ )
+            {
+                if (GameObjects[i].Valid == false)
+                {
+                    GameObject temp = GameObjects[i];
+                    GameObjects[i] = GameObjects[GameObjects.Count - 1];
+                    removed++;
+
+                    foreach (Component comp in temp.Components.Values)
+                    {
+                        if (comp is RenderComponent)
+                            RenderMgr.RemoveComponent(comp as RenderComponent);
+
+                        if (comp is PhysicsComponent)
+                            PhysicsMgr.RemoveComponent(comp as PhysicsComponent);
+                    }
+
+                    temp = null;
+                }
+            }
+
+            GameObjects.RemoveRange(GameObjects.Count - removed, removed);
         }
 
     }

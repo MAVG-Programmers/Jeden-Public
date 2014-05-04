@@ -43,6 +43,7 @@ namespace Jeden.Game
 
         public override void HandleMessage(Message message)
         {
+            //TODO: get magic numbers out of here.
             if(message is WalkLeftMessage)
             {
                 PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(-1000.0f, 0));
@@ -58,7 +59,7 @@ namespace Jeden.Game
             {
                 if (FeetColliders.Count > 0)
                 {
-                    PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -300000));
+                    PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -600000));
                 }
             }
             if(message is CollisionMessage)
@@ -87,6 +88,6 @@ namespace Jeden.Game
         AnimationRenderComponent AnimationRenderComponent; // should be animSet
         PhysicsComponent PhysicsComponent;
 
-        List<GameObject> FeetColliders;
+        List<GameObject> FeetColliders; // probably not the best way to do this...
     }
 }

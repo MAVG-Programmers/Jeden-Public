@@ -75,6 +75,7 @@ namespace Jeden.Game
         {
             if (CurrentHealth <= 0)
             {
+                Parent.Valid = false; // HACK.
                 Parent.HandleMessage(new DeathMessage(this));
             }
             else

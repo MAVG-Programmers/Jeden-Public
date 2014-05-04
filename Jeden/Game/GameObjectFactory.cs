@@ -18,6 +18,7 @@ namespace Jeden.Game
         public static GameObject CreatePlayer(Vector2f position)
         {
             GameObject player = new GameObject(GameState);
+            player.Position = position;
 
             Texture texture = new Texture("assets/player.png");
             Texture texture2 = new Texture("assets/test.png");

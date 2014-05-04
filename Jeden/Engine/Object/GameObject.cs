@@ -24,6 +24,9 @@ namespace Jeden.Engine.Object
         /// </summary>
         public Vector2f Position;
         public GameState OwningState { get; set; }
+        public bool Valid {get; set;} // Destroy a game object by setting valid to false. The object will be allowed to cary out the frame. 
+                    // The last thing a frame does is remove all invalid objects. It is the responsibility of objects holding refrences to
+                    // GameObjects to check there Valid before attempting to manipulate them.
 
         /// <summary>
         /// A new instance of GameObject.
@@ -33,6 +36,7 @@ namespace Jeden.Engine.Object
             Components = new Dictionary<Type, Component>();
             OwningState = owner;
             Position = new Vector2f(0.0f, 0.0f);
+            Valid = true;
         }
 
         /// <summary>

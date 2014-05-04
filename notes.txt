@@ -1,0 +1,5 @@
+
+
+Setting GameOject position - this doesn't really work with PhysicsComponents since the physics component will just overwrite the position.
+Game state initialization -  GameState gets some of it's managers set by GameEngine but this is after the constructor is called. Needs an Initialize function or something.
+ 

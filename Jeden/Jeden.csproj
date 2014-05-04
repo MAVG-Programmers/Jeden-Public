@@ -63,6 +63,7 @@
     <Compile Include="Engine\Object\GameObject.cs" />
     <Compile Include="Engine\GameState.cs" />
     <Compile Include="Engine\GameTime.cs" />
+    <Compile Include="Engine\Object\Message.cs" />
     <Compile Include="Engine\Render\Animation.cs" />
     <Compile Include="Engine\Render\AnimationRenderComponent.cs" />
     <Compile Include="Engine\Render\AnimationSetRenderComponent.cs" />
@@ -92,6 +93,10 @@
     <Compile Include="Engine\TileMap\TiledSharp\zlib\ZlibStream.cs" />
     <Compile Include="Engine\TileMap\TileMap.cs" />
     <Compile Include="Engine\TileMap\TiledSharp\Tileset.cs" />
+    <Compile Include="Game\AttackComponent.cs" />
+    <Compile Include="Game\CharacterControllerComponent.cs" />
+    <Compile Include="Game\GameObjectFactory.cs" />
+    <Compile Include="Game\HealthComponent.cs" />
     <Compile Include="Game\JedenGameState.cs" />
     <Compile Include="Game\JedenPlayerInput.cs" />
     <Compile Include="Game\Physics\PhysicsManager.cs" />
@@ -99,6 +104,7 @@
     <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="Game\Physics\PhysicsComponent.cs" />
     <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\WeaponComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Render\RenderComponent.cs" />

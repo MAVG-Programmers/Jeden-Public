@@ -37,6 +37,11 @@ namespace Jeden.Engine
         private InputManager InputMgr;
 
         /// <summary>
+        /// The InputManager of the game.
+        /// </summary>
+        private Music Music;
+
+        /// <summary>
         /// A new instance of GameEngine.
         /// </summary>
         public GameEngine()
@@ -45,6 +50,7 @@ namespace Jeden.Engine
             InputMgr = new InputManager(this);
             DeltaTime = new GameTime();
             Window = new RenderWindow(new VideoMode(800, 600), "Jeden");
+
         }
 
         /// <summary>
@@ -53,9 +59,10 @@ namespace Jeden.Engine
         /// <param name="state">The pushed GameState</param>
         public void PushState(GameState state)
         {
-            GameStates.Push(state);
             state.SetInputManager(InputMgr);
             state.SetRenderTarget(Window);
+            state.SetMusic(Music);
+            GameStates.Push(state);
         }
 
         /// <summary>
@@ -74,7 +81,6 @@ namespace Jeden.Engine
         /// <summary>
         /// Runs the GameEngine.
         /// </summary>
-        /// <param name="title">The title of the game's window.</param>
         public void Run() 
         {
             Stopwatch stopwatch = new Stopwatch();

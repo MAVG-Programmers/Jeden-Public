@@ -17,7 +17,6 @@ namespace Jeden.Engine.Render
     {
         public Camera Camera { get; set; }
         
-        RenderTarget target;
         public RenderTarget Target { get; set; }
 
         /// <summary>
@@ -48,14 +47,22 @@ namespace Jeden.Engine.Render
         public void Draw()
         {
             Target.SetView(Camera);
-
             
-            Components.Sort(new ZComparer());
+            List<RenderComponent> visibles = new List<RenderComponent>();
 
             foreach (RenderComponent rComp in Components)
             {
-                rComp.Draw(this, Camera);
+                if(Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
+                    visibles.Add(rComp);
             }
+
+            //visibles.Sort(new TextureComparer());
+            visibles.Sort(new ZComparer());
+
+            foreach(RenderComponent visible in visibles)
+                visible.Draw(this, Camera);
+
+
         }
 
         class ZComparer : IComparer<RenderComponent>
@@ -144,6 +151,12 @@ namespace Jeden.Engine.Render
 
             Target.Draw(vertices, PrimitiveType.Quads, rs);
 
+        }
+
+        public void RemoveComponent(RenderComponent comp)
+        {
+            if(Components.Contains(comp))
+                Components.Remove(comp);
         }
 
 

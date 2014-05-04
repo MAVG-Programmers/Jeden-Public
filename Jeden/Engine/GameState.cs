@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SFML.Graphics;
+using SFML.Audio;
 using Jeden.Engine.Object;
 using Jeden.Engine.Render;
 
@@ -14,6 +15,7 @@ namespace Jeden.Engine
     /// </summary>
     public class GameState
     {
+
         /// <summary>
         /// The list of maintained GameObjects.
         /// </summary>
@@ -24,6 +26,11 @@ namespace Jeden.Engine
         /// The RenderManager of this GameState
         /// </summary>
         public RenderManager RenderMgr;
+
+        /// <summary>
+        /// The Music of this GameState
+        /// </summary>
+        public Music Music;
 
         /// <summary>
         /// The control map for this GameState.
@@ -61,6 +68,12 @@ namespace Jeden.Engine
             RenderMgr.Draw();
         }
 
+        void PlayMusic(String filename)
+        {
+            Music = new Music(filename);
+            Music.Play();
+        }
+
         /// <summary>
         /// Sets the InputManager that this GameState's ControlMap watches
         /// </summary>
@@ -73,6 +86,11 @@ namespace Jeden.Engine
         public void SetRenderTarget(RenderTarget target)
         {
             RenderMgr.Target = target;
+        }
+
+        public void SetMusic(Music music)
+        {
+            Music = music;
         }
     }
 }

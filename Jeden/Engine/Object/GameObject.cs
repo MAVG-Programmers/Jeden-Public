@@ -41,7 +41,12 @@ namespace Jeden.Engine.Object
         /// <param name="gameTime">The time difference to the last frame.</param>
         public virtual void Update(GameTime gameTime)
         {
-
+            //THIS IS NOT RIGHT!!
+            // DOUBLE UPDATES COMPONENTS WITH MANAGER!
+            foreach(Component comp in Components.Values)
+            {
+                comp.Update(gameTime);
+            }
         }
 
         /// <summary>
@@ -51,7 +56,7 @@ namespace Jeden.Engine.Object
         /// <returns>true if GameObject owns a Component of type T; false otherwise.</returns>
         public bool ContainsComponent<T>() where T : Component
         {
-            return Components.ContainsKey(typeof(Task));
+            return Components.ContainsKey(typeof(T));
         }
 
         /// <summary>
@@ -88,6 +93,15 @@ namespace Jeden.Engine.Object
         public void RemoveComponent<T>() where T : Component 
         {
             Components.Remove(typeof(T));
+        }
+
+        public void HandleMessage(Message message)
+        {
+            foreach(Component comp in Components.Values)
+            {
+                if (comp != message.Sender)
+                    comp.HandleMessage(message);
+            }
         }
     }
 }

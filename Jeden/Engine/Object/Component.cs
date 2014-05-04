@@ -13,6 +13,7 @@ namespace Jeden.Engine.Object
     [Serializable]
     public class Component
     {
+
         /// <summary>
         /// The GameObject that owns this Component.
         /// </summary>
@@ -35,5 +36,11 @@ namespace Jeden.Engine.Object
         {
 
         }
+
+        public virtual void HandleMessage(Message message)
+        {
+
+        }
+
     }
 }

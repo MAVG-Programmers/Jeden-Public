@@ -11,6 +11,10 @@ using SFML.Graphics;
 using SFML.Window;
 using Microsoft.Xna.Framework;
 using Jeden.Engine.TileMap;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
+using System.Diagnostics;
+
 
 namespace Jeden.Game
 {
@@ -21,7 +25,7 @@ namespace Jeden.Game
     class JedenGameState : GameState
     {
         Player player;
-
+        GameObject weapon;
 
         public PhysicsManager PhysicsMgr;
 
@@ -32,14 +36,25 @@ namespace Jeden.Game
         {
             ControlMap = new JedenPlayerInput(); // TODO: not setting the InputMap
             PhysicsMgr = new PhysicsManager();
+            GameObjectFactory.PhysicsMgr = PhysicsMgr;
+            GameObjectFactory.GameState = this;
+
             GenTestLevel();
+            
         }
 
         public void GenTestLevel()
         {
-            player = new Player(this);
-            GameObjects.Add(player);
-            RenderMgr.Camera.Target = GameObjects[0];
+            GameObjectFactory.RenderMgr = RenderMgr; // TODO: put somewhere better
+
+            player = GameObjectFactory.CreatePlayer(new Vector2f(0, 0));
+            RenderMgr.Camera.Target = player;
+
+            weapon = new GameObject(this);
+            WeaponComponent weaponComp = new WeaponComponent(this, weapon);
+            weapon.AddComponent(weaponComp);
+            GameObjects.Add(weapon);
+            weaponComp.AttackRate = 1.0f;
 
             TileMap tileMap = new TileMap("assets/testmap.tmx");
 
@@ -62,7 +77,7 @@ namespace Jeden.Game
                 prc.WorldWidth = sprite.Width;
                 prc.WorldHeight = sprite.Height;
                 prc.ZIndex = sprite.ZIndex;
-                go.AddComponent<ParallaxRenderComponent>(prc);
+                go.AddComponent<RenderComponent>(prc);
                 GameObjects.Add(go);
 
             }
@@ -75,13 +90,33 @@ namespace Jeden.Game
                 go = new GameObject(this);
                 go.Position = pobj.Position;
                 PhysicsComponent pc = PhysicsMgr.MakeNewComponent(go, pobj.Width, pobj.Height, false);
-                //SpriteRenderComponent src = RenderMgr.MakeNewSpriteComponent(go, texture);
-
-                //src.ZIndex = 100;
-               // go.AddComponent(src);
                 GameObjects.Add(go);
-            }           
+            }
 
+            for (int i = 0; i < 10; i++)
+                GameObjectFactory.CreateEnemy(new Vector2f(i * 100, 100));
+
+            
+        }
+
+
+
+        void RemoveGameObject(GameObject obj)
+        {
+            // should components hold an instance of their manager so that in situations like this we can simply do
+            // Manager m = comp.Manager;
+            // m.RemoveComponenct(comp);
+            // ??
+            foreach(Component comp in obj.Components.Values)
+            {
+                if(comp is RenderComponent)
+                    RenderMgr.RemoveComponent(comp as RenderComponent);
+
+                if (comp is PhysicsComponent)
+                    PhysicsMgr.RemoveComponent(comp as PhysicsComponent);
+            }
+
+            GameObjects.Remove(obj);
         }
 
         void InputHack()
@@ -89,17 +124,19 @@ namespace Jeden.Game
             //Temp hack until CommandMap is implemented
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Left))
             {
-                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(-1000.0f, 0));
-                player.GetComponent<RenderComponent>().FlipX = true;
+                player.HandleMessage(new WalkLeftMessage(player));
             }
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Right))
             {
-                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(1000.0f, 0));
-                player.GetComponent<RenderComponent>().FlipX = false;
+                player.HandleMessage(new WalkRightMessage(player));
             }
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Up))
             {
-                player.GetComponent<PhysicsComponent>().BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -1000));
+                player.HandleMessage(new JumpMessage(player));
+            }
+            if(ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Space))
+            {
+                weapon.HandleMessage(new AttackMessage(player.Position, new Vector2f(1, 0), null));
             }
         }
 

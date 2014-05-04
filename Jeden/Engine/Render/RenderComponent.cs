@@ -24,6 +24,19 @@ namespace Jeden.Engine.Render
         public Color Tint { get; set; }
         public int ZIndex { get; set; }
 
+        public virtual FloatRect GetScreenRect(Camera camera)
+        {
+            //TODO: DOES NOT WORK WITH ROTATIONS.
+
+            FloatRect rect;
+            rect.Width = WorldWidth;
+            rect.Height = WorldHeight;
+            rect.Top = Position.Y - WorldHeight * 0.5f;
+            rect.Left = Position.X - WorldWidth * 0.5f;
+
+            return rect;
+        }
+
         public RenderComponent(GameObject parent) : base(parent)
         {
             Tint = new Color(255, 255, 255, 255);

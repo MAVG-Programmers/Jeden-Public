@@ -24,6 +24,21 @@ namespace Jeden.Engine.Render
             TileWidth = tileWidth;
             TileHeight = tileHeight;
             Tiles = tiles;
+
+            WorldWidth = MapWidth * TileWidth;
+            WorldHeight = MapHeight * TileHeight;
+
+
+        }
+
+        public override FloatRect GetScreenRect(Camera camera)
+        {
+            FloatRect rect;
+            rect.Top = 0;
+            rect.Left = 0;
+            rect.Width = WorldWidth;
+            rect.Height = WorldHeight;
+            return rect;
         }
 
         public int MapWidth { get; private set; }

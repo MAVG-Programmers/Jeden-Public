@@ -8,6 +8,7 @@ using Jeden.Engine.Object;
 using SFML.Graphics;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Xml;
 
 
 namespace Jeden.Engine.Render
@@ -19,6 +20,7 @@ namespace Jeden.Engine.Render
     [DataContract]
     class Animation 
     {
+
         /// <summary>
         /// The image part of a frame. 
         /// </summary>

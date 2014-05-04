@@ -21,8 +21,21 @@ namespace Jeden.Engine.Render
         {
             if(Target != null)
                 Center = Target.Position;
-           
         }
+
+        public FloatRect ViewRect
+        {
+            get
+            {
+                FloatRect rect;
+                rect.Left = Center.X - Size.X * 0.5f;
+                rect.Top = Center.Y - Size.Y * 0.5f;
+                rect.Width = Size.X;
+                rect.Height = Size.Y;
+                return rect;
+            }
+        }
+       
 
         public GameObject Target { get; set; }
         

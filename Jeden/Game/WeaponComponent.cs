@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Jeden.Engine.Object;
+using Jeden.Game.Physics;
+using SFML.Window;
+using SFML.Graphics;
+using Jeden.Engine.Render;
+
+namespace Jeden.Game
+{
+
+    class AttackMessage : Message
+    {
+        public AttackMessage(Vector2f position, Vector2f direction, Component sender) : base(sender) 
+        {
+            Position = position;
+            Direction = direction;
+        }
+        public Vector2f Position;
+        public Vector2f Direction;
+    }
+
+    /// <summary>
+    /// Represents a weapon. Spawns GameObjects with AttackComponents for the actual attack or bullet firing.
+    /// </summary>
+    class WeaponComponent : Component
+    {
+        JedenGameState GameState;
+
+        static Texture Texture = new Texture("assets/player.png");
+
+        public float AttackRate { get; set; }
+        double LastAttack;
+        double Time;
+
+        public WeaponComponent(JedenGameState gameState, GameObject parent) : base(parent)
+        {
+            GameState = gameState;
+        }
+
+        public override void Update(Engine.GameTime gameTime)
+        {
+            Time = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        bool TryAttack(Vector2f position, Vector2f direction)
+        {
+            if (Time > LastAttack + AttackRate)
+            {
+                LastAttack = Time;
+                GameObjectFactory.CreateBullet(position, direction);
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void HandleMessage(Message message)
+        {
+            base.HandleMessage(message);
+
+            if (message is AttackMessage)
+            {
+                AttackMessage attackMsg = message as AttackMessage;
+                TryAttack(attackMsg.Position, attackMsg.Direction);
+            }
+        }
+    }
+}

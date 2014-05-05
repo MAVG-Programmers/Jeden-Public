@@ -55,7 +55,7 @@ namespace Jeden.Game
             if (Time > LastAttack + AttackRate)
             {
                 LastAttack = Time;
-                GameObjectFactory.CreateBullet(Owner, Position + AttackDirection * 70.0f, AttackDirection);
+                GameObjectFactory.CreateBullet(Owner, Position + AttackDirection * 40.0f, AttackDirection);
                 return true;
             }
 

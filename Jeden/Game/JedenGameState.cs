@@ -89,7 +89,11 @@ namespace Jeden.Game
 
                 go = new GameObject(this);
                 go.Position = pobj.Position;
-                PhysicsComponent pc = PhysicsMgr.MakeNewComponent(go, pobj.Width, pobj.Height, false);
+                PhysicsComponent pc = PhysicsMgr.MakeNewComponent(
+                    go, pobj.Width, pobj.Height,
+                    PhysicsManager.MapCategory,
+                    PhysicsManager.PlayerCategory | PhysicsManager.EnemyCategory,
+                    false);
                 GameObjects.Add(go);
             }
 

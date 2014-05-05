@@ -14,6 +14,8 @@ using FarseerPhysics.Dynamics.Contacts;
 namespace Jeden.Game.Physics
 {
 
+    
+
     class CollisionMessage : Message
     {
         public CollisionMessage(GameObject gameObject, Contact contact, Object sender) : base(sender)
@@ -39,6 +41,10 @@ namespace Jeden.Game.Physics
 
     class PhysicsManager
     {
+        public const Category PlayerCategory = Category.Cat1;
+        public const Category EnemyCategory = Category.Cat2;
+        public const Category MapCategory = Category.Cat3;
+
         //TODO: integrate Farseer physics
         List<PhysicsComponent> Components;
         private World _world;
@@ -63,8 +69,10 @@ namespace Jeden.Game.Physics
             
         }
 
-        public PhysicsComponent MakeNewComponent(GameObject owner, float width, float height, bool dynamic)
+        public PhysicsComponent MakeNewComponent(GameObject owner, float width, float height, Category categories, Category collidesWith, bool dynamic)
         {
+
+           
             //Fixed density of 1.0
             var body = BodyFactory.CreateRectangle(_world, width, height, 1.0f);
             body.Position = new Vector2(owner.Position.X, owner.Position.Y);
@@ -82,6 +90,9 @@ namespace Jeden.Game.Physics
             body.UserData = owner;
             body.OnCollision += OnFixtureCollision;
             body.OnSeparation += OnFixtureSeperation;
+            body.CollidesWith = collidesWith;
+            body.CollisionCategories = categories;
+            
             Components.Add(comp);
             return comp;
         }
@@ -107,7 +118,7 @@ namespace Jeden.Game.Physics
 
             gameObjectA.HandleMessage(new CollisionMessage(gameObjectB, contact, this));
 
-            return true;
+            return true; // TODO: how to handle this???
         }
 
         void OnFixtureSeperation(Fixture fixtureA, Fixture fixtureB)

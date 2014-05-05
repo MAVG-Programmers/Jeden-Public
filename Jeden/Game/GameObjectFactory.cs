@@ -33,7 +33,11 @@ namespace Jeden.Game
             arc.FrameTime = 1.0f;
 
             player.AddComponent<RenderComponent>(arc);
-            player.AddComponent<PhysicsComponent>(PhysicsMgr.MakeNewComponent(player, 64, 128, true));
+            player.AddComponent<PhysicsComponent>(PhysicsMgr.MakeNewComponent(
+                player, 64, 128, 
+                PhysicsManager.PlayerCategory, 
+                PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, 
+                true));
 
             player.AddComponent(new CharacterControllerComponent(player));
 
@@ -52,7 +56,8 @@ namespace Jeden.Game
             GameState.GameObjects.Add(gameObject);
             gameObject.Position = position;
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40, true);
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40,
+                PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, true);
             physicsComp.BoundingBox.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
             gameObject.AddComponent(physicsComp);
 
@@ -89,7 +94,7 @@ namespace Jeden.Game
             enemy.AddComponent<RenderComponent>(arc);
             enemy.AddComponent(new HealthComponent(enemy, 100, 1));
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(enemy, 54, 128, true);
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(enemy, 54, 128, PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, true);
             enemy.AddComponent<PhysicsComponent>(physicsComp);
 
             CharacterControllerComponent charControllerComp = new CharacterControllerComponent(enemy);

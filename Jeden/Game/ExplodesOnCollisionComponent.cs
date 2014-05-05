@@ -22,6 +22,7 @@ namespace Jeden.Game
             base.HandleMessage(message);
             if(message is CollisionMessage)
             {
+                // suicide
                 Parent.Valid = false;
             }
         }

@@ -14,13 +14,11 @@ namespace Jeden.Game
 
     class AttackMessage : Message
     {
-        public AttackMessage(Vector2f position, Vector2f direction, Component sender) : base(sender) 
+        public AttackMessage(Component sender) : base(sender) 
         {
-            Position = position;
-            Direction = direction;
+
         }
-        public Vector2f Position;
-        public Vector2f Direction;
+
     }
 
     /// <summary>
@@ -35,23 +33,29 @@ namespace Jeden.Game
         public float AttackRate { get; set; }
         double LastAttack;
         double Time;
+        Vector2f Position;
+        Vector2f AttackDirection;
+        GameObject Owner;
 
-        public WeaponComponent(JedenGameState gameState, GameObject parent) : base(parent)
+        public WeaponComponent(JedenGameState gameState, GameObject owner, GameObject parent) : base(parent)
         {
+            AttackDirection = new Vector2f(1, 0);
+            Owner = owner;
             GameState = gameState;
         }
 
         public override void Update(Engine.GameTime gameTime)
         {
             Time = gameTime.TotalGameTime.TotalSeconds;
+            Position = Owner.Position; // + offset
         }
 
-        bool TryAttack(Vector2f position, Vector2f direction)
+        bool TryAttack()
         {
             if (Time > LastAttack + AttackRate)
             {
                 LastAttack = Time;
-                GameObjectFactory.CreateBullet(position, direction);
+                GameObjectFactory.CreateBullet(Owner, Position + AttackDirection * 30.0f, AttackDirection);
                 return true;
             }
 
@@ -65,7 +69,15 @@ namespace Jeden.Game
             if (message is AttackMessage)
             {
                 AttackMessage attackMsg = message as AttackMessage;
-                TryAttack(attackMsg.Position, attackMsg.Direction);
+                TryAttack();
+            }
+            if(message is WalkLeftMessage)
+            {
+                AttackDirection = new Vector2f(-1, 0);
+            }
+            if(message is WalkRightMessage)
+            {
+                AttackDirection = new Vector2f(1, 0);
             }
         }
     }

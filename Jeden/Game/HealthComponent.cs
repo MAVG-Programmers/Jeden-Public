@@ -75,7 +75,6 @@ namespace Jeden.Game
         {
             if (CurrentHealth <= 0)
             {
-                Parent.Valid = false; // HACK.
                 Parent.HandleMessage(new DeathMessage(this));
             }
             else
@@ -100,11 +99,14 @@ namespace Jeden.Game
 
             if(message is CollisionMessage)
             {
+
                 CollisionMessage collisionMsg = message as CollisionMessage;
                 if(collisionMsg.GameObject.ContainsComponent<AttackComponent>())
                 {
                     AttackComponent attackComp = collisionMsg.GameObject.GetComponent<AttackComponent>();
-                    Damage(attackComp.Damage);
+
+                    if(attackComp.Attacker != Parent) // bullets dont hurt those that fire them
+                        Damage(attackComp.Damage);
                 }
             }
         }

@@ -27,8 +27,8 @@ namespace Jeden.Game
 
             arc.AddFrame(texture);
             arc.AddFrame(texture2);
-            arc.WorldWidth = 64;
-            arc.WorldHeight = 128;
+            arc.WorldWidth = texture.Size.X;
+            arc.WorldHeight = texture.Size.Y;
             arc.ZIndex = 1000;
             arc.FrameTime = 1.0f;
 
@@ -44,7 +44,7 @@ namespace Jeden.Game
 
 
         static Texture BulletTexture = new Texture("assets/test.png");
-        public static GameObject CreateBullet(Vector2f position, Vector2f direction)
+        public static GameObject CreateBullet(GameObject attacker, Vector2f position, Vector2f direction)
         {
             float SPEED = 1000.0f;
 
@@ -57,7 +57,7 @@ namespace Jeden.Game
             gameObject.AddComponent(physicsComp);
 
 
-            AttackComponent attackComp = new AttackComponent(gameObject);
+            AttackComponent attackComp = new AttackComponent(attacker, gameObject);
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, BulletTexture);
@@ -76,13 +76,22 @@ namespace Jeden.Game
             GameObject enemy = new GameObject(GameState);
             GameState.GameObjects.Add(enemy);
             enemy.Position = position;
-            RenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(enemy, EnemyTexture);
-            renderComp.ZIndex = 30;
-            enemy.AddComponent(renderComp);
+            AnimationRenderComponent arc = RenderMgr.MakeNewAnimationComponent(enemy);
+
+            arc.AddFrame(EnemyTexture);
+            arc.WorldWidth = EnemyTexture.Size.X;
+            arc.WorldHeight = EnemyTexture.Size.Y;
+            arc.ZIndex = 1000;
+            arc.FrameTime = 1.0f;
+
+            enemy.AddComponent<RenderComponent>(arc);
             enemy.AddComponent(new HealthComponent(enemy, 100, 1));
 
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(enemy, 54, 128, true);
             enemy.AddComponent<PhysicsComponent>(physicsComp);
+
+            CharacterControllerComponent charControllerComp = new CharacterControllerComponent(enemy);
+            enemy.AddComponent(charControllerComp);
 
             return enemy;
         }

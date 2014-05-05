@@ -51,7 +51,7 @@ namespace Jeden.Game
             RenderMgr.Camera.Target = player;
 
             weapon = new GameObject(this);
-            WeaponComponent weaponComp = new WeaponComponent(this, weapon);
+            WeaponComponent weaponComp = new WeaponComponent(this, player, weapon);
             weapon.AddComponent(weaponComp);
             GameObjects.Add(weapon);
             weaponComp.AttackRate = 1.0f;
@@ -93,7 +93,7 @@ namespace Jeden.Game
                 GameObjects.Add(go);
             }
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 10; i++)
                 GameObjectFactory.CreateEnemy(new Vector2f(i * 100 + 500, 100));
 
             
@@ -127,19 +127,22 @@ namespace Jeden.Game
             //Temp hack until CommandMap is implemented
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Left))
             {
-                player.HandleMessage(new WalkLeftMessage(player));
+                player.HandleMessage(new WalkLeftMessage(null));
+                weapon.HandleMessage(new WalkLeftMessage(null));
             }
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Right))
             {
-                player.HandleMessage(new WalkRightMessage(player));
+                player.HandleMessage(new WalkRightMessage(null));
+                weapon.HandleMessage(new WalkRightMessage(null));
             }
             if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Up))
             {
-                player.HandleMessage(new JumpMessage(player));
+                player.HandleMessage(new JumpMessage(null));
+                weapon.HandleMessage(new JumpMessage(null));
             }
             if(ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Space))
             {
-                weapon.HandleMessage(new AttackMessage(player.Position, new Vector2f(1, 0), null));
+                weapon.HandleMessage(new AttackMessage(null));
             }
         }
 
@@ -148,20 +151,11 @@ namespace Jeden.Game
             RenderMgr.Draw();
         }
 
-        public override void Update(GameTime gameTime)
+        void RemoveInvalidGameObjects()
         {
-            PhysicsMgr.Update(gameTime);
-            InputHack();
-            base.Update(gameTime);
-
-
-
-            //Draw frame last
-            RenderMgr.Update(gameTime);
-
             int removed = 0;
 
-            for (int i = 0; i < GameObjects.Count; i++ )
+            for (int i = 0; i < GameObjects.Count; i++)
             {
                 if (GameObjects[i].Valid == false)
                 {
@@ -183,6 +177,18 @@ namespace Jeden.Game
             }
 
             GameObjects.RemoveRange(GameObjects.Count - removed, removed);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            PhysicsMgr.Update(gameTime);
+            InputHack();
+            base.Update(gameTime);
+
+            //Draw frame last
+            RenderMgr.Update(gameTime);
+
+            RemoveInvalidGameObjects();
         }
 
     }

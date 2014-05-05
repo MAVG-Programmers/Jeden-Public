@@ -62,6 +62,10 @@ namespace Jeden.Game
                     PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -600000));
                 }
             }
+            if(message is DeathMessage)
+            {
+                Parent.Valid = false;
+            }
             if(message is CollisionMessage)
             {
                 CollisionMessage collisionMsg = message as CollisionMessage;

@@ -14,10 +14,11 @@ namespace Jeden.Game
     class AttackComponent : Component 
     {
         public float Damage { get; set; }
+        public GameObject Attacker {get; set;}
 
-        public AttackComponent(GameObject parent) : base(parent)
+        public AttackComponent(GameObject attacker, GameObject parent) : base(parent)
         {
-
+            Attacker = attacker;
             Damage = 100;
         }
     }

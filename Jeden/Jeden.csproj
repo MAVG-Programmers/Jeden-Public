@@ -95,6 +95,7 @@
     <Compile Include="Engine\TileMap\TiledSharp\Tileset.cs" />
     <Compile Include="Game\AttackComponent.cs" />
     <Compile Include="Game\CharacterControllerComponent.cs" />
+    <Compile Include="Game\ExplodesOnCollisionComponent.cs" />
     <Compile Include="Game\GameObjectFactory.cs" />
     <Compile Include="Game\HealthComponent.cs" />
     <Compile Include="Game\JedenGameState.cs" />

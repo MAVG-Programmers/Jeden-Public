@@ -154,15 +154,17 @@ namespace Jeden.Game
         void RemoveInvalidGameObjects()
         {
             int removed = 0;
+            int end = GameObjects.Count;
 
-            for (int i = 0; i < GameObjects.Count; i++)
+            for (int i = 0; i < end; i++)
             {
                 if (GameObjects[i].Valid == false)
                 {
                     GameObject temp = GameObjects[i];
-                    GameObjects[i] = GameObjects[GameObjects.Count - 1];
+                    GameObjects[i] = GameObjects[end - 1];
                     removed++;
-
+                    end--;
+                    
                     foreach (Component comp in temp.Components.Values)
                     {
                         if (comp is RenderComponent)
@@ -171,8 +173,6 @@ namespace Jeden.Game
                         if (comp is PhysicsComponent)
                             PhysicsMgr.RemoveComponent(comp as PhysicsComponent);
                     }
-
-                    temp = null;
                 }
             }
 

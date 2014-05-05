@@ -26,7 +26,7 @@ namespace Jeden.Game
             AnimationRenderComponent arc = RenderMgr.MakeNewAnimationComponent(player);
 
             arc.AddFrame(texture);
-            arc.AddFrame(texture2);
+            //arc.AddFrame(texture2);
             arc.WorldWidth = texture.Size.X;
             arc.WorldHeight = texture.Size.Y;
             arc.ZIndex = 1000;
@@ -43,7 +43,7 @@ namespace Jeden.Game
         }
 
 
-        static Texture BulletTexture = new Texture("assets/test.png");
+        static Texture BulletTexture = new Texture("assets/bullet.png");
         public static GameObject CreateBullet(GameObject attacker, Vector2f position, Vector2f direction)
         {
             float SPEED = 1000.0f;
@@ -52,7 +52,7 @@ namespace Jeden.Game
             GameState.GameObjects.Add(gameObject);
             gameObject.Position = position;
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 10, 10, true);
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40, true);
             physicsComp.BoundingBox.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
             gameObject.AddComponent(physicsComp);
 
@@ -61,10 +61,12 @@ namespace Jeden.Game
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, BulletTexture);
-            renderComp.WorldWidth = 10;
-            renderComp.WorldHeight = 10;
+            renderComp.WorldWidth = 40;
+            renderComp.WorldHeight = 40;
             renderComp.ZIndex = 100;
             gameObject.AddComponent(renderComp);
+
+            gameObject.AddComponent(new ExplodesOnCollisionComponent(gameObject));
 
             return gameObject;
         }

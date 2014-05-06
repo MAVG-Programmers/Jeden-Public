@@ -49,7 +49,7 @@ namespace Jeden.Engine.Render
             }
             float dif = dxLen - len;
 
-            float slopPercent = 0.8f;
+            float slopPercent = 0.1f;
             if (Math.Abs(dif) > slopPercent * len)
             {
                 float slop = dif > 0.0f ? slopPercent * len : -slopPercent * len;
@@ -65,7 +65,6 @@ namespace Jeden.Engine.Render
         public const int nParticlesX = 11;
         public const int nParticlesY = 9;
         public const int nParticles = nParticlesX * nParticlesY;
-        public const int nClothJoints = 500; //2 * (nParticlesX) * (nParticlesY-1);
         public const float patchSize = 10.0f;
         public const int numIterations = 3;
 
@@ -155,7 +154,7 @@ namespace Jeden.Engine.Render
             for (int i = 0; i < nParticles; i++)
             {
                 Vector2f tmp = particles[i].x;
-                particles[i].x += 0.98f * (particles[i].x - particles[i].x0) + new Vector2f(0, dt);
+                particles[i].x += 0.98f * (particles[i].x - particles[i].x0) + new Vector2f(0, dt);  //TODO: this gravity is a hack
                 particles[i].x0 = tmp;
                 particles[i].f = new Vector2f(0.0f, 0.0f);
             }
@@ -163,6 +162,7 @@ namespace Jeden.Engine.Render
             for (int k = 0; k < numIterations; k++)
             {
                 particles[0].x = mouse;
+                particles[nParticlesX - 1].x = mouse + new Vector2f(20, 10);
                 for (int q = 0; q < joints.Count; q++)
                 {
                     joints[q].Solve();
@@ -220,10 +220,10 @@ namespace Jeden.Engine.Render
                     verts[2].Position = cloth.particles[(i + 1) + Cloth.nParticlesX * (j + 1)].x;
                     verts[3].Position = cloth.particles[i + Cloth.nParticlesX * (j + 1)].x;
 
-                    verts[0].Color = new SFML.Graphics.Color(255, 255, 255, 255);
-                    verts[1].Color = new SFML.Graphics.Color(255, 255, 255, 255);
-                    verts[2].Color = new SFML.Graphics.Color(255, 255, 255, 255);
-                    verts[3].Color = new SFML.Graphics.Color(255, 255, 255, 255);
+                    verts[0].Color = new SFML.Graphics.Color((byte)i, 255, 255, 255);
+                    verts[1].Color = new SFML.Graphics.Color((byte)j, 255, 255, 255);
+                    verts[2].Color = new SFML.Graphics.Color(255, 255, 0, 255);
+                    verts[3].Color = new SFML.Graphics.Color(255, 0, 255, 255);
 
                     verts[0].TexCoords = new Vector2f((float)((float)(i) / (float)(Cloth.nParticlesX - 1)), (float)((float)(j) / (float)(Cloth.nParticlesY - 1)));
                     verts[1].TexCoords = new Vector2f((float)((float)(i + 1) / (float)(Cloth.nParticlesX - 1)), (float)((float)(j) / (float)(Cloth.nParticlesY - 1)));

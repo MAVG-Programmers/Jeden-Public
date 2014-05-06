@@ -53,7 +53,7 @@ namespace Jeden.Game.Physics
         {
             Components = new List<PhysicsComponent>();
             //Create world with regular gravity
-            _world = new World(new Vector2(0f, 49.82f));
+            _world = new World(new Vector2(0f, 149.82f));
         }
 
         //Update tick all components owned by this manager
@@ -92,6 +92,8 @@ namespace Jeden.Game.Physics
             body.OnSeparation += OnFixtureSeperation;
             body.CollidesWith = collidesWith;
             body.CollisionCategories = categories;
+
+            body.LinearDamping = 1;
             
             Components.Add(comp);
             return comp;

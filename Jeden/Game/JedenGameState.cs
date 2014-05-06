@@ -100,7 +100,14 @@ namespace Jeden.Game
             for (int i = 0; i < 10; i++)
                 GameObjectFactory.CreateEnemy(new Vector2f(i * 100 + 500, 100));
 
-            
+            GameObject cloth = new GameObject(this);
+            GameObjects.Add(cloth);
+            BandanaRenderComponent crc = new BandanaRenderComponent(player, cloth);
+            crc.ZIndex = 150;
+            cloth.AddComponent<RenderComponent>(crc);
+            RenderMgr.Components.Add(crc);
+
+
         }
 
 

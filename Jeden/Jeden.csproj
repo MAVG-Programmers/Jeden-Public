@@ -67,6 +67,7 @@
     <Compile Include="Engine\Render\Animation.cs" />
     <Compile Include="Engine\Render\AnimationRenderComponent.cs" />
     <Compile Include="Engine\Render\AnimationSetRenderComponent.cs" />
+    <Compile Include="Engine\Render\BandanaRenderComponent.cs" />
     <Compile Include="Engine\Render\Camera.cs" />
     <Compile Include="Engine\Render\ParallaxRenderComponent.cs" />
     <Compile Include="Engine\Render\RenderManager.cs" />

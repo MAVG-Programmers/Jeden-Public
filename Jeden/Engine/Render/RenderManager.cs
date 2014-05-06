@@ -22,7 +22,7 @@ namespace Jeden.Engine.Render
         /// <summary>
         /// The list of RenderComponents that are maintained by the RenderManager.
         /// </summary>
-        private List<RenderComponent> Components;
+        public List<RenderComponent> Components;
 
         /// <summary>
         /// A new instance of RenderManager.
@@ -52,7 +52,7 @@ namespace Jeden.Engine.Render
 
             foreach (RenderComponent rComp in Components)
             {
-                if(Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
+               // if(Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
                     visibles.Add(rComp);
             }
 

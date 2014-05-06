@@ -46,20 +46,20 @@ namespace Jeden.Game
             //TODO: get magic numbers out of here.
             if(message is WalkLeftMessage)
             {
-                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(-1000.0f, 0));
+                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(-3000.0f, 0));
                 AnimationRenderComponent.FlipX = true;
             }
 
             if(message is WalkRightMessage)
             {
-                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(1000.0f, 0));
+                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(3000.0f, 0));
                 AnimationRenderComponent.FlipX = false;
             }
             if(message is JumpMessage)
             {
                 if (FeetColliders.Count > 0)
                 {
-                    PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -600000));
+                    PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -800000));
                 }
             }
             if(message is DeathMessage)

@@ -14,8 +14,6 @@ using FarseerPhysics.Dynamics.Contacts;
 namespace Jeden.Game.Physics
 {
 
-    
-
     class CollisionMessage : Message
     {
         public CollisionMessage(GameObject gameObject, Contact contact, Object sender) : base(sender)

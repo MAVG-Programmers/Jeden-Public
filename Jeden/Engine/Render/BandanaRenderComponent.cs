@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SFML.Window;
 using Jeden.Engine.Object;
+using SFML.Graphics;
 
 namespace Jeden.Engine.Render
 {
@@ -45,35 +46,41 @@ namespace Jeden.Engine.Render
             }
             else
             {
-                dir = new Vector2f(0.0f, -1.0f);
+                dir = new Vector2f(0.0f, 1.0f);
             }
             float dif = dxLen - len;
 
-            float slopPercent = 0.1f;
-            if (Math.Abs(dif) > slopPercent * len)
+            //float slopPercent = 0.02f;
+            //if (Math.Abs(dif) > slopPercent * len)
             {
-                float slop = dif > 0.0f ? slopPercent * len : -slopPercent * len;
-                Vector2f P = (dir / 2.0f) * (dif - slop);
-                p0.x += P;
-                p1.x -= P;
+                float slop = 0.0f;// dif > 0.0f ? slopPercent * len : -slopPercent * len;
+                Vector2f P = dir * (dif - slop);
+                float W = 1.0f/(1.0f/p0.m + 1.0f/p1.m);
+                float w1 = 1.0f / p0.m * W;
+                float w2 = 1.0f / p1.m * W;
+                p0.x += P * w1;
+                p1.x -= P * w2;
             }
         }
     }
 
     struct Cloth
     {
-        public const int nParticlesX = 11;
-        public const int nParticlesY = 9;
+        public const int nParticlesX = 12;
+        public const int nParticlesY = 12;
         public const int nParticles = nParticlesX * nParticlesY;
-        public const float patchSize = 10.0f;
-        public const int numIterations = 3;
+        public const float patchSize = 16.0f;
+        public const int numIterations = 1;
+        public const float JointLength = 6.0f;
 
         public void Init()
         {
             particles = new Particle[nParticles];
             for (int i = 0; i < nParticles; i++)
+            {
                 particles[i] = new Particle();
-            
+                particles[i].m = 1.0f;
+            }
             joints = new List<DistanceJoint>();
            
 
@@ -87,6 +94,7 @@ namespace Jeden.Engine.Render
                 }
             }
 
+            
             for (int y = 0; y < nParticlesY; y++)
             {
                 for (int x = 0; x < nParticlesX - 1; x++)
@@ -94,7 +102,7 @@ namespace Jeden.Engine.Render
                     DistanceJoint joint = new DistanceJoint();
                     joint.p0 = particles[x + y * nParticlesX];
                     joint.p1 = particles[x + 1 + y * nParticlesX];
-                    joint.len = 10;
+                    joint.len = JointLength;
                     joints.Add(joint);
                 }
             }
@@ -105,41 +113,45 @@ namespace Jeden.Engine.Render
                     DistanceJoint joint = new DistanceJoint();
                     joint.p0 = particles[x + y * nParticlesX];
                     joint.p1 = particles[x + (y + 1) * nParticlesX];
-                    joint.len = 10;
+                    joint.len = JointLength;
                     joints.Add(joint);
                 }
             }
-
+            
             /*
             for (int i = 0; i < nParticles; i++)
             {
                 if ((i + 1) % nParticlesX != 0 && i != nParticles - 1)
                 {
-                    joints[joint].p0 = particles[i];
-                    joints[joint].p1 = particles[i + 1];
-                    joints[joint].len = patchSize;
-                    joint++;
+                    DistanceJoint joint = new DistanceJoint();
+                    joint.p0 = particles[i];
+                    joint.p1 = particles[i + 1];
+                    joint.len = patchSize;
+                    joints.Add(joint);
                 }
                 if (i < nParticles - nParticlesX)
                 {
-                    joints[joint].len = patchSize;
-                    joints[joint].p0 = particles[i];
-                    joints[joint].p1 = particles[i + nParticlesY];
-                    joint++;
+                    DistanceJoint joint = new DistanceJoint();
+                    joint.len = patchSize;
+                    joint.p0 = particles[i];
+                    joint.p1 = particles[i + nParticlesY];
+                    joints.Add(joint);
                 }
                 if (((i + 1) % nParticlesX != 0 && i != nParticles - 1) && (i < nParticles - nParticlesX))
                 {
-                    joints[joint].len = (float)Math.Sqrt(2.0f * patchSize * patchSize);
-                    joints[joint].p0 = particles[i];
-                    joints[joint].p1 = particles[i + 1 + nParticlesY];
-                    joint++;
+                    DistanceJoint joint = new DistanceJoint();
+                    joint.len = (float)Math.Sqrt(2.0f * patchSize * patchSize);
+                    joint.p0 = particles[i];
+                    joint.p1 = particles[i + 1 + nParticlesY];
+                    joints.Add(joint);
                 }
                 if ((i % nParticlesX != 0 && i != 0) && (i < nParticles - nParticlesX))
                 {
-                    joints[joint].len = (float)Math.Sqrt(2.0f * patchSize * patchSize);
-                    joints[joint].p0 = particles[i];
-                    joints[joint].p1 = particles[i - 1 + nParticlesY];
-                    joint++;
+                    DistanceJoint joint = new DistanceJoint();
+                    joint.len = (float)Math.Sqrt(2.0f * patchSize * patchSize);
+                    joint.p0 = particles[i];
+                    joint.p1 = particles[i - 1 + nParticlesY];
+                    joints.Add(joint);
                 }
             }
              */
@@ -147,6 +159,8 @@ namespace Jeden.Engine.Render
 
         public void Step(Vector2f mouse, float dt)
         {
+            particles[0].m = float.PositiveInfinity;
+            particles[nParticlesX - 1].m = float.PositiveInfinity;
             for (int i = 0; i < joints.Count; i++)
             {
                 //	joints[i].AddForce();
@@ -154,15 +168,15 @@ namespace Jeden.Engine.Render
             for (int i = 0; i < nParticles; i++)
             {
                 Vector2f tmp = particles[i].x;
-                particles[i].x += 0.98f * (particles[i].x - particles[i].x0) + new Vector2f(0, dt);  //TODO: this gravity is a hack
-                particles[i].x0 = tmp;
-                particles[i].f = new Vector2f(0.0f, 0.0f);
+               particles[i].x += 0.98f * (particles[i].x - particles[i].x0) + new Vector2f(0, 0.5f * dt * dt * 1000);  //TODO: this gravity is a hack
+               particles[i].x0 = tmp;
+               particles[i].f = new Vector2f(0.0f, 0.0f);
             }
             
             for (int k = 0; k < numIterations; k++)
             {
                 particles[0].x = mouse;
-                particles[nParticlesX - 1].x = mouse + new Vector2f(20, 10);
+                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0);
                 for (int q = 0; q < joints.Count; q++)
                 {
                     joints[q].Solve();
@@ -178,6 +192,7 @@ namespace Jeden.Engine.Render
     class BandanaRenderComponent : RenderComponent
     {
         GameObject Target;
+        static Texture Texture = new Texture("assets/bullet.png");
 
         public BandanaRenderComponent(GameObject target, GameObject parent)
             : base(parent)
@@ -220,17 +235,23 @@ namespace Jeden.Engine.Render
                     verts[2].Position = cloth.particles[(i + 1) + Cloth.nParticlesX * (j + 1)].x;
                     verts[3].Position = cloth.particles[i + Cloth.nParticlesX * (j + 1)].x;
 
-                    verts[0].Color = new SFML.Graphics.Color((byte)i, 255, 255, 255);
-                    verts[1].Color = new SFML.Graphics.Color((byte)j, 255, 255, 255);
-                    verts[2].Color = new SFML.Graphics.Color(255, 255, 0, 255);
-                    verts[3].Color = new SFML.Graphics.Color(255, 0, 255, 255);
+                    verts[0].Color = new SFML.Graphics.Color(255, 255, 255, 255);
+                    verts[1].Color = new SFML.Graphics.Color(255, 255, 255, 255);
+                    verts[2].Color = new SFML.Graphics.Color(255, 255, 255, 255);
+                    verts[3].Color = new SFML.Graphics.Color(255, 255, 255, 255);
 
-                    verts[0].TexCoords = new Vector2f((float)((float)(i) / (float)(Cloth.nParticlesX - 1)), (float)((float)(j) / (float)(Cloth.nParticlesY - 1)));
-                    verts[1].TexCoords = new Vector2f((float)((float)(i + 1) / (float)(Cloth.nParticlesX - 1)), (float)((float)(j) / (float)(Cloth.nParticlesY - 1)));
-                    verts[2].TexCoords = new Vector2f((float)((float)(i + 1) / (float)(Cloth.nParticlesX - 1)), (float)((float)(j + 1) / (float)(Cloth.nParticlesY - 1)));
-                    verts[3].TexCoords = new Vector2f((float)(i) / (float)(Cloth.nParticlesX - 1), (float)(j + 1) / (float)(Cloth.nParticlesY - 1));
+                    verts[0].TexCoords = new Vector2f((float)((float)(i) / (float)(Cloth.nParticlesX - 1)) * Texture.Size.X, (float)((float)(j) / (float)(Cloth.nParticlesY - 1)) * Texture.Size.Y);
+                    verts[1].TexCoords = new Vector2f((float)((float)(i + 1) / (float)(Cloth.nParticlesX - 1)) * Texture.Size.X, (float)((float)(j) / (float)(Cloth.nParticlesY - 1)) * Texture.Size.Y);
+                    verts[2].TexCoords = new Vector2f((float)((float)(i + 1) / (float)(Cloth.nParticlesX - 1)) * Texture.Size.X, (float)((float)(j + 1) / (float)(Cloth.nParticlesY - 1)) * Texture.Size.Y);
+                    verts[3].TexCoords = new Vector2f((float)(i) / (float)(Cloth.nParticlesX - 1) * Texture.Size.X, (float)(j + 1) / (float)(Cloth.nParticlesY - 1) * Texture.Size.Y);
 
-                    renderMgr.Target.Draw(verts, SFML.Graphics.PrimitiveType.Quads);
+
+                    RenderStates renderStates = new RenderStates();
+                    renderStates.BlendMode = BlendMode.Alpha;
+                    renderStates.Shader = null;
+                    renderStates.Texture = Texture;
+                    renderStates.Transform = Transform.Identity;
+                    renderMgr.Target.Draw(verts, SFML.Graphics.PrimitiveType.Quads, renderStates);
                 }
             }
         }

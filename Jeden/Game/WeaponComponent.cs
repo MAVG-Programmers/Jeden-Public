@@ -26,22 +26,21 @@ namespace Jeden.Game
     /// </summary>
     class WeaponComponent : Component
     {
-        JedenGameState GameState;
 
         static Texture Texture = new Texture("assets/player.png");
 
         public float AttackRate { get; set; }
+        
         double LastAttack;
         double Time;
         Vector2f Position;
         Vector2f AttackDirection;
         GameObject Owner;
 
-        public WeaponComponent(JedenGameState gameState, GameObject owner, GameObject parent) : base(parent)
+        public WeaponComponent(GameObject owner, GameObject parent) : base(parent)
         {
             AttackDirection = new Vector2f(1, 0);
             Owner = owner;
-            GameState = gameState;
         }
 
         public override void Update(Engine.GameTime gameTime)

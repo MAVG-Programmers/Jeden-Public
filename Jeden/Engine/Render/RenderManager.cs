@@ -52,7 +52,7 @@ namespace Jeden.Engine.Render
 
             foreach (RenderComponent rComp in Components)
             {
-               // if(Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
+                if(Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
                     visibles.Add(rComp);
             }
 

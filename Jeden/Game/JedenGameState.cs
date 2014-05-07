@@ -45,13 +45,15 @@ namespace Jeden.Game
 
         public void GenTestLevel()
         {
+            // Just making a bunch of random stuff for now...
+
             GameObjectFactory.RenderMgr = RenderMgr; // TODO: put somewhere better
 
             player = GameObjectFactory.CreatePlayer(new Vector2f(100, 0));
             RenderMgr.Camera.Target = player;
 
             weapon = new GameObject(this);
-            WeaponComponent weaponComp = new WeaponComponent(this, player, weapon);
+            WeaponComponent weaponComp = new WeaponComponent(player, weapon);
             weapon.AddComponent(weaponComp);
             GameObjects.Add(weapon);
             weaponComp.AttackRate = 1.0f;
@@ -162,6 +164,9 @@ namespace Jeden.Game
             RenderMgr.Draw();
         }
 
+        /// <summary>
+        /// Removes all GameObjects with their Valid flag set to false. Also removes all their components from their managers
+        /// </summary>
         void RemoveInvalidGameObjects()
         {
             int removed = 0;

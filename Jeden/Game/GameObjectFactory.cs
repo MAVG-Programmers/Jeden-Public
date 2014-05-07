@@ -15,6 +15,11 @@ namespace Jeden.Game
 {
     class GameObjectFactory
     {
+        /// <summary>
+        /// Create's the main player
+        /// </summary>
+        /// <param name="position">The starting position of the player</param>
+        /// <returns></returns>
         public static GameObject CreatePlayer(Vector2f position)
         {
             GameObject player = new GameObject(GameState);
@@ -48,6 +53,13 @@ namespace Jeden.Game
 
 
         static Texture BulletTexture = new Texture("assets/bullet.png");
+        /// <summary>
+        /// Creates a new Bullet
+        /// </summary>
+        /// <param name="attacker">The GameObject that fired the bullet</param>
+        /// <param name="position">The starting position of the bullet</param>
+        /// <param name="direction">The direction in which the bullet was fired[needs to be unit length]</param>
+        /// <returns></returns>
         public static GameObject CreateBullet(GameObject attacker, Vector2f position, Vector2f direction)
         {
             float SPEED = 1000.0f;
@@ -77,6 +89,11 @@ namespace Jeden.Game
         }
 
         static Texture EnemyTexture = new Texture("assets/player.png");
+        /// <summary>
+        /// Create's an enemy
+        /// </summary>
+        /// <param name="position">the starting position of the enemy</param>
+        /// <returns></returns>
         public static GameObject CreateEnemy(Vector2f position)
         {
 

@@ -10,6 +10,9 @@ using Jeden.Engine.Object;
 
 namespace Jeden.Engine.Render
 {
+    /// <summary>
+    /// Camera, RenderComponents are drawn relative to the camera.
+    /// </summary>
     public class Camera : View
     {
         public Camera()
@@ -23,6 +26,10 @@ namespace Jeden.Engine.Render
                 Center = Target.Position;
         }
 
+        /// <summary>
+        /// The clip rect of the screen. 
+        /// No rotation yet...
+        /// </summary>
         public FloatRect ViewRect
         {
             get
@@ -36,7 +43,9 @@ namespace Jeden.Engine.Render
             }
         }
        
-
+        /// <summary>
+        /// The GameObject that the camera follows.
+        /// </summary>
         public GameObject Target { get; set; }
         
      

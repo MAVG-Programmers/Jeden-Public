@@ -175,8 +175,8 @@ namespace Jeden.Engine.Render
             
             for (int k = 0; k < numIterations; k++)
             {
-                particles[0].x = mouse;
-                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0);
+                particles[0].x = mouse + new Vector2f(-nParticlesX * JointLength, 0) / 2.0f + new Vector2f(32, -32);
+                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0) / 2.0f + new Vector2f(32, -32);
                 for (int q = 0; q < joints.Count; q++)
                 {
                     joints[q].Solve();
@@ -192,7 +192,7 @@ namespace Jeden.Engine.Render
     class BandanaRenderComponent : RenderComponent
     {
         GameObject Target;
-        static Texture Texture = new Texture("assets/bullet.png");
+        static Texture Texture = new Texture("assets/bandana.png");
 
         public BandanaRenderComponent(GameObject target, GameObject parent)
             : base(parent)
@@ -218,6 +218,14 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
             cloth.Step(Target.Position, (float)gameTime.ElapsedGameTime.TotalSeconds);
+        }
+
+        public override FloatRect GetScreenRect(Camera camera)
+        {
+            //Just do this unil the implimentation details are finalized
+            // to make sure it is drawn
+
+            return camera.ViewRect;
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)

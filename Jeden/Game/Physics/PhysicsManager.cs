@@ -111,6 +111,7 @@ namespace Jeden.Game.Physics
             }
         }
 
+        // Converts Farseer messages to game messages.
         bool OnFixtureCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             GameObject gameObjectA = (GameObject)fixtureA.Body.UserData;

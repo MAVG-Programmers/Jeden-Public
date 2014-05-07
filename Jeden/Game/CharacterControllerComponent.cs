@@ -28,8 +28,17 @@ namespace Jeden.Game
     }
 
     // Should this be split up between all the components it controls?
+
+
+    /// <summary>
+    /// Controls "Characters", things that Walk, Jump, Attack, Die and other "Character" actions.
+    /// </summary>
     class CharacterControllerComponent : Component
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="parent">GameObect that owns the component</param>
         public CharacterControllerComponent(GameObject parent) : base(parent)
         {
             AnimationRenderComponent = (AnimationRenderComponent) Parent.GetComponent<RenderComponent>();
@@ -84,10 +93,6 @@ namespace Jeden.Game
             }
         }
 
-        public override void Update(Engine.GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
 
         AnimationRenderComponent AnimationRenderComponent; // should be animSet
         PhysicsComponent PhysicsComponent;

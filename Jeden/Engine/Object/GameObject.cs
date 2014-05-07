@@ -99,6 +99,10 @@ namespace Jeden.Engine.Object
             Components.Remove(typeof(T));
         }
 
+        /// <summary>
+        /// Call this to send the component a message, or override it to handle a message.
+        /// </summary>
+        /// <param name="message">The message</param>
         public void HandleMessage(Message message)
         {
             foreach(Component comp in Components.Values)

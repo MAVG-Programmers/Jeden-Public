@@ -26,6 +26,17 @@ namespace Jeden.Engine.Render
             set { Animation.FrameTime = value; }
         }
 
+        public bool IsLooping
+        {
+            get { return Animation.IsLooping;  }
+            set { Animation.IsLooping = value;  }
+        }
+
+        public bool IsFinished()
+        {
+            return Animation.IsFinished;
+        }
+
         public AnimationRenderComponent(GameObject parent) : base(parent) 
         {
             Animation = new Animation();
@@ -56,7 +67,7 @@ namespace Jeden.Engine.Render
             base.Update(gameTime);
 
             Position = Parent.Position;
-            Animation.Update(gameTime.TotalGameTime.TotalSeconds);
+            Animation.Update(gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)

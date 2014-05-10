@@ -24,18 +24,17 @@ namespace Jeden.Game
     /// <summary>
     /// Represents a weapon. Spawns GameObjects with AttackComponents for the actual attack or bullet firing.
     /// </summary>
+    
     class WeaponComponent : Component
     {
 
-        static Texture Texture = new Texture("assets/player.png");
-
-        public float AttackRate { get; set; }
+        public float AttackDelay { get; set; }
         
-        double LastAttack;
-        double Time;
-        Vector2f Position;
-        Vector2f AttackDirection;
-        GameObject Owner;
+        protected double LastAttack;
+        protected double Time;
+        protected Vector2f Position;
+        protected Vector2f AttackDirection;
+        protected GameObject Owner;
 
         public WeaponComponent(GameObject owner, GameObject parent) : base(parent)
         {
@@ -49,17 +48,8 @@ namespace Jeden.Game
             Position = Owner.Position; // + offset
         }
 
-        bool TryAttack()
-        {
-            if (Time > LastAttack + AttackRate)
-            {
-                LastAttack = Time;
-                GameObjectFactory.CreateBullet(Owner, Position + AttackDirection * 40.0f, AttackDirection);
-                return true;
-            }
+        public virtual bool TryAttack() { return false; }
 
-            return false;
-        }
 
         public override void HandleMessage(Message message)
         {
@@ -78,6 +68,40 @@ namespace Jeden.Game
             {
                 AttackDirection = new Vector2f(1, 0);
             }
+        }
+    }
+
+    class MeleeWeaponComponent : WeaponComponent
+    {
+        public MeleeWeaponComponent(GameObject owner, GameObject parent) : base(owner, parent) { }
+
+        public override bool TryAttack()
+        {
+            if (Time > LastAttack + AttackDelay)
+            {
+                LastAttack = Time;
+                GameObjectFactory.CreateSword(Owner, Position, 95, 35, Math.Sign(AttackDirection.X));
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    class GunWeaponComponent : WeaponComponent 
+    {
+        public GunWeaponComponent(GameObject owner, GameObject parent) : base(owner, parent) {  }
+
+        public override bool TryAttack()
+        {
+            if (Time > LastAttack + AttackDelay)
+            {
+                LastAttack = Time;
+                GameObjectFactory.CreateBullet(Owner, Position + AttackDirection * 40.0f, AttackDirection);
+                return true;
+            }
+
+            return false;
         }
     }
 }

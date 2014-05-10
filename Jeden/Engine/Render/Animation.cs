@@ -37,9 +37,13 @@ namespace Jeden.Engine.Render
             FrameTime = 0;
             CurrentFrame = 0;
             Frames = new List<SubImage>();
+            IsLooping = true;
         }
 
         public float FrameTime { get; set; }
+        public bool IsLooping { get; set; }
+        public bool IsFinished { get; private set; } // set to true after the last frame is drawn for FrameTime of a non looping animation
+
         List<SubImage> Frames;
 
         int CurrentFrame;
@@ -51,7 +55,7 @@ namespace Jeden.Engine.Render
         /// Adds a frame as the last frame of the animation.
         /// </summary>
         /// <param name="texture">The texture to draw for the fame.</param>
-        /// <param name="subImageRect">The sub image rectange from the spriteshet</param>
+        /// <param name="subImageRect">The sub image rectangle from the spriteshet</param>
         public void AddFrame(Texture texture, IntRect subImageRect)
         {
             SubImage subImage;
@@ -95,14 +99,29 @@ namespace Jeden.Engine.Render
         /// Updates the animation[frame counter].
         /// </summary>
         /// <param name="deltaTime"></param>
-        public void Update(double time)
+        public void Update(double deltaTime)
         {
-            Time = time;
+            Time += deltaTime;
 
             if (Time > NextUpdate)
             {
-                NextUpdate += FrameTime;
-                CurrentFrame = (CurrentFrame + 1) % Frames.Count;
+                if (IsLooping)
+                {
+                    NextUpdate += FrameTime;
+                    CurrentFrame = (CurrentFrame + 1) % Frames.Count;
+                }
+                else
+                { 
+                    // If not looping just stop on the last frame.
+                    NextUpdate += FrameTime;
+                    CurrentFrame = (CurrentFrame + 1);
+                    if (CurrentFrame > Frames.Count - 1)
+                    {
+                        CurrentFrame = Frames.Count - 1;
+                        NextUpdate = float.PositiveInfinity;
+                        IsFinished = true;
+                    }
+                }
             }
         }
 
@@ -111,8 +130,9 @@ namespace Jeden.Engine.Render
         /// </summary>
         public void Reset()
         {
-            NextUpdate = Time;
+            NextUpdate = Time + FrameTime;
             CurrentFrame = 0;
+            IsFinished = false;
         }
 
     }

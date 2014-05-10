@@ -175,8 +175,8 @@ namespace Jeden.Engine.Render
             
             for (int k = 0; k < numIterations; k++)
             {
-                particles[0].x = mouse + new Vector2f(-nParticlesX * JointLength, 0) / 2.0f + new Vector2f(32, -32);
-                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0) / 2.0f + new Vector2f(32, -32);
+                particles[0].x = mouse + new Vector2f(-nParticlesX * JointLength, 0) / 2.0f + new Vector2f(0, -32);
+                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0) / 2.0f + new Vector2f(0, -32);
                 for (int q = 0; q < joints.Count; q++)
                 {
                     joints[q].Solve();

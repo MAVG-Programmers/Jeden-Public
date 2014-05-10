@@ -53,9 +53,9 @@ namespace Jeden.Engine
         public virtual void Update(GameTime gameTime)
         {
             //Health components tied directly to GameObjects receive update here
-            foreach (GameObject gameObject in GameObjects)
+            for(int i = 0; i < GameObjects.Count; i++)
             {
-                gameObject.Update(gameTime);
+                GameObjects[i].Update(gameTime);
             }
         }
 

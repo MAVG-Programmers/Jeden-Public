@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Jeden.Engine.Object;
 using Jeden.Game.Physics;
+using SFML.Window;
 
 namespace Jeden.Game
 {
@@ -22,7 +23,9 @@ namespace Jeden.Game
             base.HandleMessage(message);
             if(message is CollisionMessage)
             {
+                CollisionMessage collisionMessage = message as CollisionMessage;
                 // suicide
+                GameObjectFactory.CreateExplosion(Parent.Position);
                 Parent.Valid = false;
             }
         }

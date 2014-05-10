@@ -37,11 +37,6 @@ namespace Jeden.Engine
         private InputManager InputMgr;
 
         /// <summary>
-        /// The InputManager of the game.
-        /// </summary>
-        private Music Music;
-
-        /// <summary>
         /// A new instance of GameEngine.
         /// </summary>
         public GameEngine()
@@ -61,7 +56,6 @@ namespace Jeden.Engine
         {
             state.SetInputManager(InputMgr);
             state.SetRenderTarget(Window);
-            state.SetMusic(Music);
             GameStates.Push(state);
         }
 

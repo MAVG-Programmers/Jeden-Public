@@ -33,7 +33,11 @@ namespace Jeden.Engine.Render
             Camera = new Camera();
         }
 
-        //Update tick all components owned by this manager
+        /// <summary>
+        /// Update tick all components owned by this manager
+        /// </summary>
+        /// <param name="gameTime"></param>
+
         public void Update(GameTime gameTime)
         {
             Camera.Update(gameTime);
@@ -44,6 +48,9 @@ namespace Jeden.Engine.Render
             }
         }
 
+        /// <summary>
+        /// Draws all of the RenderComponents
+        /// </summary>
         public void Draw()
         {
             Target.SetView(Camera);
@@ -153,6 +160,10 @@ namespace Jeden.Engine.Render
 
         }
 
+        /// <summary>
+        /// Removes a render component from the list
+        /// </summary>
+        /// <param name="comp">The component to remove</param>
         public void RemoveComponent(RenderComponent comp)
         {
             if(Components.Contains(comp))

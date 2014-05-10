@@ -53,10 +53,13 @@ namespace Jeden.Game
             RenderMgr.Camera.Target = player;
 
             weapon = new GameObject(this);
-            WeaponComponent weaponComp = new WeaponComponent(player, weapon);
+            GunWeaponComponent weaponComp = new GunWeaponComponent(player, weapon);
             weapon.AddComponent(weaponComp);
             GameObjects.Add(weapon);
-            weaponComp.AttackRate = 1.0f;
+            weaponComp.AttackDelay = 1.0f;
+
+            player.AddComponent(new WeaponHoldingComponent(weaponComp, player));
+
 
             TileMap tileMap = new TileMap("assets/testmap.tmx");
 
@@ -109,7 +112,9 @@ namespace Jeden.Game
             cloth.AddComponent<RenderComponent>(crc);
             RenderMgr.Components.Add(crc);
 
-
+            Music = new SFML.Audio.Music("assets/Widzy.wav");
+       
+            Music.Play();
         }
 
 
@@ -155,7 +160,8 @@ namespace Jeden.Game
             }
             if(ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Space))
             {
-                weapon.HandleMessage(new AttackMessage(null));
+                player.HandleMessage(new AttackMessage(null));
+              //  weapon.HandleMessage(new AttackMessage(null));
             }
         }
 

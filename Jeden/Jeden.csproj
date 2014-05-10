@@ -97,8 +97,10 @@
     <Compile Include="Game\AttackComponent.cs" />
     <Compile Include="Game\CharacterControllerComponent.cs" />
     <Compile Include="Game\ExplodesOnCollisionComponent.cs" />
+    <Compile Include="Game\FrameLifetimeComponent.cs" />
     <Compile Include="Game\GameObjectFactory.cs" />
     <Compile Include="Game\HealthComponent.cs" />
+    <Compile Include="Game\InvalidatesWhenIsFinishedComponent.cs" />
     <Compile Include="Game\JedenGameState.cs" />
     <Compile Include="Game\JedenPlayerInput.cs" />
     <Compile Include="Game\Physics\PhysicsManager.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="Game\Physics\PhysicsComponent.cs" />
     <Compile Include="Game\WeaponComponent.cs" />
+    <Compile Include="Game\WeaponHoldingComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Render\RenderComponent.cs" />

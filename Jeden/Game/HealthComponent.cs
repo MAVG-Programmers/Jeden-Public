@@ -105,8 +105,7 @@ namespace Jeden.Game
                 {
                     AttackComponent attackComp = collisionMsg.GameObject.GetComponent<AttackComponent>();
 
-                    if(attackComp.Attacker != Parent) // bullets dont hurt those that fire them
-                        Damage(attackComp.Damage);
+                    Damage(attackComp.Damage);
                 }
             }
         }

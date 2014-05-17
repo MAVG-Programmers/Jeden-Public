@@ -9,6 +9,7 @@ using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Dynamics.Contacts;
+using System.Diagnostics;
 
 
 namespace Jeden.Game.Physics
@@ -37,13 +38,12 @@ namespace Jeden.Game.Physics
         public GameObject GameObject;
     }
 
-    class PhysicsManager
+    class PhysicsManager : Manager 
     {
         public const Category PlayerCategory = Category.Cat1;
         public const Category EnemyCategory = Category.Cat2;
         public const Category MapCategory = Category.Cat3;
 
-        //TODO: integrate Farseer physics
         List<PhysicsComponent> Components;
         private World _world;
 
@@ -51,7 +51,7 @@ namespace Jeden.Game.Physics
         {
             Components = new List<PhysicsComponent>();
             //Create world with regular gravity
-            _world = new World(new Vector2(0f, 149.82f));
+            _world = new World(new Vector2(0f, 449.82f));
         }
 
         //Update tick all components owned by this manager
@@ -84,7 +84,7 @@ namespace Jeden.Game.Physics
             }
             //AABB, no rotation
             body.FixedRotation = true;
-            PhysicsComponent comp = new PhysicsComponent(owner, body);
+            PhysicsComponent comp = new PhysicsComponent(body, this, owner);
             body.UserData = owner;
             body.OnCollision += OnFixtureCollision;
             body.OnSeparation += OnFixtureSeperation;
@@ -97,17 +97,20 @@ namespace Jeden.Game.Physics
             return comp;
         }
 
-        public void RemoveComponent(PhysicsComponent comp)
+        public override void RemoveComponent(Component comp)
         {
+            Debug.Assert(comp is PhysicsComponent);
+
+            PhysicsComponent physicsComp = comp as PhysicsComponent;
             //Remove from Farseer world
 
-            if (_world.BodyList.Contains(comp.BoundingBox))
-                _world.RemoveBody(comp.BoundingBox);
+            if (_world.BodyList.Contains(physicsComp.Body))
+                _world.RemoveBody(physicsComp.Body);
 
             //Remove from Components list
-            if (Components.Contains(comp))
+            if (Components.Contains(physicsComp))
             {
-                Components.Remove(comp);
+                Components.Remove(physicsComp);
             }
         }
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SFML.Graphics;
 using SFML.Window;
+using System.Diagnostics;
 
 namespace Jeden.Engine.Render
 {
@@ -13,7 +14,7 @@ namespace Jeden.Engine.Render
     /// <summary>
     /// Maintains all Drawable components.
     /// </summary>
-    public class RenderManager
+    public class RenderManager : Manager 
     {
         public Camera Camera { get; set; }
         
@@ -89,8 +90,6 @@ namespace Jeden.Engine.Render
                          Vector2f centerPos,
                          float viewWidth,
                          float viewHeight,
-                         float angle,
-                         Vector2f rotationCenter,
                          bool flipX,
                          bool flipY,
                          Color tint,
@@ -136,13 +135,10 @@ namespace Jeden.Engine.Render
                 vertices[3].TexCoords.Y = subImageRect.Top + subImageRect.Height;
             }
 
-            Vector2f rotBasisX = new Vector2f((float)Math.Cos((double)angle), (float)Math.Sin((double)angle));
-            Vector2f rotBasisY = new Vector2f(-rotBasisX.Y, rotBasisX.X);
 
             for (int i = 0; i < 4; i++)
             {
-                vertices[i].Position.X = Vector2Dot(rotBasisX, vertices[i].Position - rotationCenter) + rotationCenter.X + centerPos.X;
-                vertices[i].Position.Y = Vector2Dot(rotBasisY, vertices[i].Position - rotationCenter) + rotationCenter.Y + centerPos.Y;
+                vertices[i].Position += centerPos;
             }
 
             vertices[0].Color = tint;
@@ -164,10 +160,12 @@ namespace Jeden.Engine.Render
         /// Removes a render component from the list
         /// </summary>
         /// <param name="comp">The component to remove</param>
-        public void RemoveComponent(RenderComponent comp)
+        public override void RemoveComponent(Component comp)
         {
+            Debug.Assert(comp is RenderComponent);
+
             if(Components.Contains(comp))
-                Components.Remove(comp);
+                Components.Remove((RenderComponent)comp);
         }
 
 
@@ -183,8 +181,8 @@ namespace Jeden.Engine.Render
         ///<returns> The new component.</returns>
         public SpriteRenderComponent MakeNewSpriteComponent(GameObject owner, Texture texture)
         {
-            SpriteRenderComponent component = new SpriteRenderComponent(owner, texture);
-            Components.Add((RenderComponent)component);
+            SpriteRenderComponent component = new SpriteRenderComponent(this, owner, texture);
+            Components.Add(component);
             return component;
         }
 
@@ -195,8 +193,8 @@ namespace Jeden.Engine.Render
         ///<returns> The new component.</returns>
         public SpriteSetRenderComponent MakeNewSpriteSetComponent(GameObject owner)
         {
-            SpriteSetRenderComponent component = new SpriteSetRenderComponent(owner);
-            Components.Add((RenderComponent)component);
+            SpriteSetRenderComponent component = new SpriteSetRenderComponent(this, owner);
+            Components.Add(component);
             return component;
         }
 
@@ -207,8 +205,8 @@ namespace Jeden.Engine.Render
         ///<returns> The new component.</returns>
         public AnimationRenderComponent MakeNewAnimationComponent(GameObject owner)
         {
-            AnimationRenderComponent component = new AnimationRenderComponent(owner);
-            Components.Add((RenderComponent)component);
+            AnimationRenderComponent component = new AnimationRenderComponent(this, owner);
+            Components.Add(component);
             return component;
         }
 
@@ -219,8 +217,8 @@ namespace Jeden.Engine.Render
         ///<returns> The new component.</returns>
         public AnimationSetRenderComponent MakeNewAnimationSetComponent(GameObject owner)
         {
-            AnimationSetRenderComponent component = new AnimationSetRenderComponent(owner);
-            Components.Add((RenderComponent)component);
+            AnimationSetRenderComponent component = new AnimationSetRenderComponent(this, owner);
+            Components.Add(component);
             return component;
         }
 
@@ -231,8 +229,8 @@ namespace Jeden.Engine.Render
         ///<returns> The new component.</returns>
         public ParallaxRenderComponent MakeNewParallaxComponent(GameObject owner, Texture texture, float factor)
         {
-            ParallaxRenderComponent component = new ParallaxRenderComponent(owner, texture, factor);
-            Components.Add((RenderComponent)component);
+            ParallaxRenderComponent component = new ParallaxRenderComponent(this, owner, texture, factor);
+            Components.Add(component);
             return component;
         }
 
@@ -243,8 +241,8 @@ namespace Jeden.Engine.Render
         ///<returns> The new component.</returns>
         public TileMapRenderComponent MakeNewTileMapComponent(GameObject owner)
         {
-            TileMapRenderComponent component = new TileMapRenderComponent(owner);
-            Components.Add((RenderComponent)component);
+            TileMapRenderComponent component = new TileMapRenderComponent(this, owner);
+            Components.Add(component);
             return component;
         }
 

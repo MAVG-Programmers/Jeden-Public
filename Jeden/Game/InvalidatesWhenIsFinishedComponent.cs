@@ -16,18 +16,16 @@ namespace Jeden.Game
     {
         AnimationRenderComponent AnimRenderComponent;
 
-        public InvalidatesWhenAnimationIsFinishedComponent(AnimationRenderComponent animComponent, GameObject parent) : base(parent)
-        {
-            AnimRenderComponent = animComponent;  
+        public InvalidatesWhenAnimationIsFinishedComponent(GameObject parent) : base(parent)
+        {  
         }
 
-        public override void Update(Engine.GameTime gameTime)
+        public override void HandleMessage(Message message)
         {
-            base.Update(gameTime);
-
-            if(AnimRenderComponent.IsFinished())
+            base.HandleMessage(message);
+            if(message is AnimationFinishedMessage)
             {
-                Parent.Valid = false;
+                Parent.Invalidate();
             }
         }
     }

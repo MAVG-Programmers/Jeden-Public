@@ -17,10 +17,6 @@ namespace Jeden.Game
         }
     }
 
-    class DeathMessage : Message
-    {
-        public DeathMessage(Component sender) : base(sender) { }
-    }
 
     /// <summary>
     /// Represents a GameObjects health, armor and resistances.
@@ -75,7 +71,7 @@ namespace Jeden.Game
         {
             if (CurrentHealth <= 0)
             {
-                Parent.HandleMessage(new DeathMessage(this));
+                Parent.Invalidate();
             }
             else
             {
@@ -101,11 +97,16 @@ namespace Jeden.Game
             {
 
                 CollisionMessage collisionMsg = message as CollisionMessage;
-                if(collisionMsg.GameObject.ContainsComponent<AttackComponent>())
+                foreach(Component comp in collisionMsg.GameObject.Components)
                 {
-                    AttackComponent attackComp = collisionMsg.GameObject.GetComponent<AttackComponent>();
+                    if (comp is AttackComponent)
+                    {
+                        AttackComponent attackComp = comp as AttackComponent;
 
-                    Damage(attackComp.Damage);
+                        Damage(attackComp.Damage);
+
+                        GameObjectFactory.CreateShieldDamgageFeedback(Parent.Position);
+                    }
                 }
             }
         }

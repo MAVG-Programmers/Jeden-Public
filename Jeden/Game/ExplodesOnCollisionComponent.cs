@@ -10,7 +10,6 @@ using SFML.Window;
 
 namespace Jeden.Game
 {
-    // No explosions yet...
     class ExplodesOnCollisionComponent : Component
     {
         public ExplodesOnCollisionComponent(GameObject parent) : base(parent)
@@ -26,7 +25,7 @@ namespace Jeden.Game
                 CollisionMessage collisionMessage = message as CollisionMessage;
                 // suicide
                 GameObjectFactory.CreateExplosion(Parent.Position);
-                Parent.Valid = false;
+                Parent.Invalidate();
             }
         }
     }

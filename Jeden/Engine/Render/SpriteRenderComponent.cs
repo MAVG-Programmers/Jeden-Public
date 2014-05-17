@@ -16,8 +16,8 @@ namespace Jeden.Engine.Render
         protected Texture Texture;
         protected IntRect SubImageRect;
 
-        public SpriteRenderComponent(GameObject parent, Texture texture)
-            : base(parent)
+        public SpriteRenderComponent(RenderManager renderMgr, GameObject parent, Texture texture)
+            : base(renderMgr, parent)
         
         {
             Texture = texture;
@@ -28,23 +28,19 @@ namespace Jeden.Engine.Render
             SubImageRect.Height = (int)texture.Size.Y;
             WorldWidth = SubImageRect.Width;
             WorldHeight = SubImageRect.Height;
-            Angle = 0.0f;
-            RotationCenter = new Vector2f(0,0);
             FlipX = false;
             FlipY = false;
             Tint = new Color(255, 255, 255, 255);
         }
 
-        public SpriteRenderComponent(GameObject parent, Texture texture, IntRect subImageRect)
-            : base(parent)
+        public SpriteRenderComponent(RenderManager renderMgr, GameObject parent, Texture texture, IntRect subImageRect)
+            : base(renderMgr, parent)
         {
             Texture = texture;
             Position = parent.Position;
             SubImageRect = subImageRect;
             WorldWidth = SubImageRect.Width;
             WorldHeight = SubImageRect.Height;
-            Angle = 0.0f;
-            RotationCenter = new Vector2f(0, 0);
             FlipX = false;
             FlipY = false;
             Tint = new Color(255, 255, 255, 255);
@@ -59,7 +55,7 @@ namespace Jeden.Engine.Render
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            renderMgr.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
+            renderMgr.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

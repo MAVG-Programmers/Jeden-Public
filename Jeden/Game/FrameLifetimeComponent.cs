@@ -26,7 +26,7 @@ namespace Jeden.Game
             Age++;
             if(Age >= Lifetime)
             {
-                Parent.Valid = false;
+                Parent.Invalidate();
             }
         }
     }

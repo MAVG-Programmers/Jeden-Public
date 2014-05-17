@@ -168,7 +168,7 @@ namespace Jeden.Engine.Render
             for (int i = 0; i < nParticles; i++)
             {
                 Vector2f tmp = particles[i].x;
-               particles[i].x += 0.98f * (particles[i].x - particles[i].x0) + new Vector2f(0, 0.5f * dt * dt * 1000);  //TODO: this gravity is a hack
+               particles[i].x += 0.98f * (particles[i].x - particles[i].x0) + new Vector2f(0, 0.5f * dt * dt * 2000);  //TODO: this gravity is a hack
                particles[i].x0 = tmp;
                particles[i].f = new Vector2f(0.0f, 0.0f);
             }
@@ -194,8 +194,8 @@ namespace Jeden.Engine.Render
         GameObject Target;
         static Texture Texture = new Texture("assets/bandana.png");
 
-        public BandanaRenderComponent(GameObject target, GameObject parent)
-            : base(parent)
+        public BandanaRenderComponent(RenderManager renderMgr, GameObject target, GameObject parent)
+            : base(renderMgr, parent)
         {
             cloth = new Cloth();
             cloth.Init();

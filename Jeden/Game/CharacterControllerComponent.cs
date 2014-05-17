@@ -41,10 +41,10 @@ namespace Jeden.Game
         /// Constructor
         /// </summary>
         /// <param name="parent">GameObect that owns the component</param>
-        public CharacterControllerComponent(GameObject parent) : base(parent)
+        public CharacterControllerComponent(AnimationSetRenderComponent animSetComponent, PhysicsComponent physicsComponent, GameObject parent) : base(parent)
         {
-            AnimationSetRenderComponent = (AnimationSetRenderComponent) Parent.GetComponent<RenderComponent>();
-            PhysicsComponent = Parent.GetComponent<PhysicsComponent>();
+            AnimationSetRenderComponent = animSetComponent;
+            PhysicsComponent = physicsComponent;
 
             FeetColliders = new List<GameObject>();
 
@@ -65,40 +65,45 @@ namespace Jeden.Game
             //TODO: get magic numbers out of here.
             if(message is WalkLeftMessage)
             {
-                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(-9000.0f, 0));
+                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-9000.0f, 0));
                 AnimationSetRenderComponent.FlipX = true;
             }
 
 
             if(message is WalkRightMessage)
             {
-                PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(9000.0f, 0));
+                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(9000.0f, 0));
                 AnimationSetRenderComponent.FlipX = false;
             }
             if(message is JumpMessage)
             {
                 if (FeetColliders.Count > 0)
                 {
-                    PhysicsComponent.BoundingBox.ApplyLinearImpulse(new Vector2(0.0f, -1600000));
+                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(0.0f, -1600000));
                 }
             }
 
             if (message is AttackMessage)
             {
 
-                WeaponHoldingComponent weaponHoldingComp = Parent.GetComponent<WeaponHoldingComponent>();
-                WeaponComponent weapon = weaponHoldingComp.WeaponComponent;
-
-                if (weapon.TryAttack())
+                foreach (Component comp in Parent.Components)
                 {
-                    AnimationSetRenderComponent.SetAnimation("Attacking");
+                    if (comp is WeaponHoldingComponent)
+                    {
+                        WeaponHoldingComponent weaponHoldingComp = comp as WeaponHoldingComponent;
+                        WeaponComponent weapon = weaponHoldingComp.WeaponComponent;
+
+                        if (weapon.TryAttack())
+                        {
+                            AnimationSetRenderComponent.SetAnimation("Attacking");
+                        }
+                    }
                 }
             }
 
-            if(message is DeathMessage)
+            if(message is InvalidatedMessage)
             {
                 GameObjectFactory.CreateDeadGuy(Parent.Position);
-                Parent.Valid = false;
             }
             if(message is CollisionMessage)
             {

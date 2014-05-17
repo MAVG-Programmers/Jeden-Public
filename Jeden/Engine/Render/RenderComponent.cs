@@ -12,22 +12,19 @@ namespace Jeden.Engine.Render
     /// <summary>
     /// Interface for rendering components.
     /// </summary>
-    public class RenderComponent : Component 
+    public class RenderComponent : Component
     {
         public Vector2f Position { get; set; }
         public float WorldWidth { get; set; }
         public float WorldHeight { get; set; }
-        public float Angle { get; set; }
-        public Vector2f RotationCenter { get; set; }
         public bool FlipX { get; set; }
         public bool FlipY { get; set; }
         public Color Tint { get; set; }
         public int ZIndex { get; set; }
 
+
         public virtual FloatRect GetScreenRect(Camera camera)
         {
-            //TODO: DOES NOT WORK WITH ROTATIONS.
-
             FloatRect rect;
             rect.Width = WorldWidth;
             rect.Height = WorldHeight;
@@ -37,8 +34,9 @@ namespace Jeden.Engine.Render
             return rect;
         }
 
-        public RenderComponent(GameObject parent) : base(parent)
+        public RenderComponent(RenderManager renderMgr, GameObject parent) : base(parent)
         {
+            Manager = renderMgr;
             Tint = new Color(255, 255, 255, 255);
         }
         

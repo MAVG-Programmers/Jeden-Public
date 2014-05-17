@@ -31,7 +31,7 @@ namespace Jeden.Game
         public AttackComponent(GameObject attacker, GameObject parent) : base(parent)
         {
             Attacker = attacker;
-            Damage = 100;
+            Damage = 65;
         }
     }
 }

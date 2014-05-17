@@ -26,16 +26,12 @@ namespace Jeden.Engine
         /// The RenderManager of this GameState
         /// </summary>
         public RenderManager RenderMgr;
+        public InputManager InputMgr;
 
         /// <summary>
         /// The Music of this GameState
         /// </summary>
         public Music Music;
-
-        /// <summary>
-        /// The control map for this GameState.
-        /// </summary>
-        protected IControlMap ControlMap;
 
         /// <summary>
         /// A new instance of GameState.
@@ -80,7 +76,7 @@ namespace Jeden.Engine
         /// <param name="inputmgr">The watched InputManager</param>
         public void SetInputManager(InputManager inputmgr)
         {
-            ControlMap.InputMgr = inputmgr;
+            InputMgr = inputmgr;
         }
 
         public void SetRenderTarget(RenderTarget target)

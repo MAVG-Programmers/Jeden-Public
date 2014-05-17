@@ -12,7 +12,7 @@ namespace Jeden.Engine.Render
 {
     public class TileMapRenderComponent : RenderComponent
     {
-        public TileMapRenderComponent(GameObject parent) : base(parent)
+        public TileMapRenderComponent(RenderManager renderMgr, GameObject parent) : base(renderMgr, parent)
         {
 
         }
@@ -84,7 +84,7 @@ namespace Jeden.Engine.Render
                                     TileWidth * i + TileWidth * 0.5f,
                                     TileHeight * j + TileHeight * 0.5f);
 
-                    renderMgr.DrawSprite(Tiles[i, j].Texture, Tiles[i, j].SubImageRect, position + Position, TileWidth, TileHeight, Angle, RotationCenter + position, false, false, Tint, ZIndex);
+                    renderMgr.DrawSprite(Tiles[i, j].Texture, Tiles[i, j].SubImageRect, position + Position, TileWidth, TileHeight, false, false, Tint, ZIndex);
 
                 }
             }

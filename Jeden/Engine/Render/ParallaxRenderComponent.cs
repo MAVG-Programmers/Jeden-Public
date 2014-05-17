@@ -23,8 +23,8 @@ namespace Jeden.Engine.Render
         /// <param name="parent">The GameObject that owns the component</param>
         /// <param name="texture">The texture that is drawn</param>
         /// <param name="factor">The parallax factor, the amount which the movement is scaled relative to the camera</param>
-        public ParallaxRenderComponent(GameObject parent, Texture texture, float factor)
-            : base(parent, texture)
+        public ParallaxRenderComponent(RenderManager renderMgr, GameObject parent, Texture texture, float factor)
+            : base(renderMgr, parent, texture)
         {
             ParallaxFactor = factor;
         }
@@ -57,7 +57,7 @@ namespace Jeden.Engine.Render
         {
             //add camera position to where we want to draw on the screen, and let the view transform just subtract it back off
             renderMgr.DrawSprite(Texture, SubImageRect, (Position - camera.Center) * ParallaxFactor + camera.Center, 
-                WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
+                WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

@@ -14,9 +14,12 @@ namespace Jeden.Engine.Object
     public class Component
     {
 
+        public Manager Manager { get; set; }
+
         /// <summary>
         /// The GameObject that owns this Component.
         /// </summary>
+        /// 
         public GameObject Parent { get; set; }
 
         /// <summary>

@@ -21,8 +21,8 @@ namespace Jeden.Engine.Render
 
         public String CurrentKey;
 
-        public SpriteSetRenderComponent(GameObject parent)
-            : base(parent)
+        public SpriteSetRenderComponent(RenderManager renderMgr, GameObject parent)
+            : base(renderMgr, parent)
         {
             SpriteSet = new Dictionary<string, SubImage>();
         }
@@ -71,8 +71,6 @@ namespace Jeden.Engine.Render
                 Position, 
                 WorldWidth, 
                 WorldHeight,
-                Angle,
-                RotationCenter, 
                 FlipX, 
                 FlipY,
                 Tint, ZIndex);

@@ -126,12 +126,12 @@ namespace Jeden.Engine.TileMap
 
             foreach (TmxObjectGroup objectGroup in map.ObjectGroups)
             {
-                if (objectGroup.Name == "objects")
+                if (objectGroup.Name.ToLower().Contains("objects"))
                 {
                     ParseCollisionLayer(objectGroup);
                 }
 
-                if(objectGroup.Name == "parallax")
+                if(objectGroup.Name.ToLower().Contains("parallax"))
                 {
                     ParseParallaxLayer(objectGroup);
                 }

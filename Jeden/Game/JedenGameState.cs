@@ -34,7 +34,6 @@ namespace Jeden.Game
         /// </summary>
         public JedenGameState()
         {
-            ControlMap = new JedenPlayerInput(); // TODO: not setting the InputMap
             PhysicsMgr = new PhysicsManager();
             GameObjectFactory.PhysicsMgr = PhysicsMgr;
             GameObjectFactory.GameState = this;
@@ -52,8 +51,8 @@ namespace Jeden.Game
             player = GameObjectFactory.CreatePlayer(new Vector2f(100, 0));
             RenderMgr.Camera.Target = player;
 
-            weapon = new GameObject(this);
-            GunWeaponComponent weaponComp = new GunWeaponComponent(player, weapon);
+            weapon = new GameObject();
+            MeleeWeaponComponent weaponComp = new MeleeWeaponComponent(player, weapon);
             weapon.AddComponent(weaponComp);
             GameObjects.Add(weapon);
             weaponComp.AttackDelay = 1.0f;
@@ -63,11 +62,11 @@ namespace Jeden.Game
 
             TileMap tileMap = new TileMap("assets/testmap.tmx");
 
-            GameObject tileMapGo = new GameObject(this);
+            GameObject tileMapGo = new GameObject();
             GameObjects.Add(tileMapGo);
             TileMapRenderComponent tmrc = RenderMgr.MakeNewTileMapComponent(tileMapGo);
             tileMap.SetRenderComponent(tmrc);
-            tileMapGo.AddComponent<RenderComponent>(tmrc);
+            tileMapGo.AddComponent(tmrc);
             tmrc.ZIndex = 40;
 
 
@@ -75,14 +74,14 @@ namespace Jeden.Game
 
             foreach (TileMap.ParallaxSprite sprite in tileMap.ParallaxSprites)
             {
-                go = new GameObject(this);
+                go = new GameObject();
                 ParallaxRenderComponent prc;
                 go.Position = sprite.Position;
                 prc = RenderMgr.MakeNewParallaxComponent(go, sprite.Texture, sprite.ParallaxFactor);
                 prc.WorldWidth = sprite.Width;
                 prc.WorldHeight = sprite.Height;
                 prc.ZIndex = sprite.ZIndex;
-                go.AddComponent<RenderComponent>(prc);
+                go.AddComponent(prc);
                 GameObjects.Add(go);
 
             }
@@ -92,7 +91,7 @@ namespace Jeden.Game
 
                 Vector2f Position = new Vector2f(pobj.Position.X, pobj.Position.Y);
 
-                go = new GameObject(this);
+                go = new GameObject();
                 go.Position = pobj.Position;
                 PhysicsComponent pc = PhysicsMgr.MakeNewComponent(
                     go, pobj.Width, pobj.Height,
@@ -102,14 +101,15 @@ namespace Jeden.Game
                 GameObjects.Add(go);
             }
 
-            for (int i = 0; i < 10; i++)
-                GameObjectFactory.CreateEnemy(new Vector2f(i * 100 + 500, 100));
+            for (int i = 0; i < 2; i++)
+                GameObjectFactory.CreateEnemy(new Vector2f(i * 400 + 500, 190));
+            
 
-            GameObject cloth = new GameObject(this);
+            GameObject cloth = new GameObject();
             GameObjects.Add(cloth);
-            BandanaRenderComponent crc = new BandanaRenderComponent(player, cloth);
+            BandanaRenderComponent crc = new BandanaRenderComponent(RenderMgr, player, cloth);
             crc.ZIndex = 150;
-            cloth.AddComponent<RenderComponent>(crc);
+            cloth.AddComponent(crc);
             RenderMgr.Components.Add(crc);
 
             Music = new SFML.Audio.Music("assets/Widzy.wav");
@@ -137,28 +137,27 @@ namespace Jeden.Game
 
             GameObjects.Remove(obj);
              */
-            obj.Valid = false;
+            obj.Invalidate();
         }
 
         void InputHack()
         {
-            //Temp hack until CommandMap is implemented
-            if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Left))
+            if (InputMgr.IsKeyDown(Keyboard.Key.Left))
             {
                 player.HandleMessage(new WalkLeftMessage(null));
                 weapon.HandleMessage(new WalkLeftMessage(null));
             }
-            if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Right))
+            if (InputMgr.IsKeyDown(Keyboard.Key.Right))
             {
                 player.HandleMessage(new WalkRightMessage(null));
                 weapon.HandleMessage(new WalkRightMessage(null));
             }
-            if (ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Up))
+            if (InputMgr.IsKeyDown(Keyboard.Key.Up))
             {
                 player.HandleMessage(new JumpMessage(null));
                 weapon.HandleMessage(new JumpMessage(null));
             }
-            if(ControlMap.InputMgr.IsKeyDown(Keyboard.Key.Space))
+            if(InputMgr.IsKeyDown(Keyboard.Key.Space))
             {
                 player.HandleMessage(new AttackMessage(null));
               //  weapon.HandleMessage(new AttackMessage(null));
@@ -187,13 +186,10 @@ namespace Jeden.Game
                     removed++;
                     end--;
                     
-                    foreach (Component comp in temp.Components.Values)
+                    foreach (Component comp in temp.Components)
                     {
-                        if (comp is RenderComponent)
-                            RenderMgr.RemoveComponent(comp as RenderComponent);
-
-                        if (comp is PhysicsComponent)
-                            PhysicsMgr.RemoveComponent(comp as PhysicsComponent);
+                        if (comp.Manager != null)
+                            comp.Manager.RemoveComponent(comp);
                     }
                 }
             }
@@ -203,10 +199,12 @@ namespace Jeden.Game
 
         public override void Update(GameTime gameTime)
         {
-            PhysicsMgr.Update(gameTime);
             InputHack();
             base.Update(gameTime);
 
+
+            PhysicsMgr.Update(gameTime);
+      
             //Draw frame last
             RenderMgr.Update(gameTime);
 

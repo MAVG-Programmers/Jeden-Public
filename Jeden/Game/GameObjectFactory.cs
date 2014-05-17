@@ -22,7 +22,7 @@ namespace Jeden.Game
         /// <returns></returns>
         public static GameObject CreatePlayer(Vector2f position)
         {
-            GameObject player = new GameObject(GameState);
+            GameObject player = new GameObject();
             player.Position = position;
 
 
@@ -46,15 +46,19 @@ namespace Jeden.Game
 
             arc.SetAnimation("Walking");
             arc.ZIndex = 1000;
-            player.AddComponent<RenderComponent>(arc);
+            player.AddComponent(arc);
 
-            player.AddComponent<PhysicsComponent>(PhysicsMgr.MakeNewComponent(
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(
                 player, 64, 128, 
                 PhysicsManager.PlayerCategory, 
                 PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, 
-                true));
+                true);
 
-            player.AddComponent(new CharacterControllerComponent(player));
+            player.AddComponent(physicsComp);
+
+            player.AddComponent(new CharacterControllerComponent(arc, physicsComp, player));
+
+            player.AddComponent(new HealthComponent(player, 400, 0));
 
             GameState.GameObjects.Add(player);
 
@@ -74,14 +78,14 @@ namespace Jeden.Game
         {
             float SPEED = 1000.0f;
 
-            GameObject gameObject = new GameObject(GameState);
+            GameObject gameObject = new GameObject();
             GameState.GameObjects.Add(gameObject);
             gameObject.Position = position;
 
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40,
                 PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, true);
-            physicsComp.BoundingBox.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
-            physicsComp.BoundingBox.GravityScale = 0.0f;
+            physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
+            physicsComp.Body.GravityScale = 0.0f;
             gameObject.AddComponent(physicsComp);
 
 
@@ -111,13 +115,13 @@ namespace Jeden.Game
         /// <returns></returns>
         public static GameObject CreateSword(GameObject attacker, Vector2f position, float length, float width, int xdirection)
         {
-            GameObject gameObject = new GameObject(GameState);
+            GameObject gameObject = new GameObject();
             GameState.GameObjects.Add(gameObject);
             gameObject.Position = position + new Vector2f(length * 0.5f * xdirection, 0);
 
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, length, width,  
             PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, true);
-            physicsComp.BoundingBox.GravityScale = 0.0f;
+            physicsComp.Body.GravityScale = 0.0f;
             gameObject.AddComponent(physicsComp);
 
             AttackComponent attackComp = new AttackComponent(attacker, gameObject);
@@ -136,7 +140,46 @@ namespace Jeden.Game
             return gameObject;
         }
 
-        static Texture EnemyTexture = new Texture("assets/player.png");
+        static Texture StingerTexture = new Texture("assets/stinger.png");
+        /// <summary>
+        /// Creates a new Bullet
+        /// </summary>
+        /// <param name="attacker">The GameObject that fired the bullet</param>
+        /// <param name="position">The starting position of the bullet</param>
+        /// <param name="direction">The direction in which the bullet was fired[needs to be unit length]</param>
+        /// <returns></returns>
+        public static GameObject CreateStinger(GameObject attacker, Vector2f position, Vector2f direction)
+        {
+            float SPEED = 1000.0f;
+
+            GameObject gameObject = new GameObject();
+            GameState.GameObjects.Add(gameObject);
+            gameObject.Position = position;
+
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40,
+                PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, true);
+            physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
+            physicsComp.Body.GravityScale = 0.0f;
+            physicsComp.Body.LinearDamping = 0.0f;
+            physicsComp.Body.IgnoreGravity = true;
+            gameObject.AddComponent(physicsComp);
+
+
+            AttackComponent attackComp = new AttackComponent(attacker, gameObject);
+            gameObject.AddComponent(attackComp);
+
+            SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, StingerTexture);
+            renderComp.WorldWidth = StingerTexture.Size.X;
+            renderComp.WorldHeight = StingerTexture.Size.Y;
+            renderComp.ZIndex = 100;
+            gameObject.AddComponent(renderComp);
+
+            gameObject.AddComponent(new ExplodesOnCollisionComponent(gameObject));
+
+            return gameObject;
+        }
+        
+        static Texture EnemyTexture = new Texture("assets/bee.png");
         /// <summary>
         /// Create's an enemy
         /// </summary>
@@ -145,26 +188,29 @@ namespace Jeden.Game
         public static GameObject CreateEnemy(Vector2f position)
         {
 
-            GameObject enemy = new GameObject(GameState);
+            GameObject enemy = new GameObject();
             GameState.GameObjects.Add(enemy);
             enemy.Position = position;
             AnimationSetRenderComponent arc = RenderMgr.MakeNewAnimationSetComponent(enemy);
 
-            arc.AddFrame("Walking", EnemyTexture);
+            arc.AddFrame("Flying", EnemyTexture);
             arc.WorldWidth = EnemyTexture.Size.X;
             arc.WorldHeight = EnemyTexture.Size.Y;
             arc.ZIndex = 1000;
-            arc.SetFrameTime("Walking", 1.0f);
-            arc.SetAnimation("Walking");
-            enemy.AddComponent<RenderComponent>(arc);
+            arc.SetFrameTime("Flying", 2.0f);
+            arc.SetAnimation("Flying");
+            enemy.AddComponent(arc);
 
             enemy.AddComponent(new HealthComponent(enemy, 100, 1));
 
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(enemy, 54, 128, PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, true);
-            enemy.AddComponent<PhysicsComponent>(physicsComp);
+            enemy.AddComponent(physicsComp);
 
-            CharacterControllerComponent charControllerComp = new CharacterControllerComponent(enemy);
+            FlyingBugControllerComponent charControllerComp = new FlyingBugControllerComponent(arc, physicsComp, enemy);
             enemy.AddComponent(charControllerComp);
+
+            FlyingBugAIComponent flyingBugAIComponent = new FlyingBugAIComponent(enemy.Position, enemy);
+            enemy.AddComponent(flyingBugAIComponent);
 
             return enemy;
         }
@@ -173,7 +219,7 @@ namespace Jeden.Game
         static Texture ExplosionTexture1 = new Texture("assets/explosion.png");
         static public GameObject CreateExplosion(Vector2f position)
         {
-            GameObject gameObject = new GameObject(GameState);
+            GameObject gameObject = new GameObject();
             gameObject.Position = position;
             GameState.GameObjects.Add(gameObject);
 
@@ -190,8 +236,8 @@ namespace Jeden.Game
             animationRenderComponent.WorldHeight = 64;
             animationRenderComponent.IsLooping = false;
             animationRenderComponent.ZIndex = 175;
-            gameObject.AddComponent<RenderComponent>(animationRenderComponent);
-            gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(animationRenderComponent, gameObject));
+            gameObject.AddComponent(animationRenderComponent);
+            gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(gameObject));
 
             return gameObject;
         }
@@ -202,7 +248,7 @@ namespace Jeden.Game
 
         public static GameObject CreateDeadGuy(Vector2f position)
         {
-            GameObject gameObject = new GameObject(GameState);
+            GameObject gameObject = new GameObject();
             gameObject.Position = position;
             GameState.GameObjects.Add(gameObject);
 
@@ -216,8 +262,70 @@ namespace Jeden.Game
             animationRenderComponent.WorldHeight = 142;
             animationRenderComponent.IsLooping = false;
             animationRenderComponent.ZIndex = 175;
-            gameObject.AddComponent<RenderComponent>(animationRenderComponent);
-            gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(animationRenderComponent, gameObject));
+            gameObject.AddComponent(animationRenderComponent);
+            gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(gameObject));
+
+            return gameObject;
+        }
+
+        public static Texture BugDeathTexture1 = new Texture("assets/bugdeath1.png");
+        public static Texture BugDeathTexture2 = new Texture("assets/bugdeath2.png");
+        public static Texture BugDeathTexture3 = new Texture("assets/bugdeath3.png");
+        public static Texture BugDeathTexture4 = new Texture("assets/bugdeath4.png");
+        public static Texture BugDeathTexture5 = new Texture("assets/bugdeath5.png");
+
+        public static GameObject CreateDeadBug(Vector2f position)
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.Position = position;
+            GameState.GameObjects.Add(gameObject);
+
+            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent(gameObject);
+            animationRenderComponent.FrameTime = 0.5f;
+            animationRenderComponent.AddFrame(BugDeathTexture1);
+            animationRenderComponent.AddFrame(BugDeathTexture2);
+            animationRenderComponent.AddFrame(BugDeathTexture3);
+            animationRenderComponent.AddFrame(BugDeathTexture4);
+            animationRenderComponent.AddFrame(BugDeathTexture5);
+
+            animationRenderComponent.WorldWidth = BugDeathTexture1.Size.X; ;
+            animationRenderComponent.WorldHeight = BugDeathTexture1.Size.Y;
+            animationRenderComponent.IsLooping = false;
+            animationRenderComponent.ZIndex = 175;
+            gameObject.AddComponent(animationRenderComponent);
+            gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(gameObject));
+
+            return gameObject;
+        }
+
+        public static Texture ShieldTexture1 = new Texture("assets/shield1.png");
+        public static Texture ShieldTexture2 = new Texture("assets/shield2.png");
+        public static Texture ShieldTexture3 = new Texture("assets/shield3.png");
+        public static Texture ShieldTexture4 = new Texture("assets/shield4.png");
+        public static Texture ShieldTexture5 = new Texture("assets/shield5.png");
+        public static Texture ShieldTexture6 = new Texture("assets/shield6.png");
+
+        public static GameObject CreateShieldDamgageFeedback(Vector2f position)
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.Position = position;
+            GameState.GameObjects.Add(gameObject);
+
+            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent(gameObject);
+            animationRenderComponent.FrameTime = 0.1f;
+            animationRenderComponent.AddFrame(ShieldTexture1);
+            animationRenderComponent.AddFrame(ShieldTexture2);
+            animationRenderComponent.AddFrame(ShieldTexture3);
+            animationRenderComponent.AddFrame(ShieldTexture4);
+            animationRenderComponent.AddFrame(ShieldTexture5);
+            animationRenderComponent.AddFrame(ShieldTexture6);
+
+            animationRenderComponent.WorldWidth = 200;
+            animationRenderComponent.WorldHeight = 142;
+            animationRenderComponent.IsLooping = false;
+            animationRenderComponent.ZIndex = 1775;
+            gameObject.AddComponent(animationRenderComponent);
+            gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(gameObject));
 
             return gameObject;
         }

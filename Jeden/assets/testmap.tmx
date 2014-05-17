@@ -12,21 +12,24 @@
  <tileset firstgid="39" name="parallax2" tilewidth="1920" tileheight="382">
   <image source="../../../../magv/Jeden-Public/Jeden/assets/parallax2.png" width="1920" height="382"/>
  </tileset>
- <objectgroup name="parallax" width="100" height="100">
+ <tileset firstgid="40" name="cave_tileset" tilewidth="32" tileheight="32">
+  <image source="cave_tileset.png" width="320" height="224"/>
+ </tileset>
+ <objectgroup name="Parallax_layer_2" width="100" height="100">
   <properties>
    <property name="parallax_factor" value="0"/>
    <property name="zindex" value="2"/>
   </properties>
   <object gid="39" x="140" y="359"/>
  </objectgroup>
- <objectgroup name="parallax" width="100" height="100">
+ <objectgroup name="parallaxLayer1" width="100" height="100">
   <properties>
    <property name="parallax_factor" value="0.2"/>
    <property name="zindex" value="10"/>
   </properties>
   <object gid="38" x="481" y="533"/>
  </objectgroup>
- <objectgroup name="parallax" width="100" height="100">
+ <objectgroup name="parallax_bg" width="100" height="100">
   <properties>
    <property name="parallax_factor" value="0.6"/>
    <property name="zindex" value="19"/>
@@ -35,7 +38,7 @@
  </objectgroup>
  <layer name="tiles" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1rENAEAIAzG6339jlnidKGwpC5AizAAAAACXvTgAULNRPb9D68d99QEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0FpmWgI/
+   eJzt2c1ugkAUBlB2+mTq0pq4af3ZWI3v/wIdU92YUAEnw51yTvJtwGTC/VQg0zQAADzMe4RxjN3HtuBatSrZx7HgWrUq+Ru5FlqndkP6mBXOlLinx6KPWPQRxxTeQWq6R/2XLko8OyxSli1ZZbqOWvrIMd+un297b16nfLRkk+k6a+kjgs+Ur5Tvp9yO7VL2KYd7htJHd6c/zp1TLhnW0Ecs+ohFH7HoIxZ9xKKPX7n2UPvsy469PxjVqzm8M08z7s53Mg49lOc/ejzmHoPZAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADANPwArz8Qpg==
   </data>
  </layer>
  <objectgroup name="objects" width="100" height="100">
@@ -44,5 +47,20 @@
   <object x="1376" y="480" width="608" height="33"/>
   <object x="1600" y="449" width="320" height="30"/>
   <object x="1665" y="514" width="319" height="30"/>
+  <object x="1313" y="961" width="92" height="33"/>
+  <object x="1378" y="928" width="191" height="32"/>
+  <object x="1537" y="896" width="221" height="33"/>
+  <object x="1761" y="863" width="63" height="34"/>
+  <object x="1794" y="833" width="93" height="32"/>
+  <object x="1857" y="800" width="63" height="33"/>
+  <object x="1890" y="769" width="253" height="29"/>
+  <object x="2113" y="801" width="382" height="30"/>
+  <object x="2466" y="768" width="541" height="31"/>
+  <object x="2975" y="418" width="33" height="348"/>
+  <object x="1984" y="513" width="450" height="31"/>
+  <object x="2399" y="546" width="31" height="64"/>
+  <object x="2435" y="552" width="90" height="22"/>
+  <object x="88" y="743" width="66" height="10"/>
+  <object x="649" y="251" width="11" height="69"/>
  </objectgroup>
 </map>

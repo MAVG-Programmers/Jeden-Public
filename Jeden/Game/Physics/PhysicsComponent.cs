@@ -12,11 +12,12 @@ namespace Jeden.Game.Physics
     class PhysicsComponent : Component
     {
         //TODO: integrate Farseer physics
-        public Body BoundingBox { get; set; }
+        public Body Body { get; set; }
 
-        public PhysicsComponent(GameObject parent, Body box) : base(parent)
+        public PhysicsComponent(Body body, PhysicsManager physicsMgr, GameObject parent) : base(parent)
         {
-            BoundingBox = box;
+            Manager = physicsMgr;
+            Body = body;
         }
 
         /// <summary>
@@ -26,8 +27,8 @@ namespace Jeden.Game.Physics
         public override void Update(Engine.GameTime gameTime)
         {
             base.Update(gameTime);
-            Parent.Position.X = BoundingBox.Position.X;
-            Parent.Position.Y = BoundingBox.Position.Y;
+            Parent.Position.X = Body.Position.X;
+            Parent.Position.Y = Body.Position.Y;
         }
     }
 }

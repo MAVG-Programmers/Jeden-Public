@@ -11,11 +11,15 @@ using System.Runtime.Serialization.Json;
 
 namespace Jeden.Engine.Render
 {
+
+    class AnimationFinishedMessage : Message
+    {
+        public AnimationFinishedMessage(object sender) : base(sender) { }
+    }
     /// <summary>
     /// RenderComponent for a looped animation sequence.
     /// </summary>
     
-    [DataContract]
     public class AnimationRenderComponent : RenderComponent 
     {
         Animation Animation;
@@ -37,7 +41,8 @@ namespace Jeden.Engine.Render
             return Animation.IsFinished;
         }
 
-        public AnimationRenderComponent(GameObject parent) : base(parent) 
+        public AnimationRenderComponent(RenderManager renderMgr, GameObject parent)
+            : base(renderMgr, parent) 
         {
             Animation = new Animation();
         }
@@ -68,11 +73,15 @@ namespace Jeden.Engine.Render
 
             Position = Parent.Position;
             Animation.Update(gameTime.ElapsedGameTime.TotalSeconds);
+
+            if (Animation.IsFinished)
+                Parent.HandleMessage(new AnimationFinishedMessage(this));
+
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            Animation.Draw(renderMgr, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
+            Animation.Draw(renderMgr, Position, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
 
 

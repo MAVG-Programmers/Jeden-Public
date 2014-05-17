@@ -20,7 +20,8 @@ namespace Jeden.Engine.Render
         public String CurrentKey { get; private set; }
 
 
-        public AnimationSetRenderComponent(GameObject parent) : base(parent)
+        public AnimationSetRenderComponent(RenderManager renderMgr, GameObject parent)
+            : base(renderMgr, parent)
         {
             AnimationSet = new Dictionary<string, Animation>();
         }
@@ -103,7 +104,7 @@ namespace Jeden.Engine.Render
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            CurrentAnimation.Draw(renderMgr, Position, WorldWidth, WorldHeight, Angle, RotationCenter, FlipX, FlipY, Tint, ZIndex);
+            CurrentAnimation.Draw(renderMgr, Position, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

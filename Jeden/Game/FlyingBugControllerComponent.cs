@@ -56,10 +56,10 @@ namespace Jeden.Game
             if(message is FlyMessage)
             {
                 FlyMessage flyMessage = message as FlyMessage;
-                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(flyMessage.Direction.X, flyMessage.Direction.Y) * 200);
+                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(flyMessage.Direction.X, flyMessage.Direction.Y) * 0.2f);
             }
 
-            if(message is InvalidatedMessage)
+            if(message is InvalidateMessage)
             {
                 GameObjectFactory.CreateDeadBug(Parent.Position);
             }

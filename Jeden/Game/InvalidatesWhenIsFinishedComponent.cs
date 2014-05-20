@@ -25,7 +25,7 @@ namespace Jeden.Game
             base.HandleMessage(message);
             if(message is AnimationFinishedMessage)
             {
-                Parent.Invalidate();
+                Parent.HandleMessage(new InvalidateMessage(this));
             }
         }
     }

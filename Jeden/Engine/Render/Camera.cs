@@ -17,7 +17,7 @@ namespace Jeden.Engine.Render
     {
         public Camera()
         {
-            Size = new Vector2f(800, 600);
+
         }
 
         public void Update(GameTime gameTime)

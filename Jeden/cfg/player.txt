@@ -1,0 +1,2 @@
+WorldWidth=10
+WorldHeight=10

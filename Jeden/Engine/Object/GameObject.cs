@@ -9,9 +9,9 @@ using SFML.Window;
 namespace Jeden.Engine.Object
 {
 
-    class InvalidatedMessage : Message
+    class InvalidateMessage : Message
     {
-        public InvalidatedMessage(object sender) : base(sender)
+        public InvalidateMessage(object sender) : base(sender)
         {
 
         }
@@ -36,11 +36,6 @@ namespace Jeden.Engine.Object
                     // The last thing a frame does is remove all invalid objects. It is the responsibility of objects holding refrences to
                     // GameObjects to check there Valid before attempting to manipulate them.
 
-        public void Invalidate()
-        {
-            Valid = false;
-            HandleMessage(new InvalidatedMessage(this));
-        }
 
         /// <summary>
         /// A new instance of GameObject.
@@ -91,6 +86,9 @@ namespace Jeden.Engine.Object
         /// <param name="message">The message</param>
         public void HandleMessage(Message message)
         {
+            if (message is InvalidateMessage)
+                Valid = false;
+
             foreach(Component comp in Components)
             {
                 if (comp != message.Sender)

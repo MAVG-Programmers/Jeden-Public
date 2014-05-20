@@ -69,9 +69,9 @@ namespace Jeden.Engine.Render
         public const int nParticlesX = 12;
         public const int nParticlesY = 12;
         public const int nParticles = nParticlesX * nParticlesY;
-        public const float patchSize = 16.0f;
+        public const float patchSize = 0.1f;
         public const int numIterations = 1;
-        public const float JointLength = 6.0f;
+        public const float JointLength = 0.1f;
 
         public void Init()
         {
@@ -175,8 +175,8 @@ namespace Jeden.Engine.Render
             
             for (int k = 0; k < numIterations; k++)
             {
-                particles[0].x = mouse + new Vector2f(-nParticlesX * JointLength, 0) / 2.0f + new Vector2f(0, -32);
-                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0) / 2.0f + new Vector2f(0, -32);
+                particles[0].x = mouse + new Vector2f(-nParticlesX * JointLength, 0) / 2.0f + new Vector2f(0, -0.5f);
+                particles[nParticlesX - 1].x = mouse + new Vector2f(nParticlesX * JointLength, 0) / 2.0f + new Vector2f(0, -0.5f);
                 for (int q = 0; q < joints.Count; q++)
                 {
                     joints[q].Solve();

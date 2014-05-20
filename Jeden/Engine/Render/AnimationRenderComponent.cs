@@ -47,6 +47,11 @@ namespace Jeden.Engine.Render
             Animation = new Animation();
         }
 
+        public AnimationRenderComponent(String filename, RenderManager renderMgr, GameObject parent) : base(renderMgr, parent)
+        {
+            Animation = new Animation(filename);
+        }
+
         /// <summary>
         /// Adds a frame to the end of the animation sequence.
         /// </summary>
@@ -71,7 +76,7 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
 
-            Position = Parent.Position;
+            LocalPosition = Parent.Position;
             Animation.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
             if (Animation.IsFinished)
@@ -81,7 +86,7 @@ namespace Jeden.Engine.Render
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            Animation.Draw(renderMgr, Position, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
+            Animation.Draw(renderMgr, WorldPosition, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
 
 

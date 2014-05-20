@@ -25,7 +25,7 @@ namespace Jeden.Game
                 CollisionMessage collisionMessage = message as CollisionMessage;
                 // suicide
                 GameObjectFactory.CreateExplosion(Parent.Position);
-                Parent.Invalidate();
+                Parent.HandleMessage(new InvalidateMessage(this));
             }
         }
     }

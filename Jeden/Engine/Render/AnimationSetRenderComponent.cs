@@ -74,6 +74,20 @@ namespace Jeden.Engine.Render
             AddFrame(key, texture, subImageRect);
         }
 
+        public void AddAnimation(String key, String filename)
+        {
+            Animation anim;
+            if (AnimationSet.TryGetValue(key, out anim))
+            {
+                // TODO: make an error message or something
+            }
+            else
+            {
+                anim = new Animation(filename);
+                AnimationSet.Add(key, anim);
+            }
+        }
+
         public void SetAnimation(String key)
         {   
             Animation anim;
@@ -98,13 +112,13 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
 
-            Position = Parent.Position;
+            LocalPosition = Parent.Position;
             CurrentAnimation.Update(gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            CurrentAnimation.Draw(renderMgr, Position, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
+            CurrentAnimation.Draw(renderMgr, WorldPosition, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

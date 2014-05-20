@@ -1,14 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-
-
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using SFML.Window;
 using Jeden.Engine.Object;
 using SFML.Graphics;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Xml;
+
 
 
 namespace Jeden.Engine.Render
@@ -17,7 +16,6 @@ namespace Jeden.Engine.Render
     /// Internal animation class to share code between AnimationRenderComponent and AnimationSetRenderComponent.
     /// </summary>
     /// 
-    [DataContract]
     class Animation 
     {
 
@@ -38,6 +36,35 @@ namespace Jeden.Engine.Render
             CurrentFrame = 0;
             Frames = new List<SubImage>();
             IsLooping = true;
+        }
+
+        public Animation(String filename)
+        {
+            FrameTime = 0;
+            CurrentFrame = 0;
+            Frames = new List<SubImage>();
+            IsLooping = true;
+
+            using(StreamReader reader = new StreamReader(filename))
+            {
+                String line;
+                while((line = reader.ReadLine()) != null)
+                {
+                    string[] pair = line.Split('=');
+                    if(pair.Count() == 2)
+                    {
+                        if(pair[0] == "FrameTime")
+                        {
+                            FrameTime = float.Parse(pair[1]);
+                        }
+                        if(pair[0] == "Frame")
+                        {
+                            AddFrame(TextureCache.GetTexture(pair[1]));
+                        }
+                    }
+
+                }
+            }
         }
 
         public float FrameTime { get; set; }

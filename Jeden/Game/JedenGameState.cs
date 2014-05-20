@@ -48,7 +48,10 @@ namespace Jeden.Game
 
             GameObjectFactory.RenderMgr = RenderMgr; // TODO: put somewhere better
 
-            player = GameObjectFactory.CreatePlayer(new Vector2f(100, 0));
+
+            RenderMgr.Camera.Size = new Vector2f(1280 / 64, 720 / 64);
+
+            player = GameObjectFactory.CreatePlayer(new Vector2f(0, -10));
             RenderMgr.Camera.Target = player;
 
             weapon = new GameObject();
@@ -60,7 +63,7 @@ namespace Jeden.Game
             player.AddComponent(new WeaponHoldingComponent(weaponComp, player));
 
 
-            TileMap tileMap = new TileMap("assets/testmap.tmx");
+            TileMap tileMap = new TileMap("assets/testmap.tmx", 1.0f/64);
 
             GameObject tileMapGo = new GameObject();
             GameObjects.Add(tileMapGo);
@@ -102,7 +105,7 @@ namespace Jeden.Game
             }
 
             for (int i = 0; i < 2; i++)
-                GameObjectFactory.CreateEnemy(new Vector2f(i * 400 + 500, 190));
+                GameObjectFactory.CreateEnemy(new Vector2f(i * 4 + 13, 1));
             
 
             GameObject cloth = new GameObject();
@@ -115,29 +118,6 @@ namespace Jeden.Game
             Music = new SFML.Audio.Music("assets/Widzy.wav");
        
             Music.Play();
-        }
-
-
-
-        void RemoveGameObject(GameObject obj)
-        {
-            // should components hold an instance of their manager so that in situations like this we can simply do
-            // Manager m = comp.Manager;
-            // m.RemoveComponenct(comp);
-            // ??
-            /*
-            foreach(Component comp in obj.Components.Values)
-            {
-                if(comp is RenderComponent)
-                    RenderMgr.RemoveComponent(comp as RenderComponent);
-
-                if (comp is PhysicsComponent)
-                    PhysicsMgr.RemoveComponent(comp as PhysicsComponent);
-            }
-
-            GameObjects.Remove(obj);
-             */
-            obj.Invalidate();
         }
 
         void InputHack()
@@ -161,6 +141,10 @@ namespace Jeden.Game
             {
                 player.HandleMessage(new AttackMessage(null));
               //  weapon.HandleMessage(new AttackMessage(null));
+            }
+            if(InputMgr.IsKeyDown(Keyboard.Key.A))
+            {
+                GameObjectFactory.CreateEnemy(player.Position + new Vector2f(2, 2));
             }
         }
 

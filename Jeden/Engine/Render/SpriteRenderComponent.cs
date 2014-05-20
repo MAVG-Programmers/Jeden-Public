@@ -21,7 +21,7 @@ namespace Jeden.Engine.Render
         
         {
             Texture = texture;
-            Position = parent.Position;
+            LocalPosition = parent.Position;
             SubImageRect.Top = 0;
             SubImageRect.Left = 0;
             SubImageRect.Width = (int)texture.Size.X;
@@ -37,7 +37,7 @@ namespace Jeden.Engine.Render
             : base(renderMgr, parent)
         {
             Texture = texture;
-            Position = parent.Position;
+            LocalPosition = parent.Position;
             SubImageRect = subImageRect;
             WorldWidth = SubImageRect.Width;
             WorldHeight = SubImageRect.Height;
@@ -50,12 +50,12 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
             //Update position from parent
-            Position = Parent.Position;
+            LocalPosition = Parent.Position;
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
-            renderMgr.DrawSprite(Texture, SubImageRect, Position, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
+            renderMgr.DrawSprite(Texture, SubImageRect, WorldPosition, WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
     }
 }

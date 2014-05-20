@@ -84,7 +84,7 @@ namespace Jeden.Engine.Render
                                     TileWidth * i + TileWidth * 0.5f,
                                     TileHeight * j + TileHeight * 0.5f);
 
-                    renderMgr.DrawSprite(Tiles[i, j].Texture, Tiles[i, j].SubImageRect, position + Position, TileWidth, TileHeight, false, false, Tint, ZIndex);
+                    renderMgr.DrawSprite(Tiles[i, j].Texture, Tiles[i, j].SubImageRect, position + WorldPosition, TileWidth, TileHeight, false, false, Tint, ZIndex);
 
                 }
             }

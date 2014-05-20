@@ -51,7 +51,7 @@ namespace Jeden.Game.Physics
         {
             Components = new List<PhysicsComponent>();
             //Create world with regular gravity
-            _world = new World(new Vector2(0f, 449.82f));
+            _world = new World(new Vector2(0f, 75));
         }
 
         //Update tick all components owned by this manager

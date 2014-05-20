@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\ConfigFileParser.cs" />
     <Compile Include="Engine\Object\Component.cs" />
     <Compile Include="Engine\Object\GameObject.cs" />
     <Compile Include="Engine\GameState.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Engine\Render\RenderManager.cs" />
     <Compile Include="Engine\Render\SpriteRenderComponent.cs" />
     <Compile Include="Engine\Render\SpriteSetRenderComponent.cs" />
+    <Compile Include="Engine\Render\TextureCache.cs" />
     <Compile Include="Engine\Render\TileMapRenderComponent.cs" />
     <Compile Include="Engine\TileMap\TiledSharp\ImageLayer.cs" />
     <Compile Include="Engine\TileMap\TiledSharp\Layer.cs" />

@@ -10,11 +10,15 @@ using Jeden.Game.Physics;
 using SFML.Window;
 using SFML.Graphics;
 using Jeden.Engine.Object;
+using Jeden.Engine;
 
 namespace Jeden.Game
 {
     class GameObjectFactory
     {
+
+        static ConfigFileParser playerConfigFileParser = new ConfigFileParser("cfg/player.txt");
+        static ConfigFileParser bulletConfigFileParser = new ConfigFileParser("cfg/bullet.txt");
         /// <summary>
         /// Create's the main player
         /// </summary>
@@ -25,40 +29,44 @@ namespace Jeden.Game
             GameObject player = new GameObject();
             player.Position = position;
 
-
-            Texture attack1  = new Texture("assets/attacking_1.png");
-            Texture attack2 = new Texture("assets/attacking_2.png");
-            Texture attack3 = new Texture("assets/attacking_3.png");
-            Texture walking = new Texture("assets/player.png");
-
             AnimationSetRenderComponent arc = RenderMgr.MakeNewAnimationSetComponent(player);
 
-            arc.AddFrame("Walking", walking);
-
-            arc.AddFrame("Attacking", attack1);
-            arc.AddFrame("Attacking", attack2);
-            arc.AddFrame("Attacking", attack3);
-            arc.WorldWidth = attack1.Size.X;
-            arc.WorldHeight = attack1.Size.Y;
-            arc.SetFrameTime("Attacking", 0.2f);
-
+            arc.AddAnimation("Walking", "cfg/player_walking_anim.txt");
+            arc.AddAnimation("Attacking", "cfg/player_attacking_anim.txt");
             arc.SetIsLooping("Attacking", false);
 
             arc.SetAnimation("Walking");
-            arc.ZIndex = 1000;
+            arc.ZIndex = playerConfigFileParser.GetAsInt("ZIndex");
+
+            arc.WorldWidth = playerConfigFileParser.GetAsFloat("SpriteWidth");
+            arc.WorldHeight = playerConfigFileParser.GetAsFloat("SpriteHeight");
             player.AddComponent(arc);
 
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(
-                player, 64, 128, 
+                player,
+                playerConfigFileParser.GetAsFloat("CollisionWidth"),
+                playerConfigFileParser.GetAsFloat("CollisionHeight"), 
                 PhysicsManager.PlayerCategory, 
                 PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, 
                 true);
 
+
+            physicsComp.Body.Friction = playerConfigFileParser.GetAsFloat("Friction");
+            physicsComp.Body.GravityScale = playerConfigFileParser.GetAsFloat("GravityScale");
+            physicsComp.Body.LinearDamping = playerConfigFileParser.GetAsFloat("LinearDamping");
+            physicsComp.Body.Mass = playerConfigFileParser.GetAsFloat("Mass");
+            physicsComp.Body.Restitution = playerConfigFileParser.GetAsFloat("Restitution");
+
+
             player.AddComponent(physicsComp);
 
-            player.AddComponent(new CharacterControllerComponent(arc, physicsComp, player));
+            CharacterControllerComponent controller = new CharacterControllerComponent(arc, physicsComp, player);
+            controller.WalkImpulse = playerConfigFileParser.GetAsFloat("WalkImpulse");
+            controller.JumpImpulse = playerConfigFileParser.GetAsFloat("JumpImpulse");
 
-            player.AddComponent(new HealthComponent(player, 400, 0));
+            player.AddComponent(controller);
+
+            player.AddComponent(new HealthComponent(player, playerConfigFileParser.GetAsFloat("MaxHealth")));
 
             GameState.GameObjects.Add(player);
 
@@ -76,16 +84,17 @@ namespace Jeden.Game
         /// <returns></returns>
         public static GameObject CreateBullet(GameObject attacker, Vector2f position, Vector2f direction)
         {
-            float SPEED = 1000.0f;
 
             GameObject gameObject = new GameObject();
             GameState.GameObjects.Add(gameObject);
             gameObject.Position = position;
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40,
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 
+                bulletConfigFileParser.GetAsFloat("CollisionWidth"), 
+                bulletConfigFileParser.GetAsFloat("CollisionHeight"),
                 PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, true);
-            physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
-            physicsComp.Body.GravityScale = 0.0f;
+            physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * bulletConfigFileParser.GetAsFloat("Speed");
+            physicsComp.Body.GravityScale = bulletConfigFileParser.GetAsFloat("GravityScale");
             gameObject.AddComponent(physicsComp);
 
 
@@ -93,9 +102,9 @@ namespace Jeden.Game
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, BulletTexture);
-            renderComp.WorldWidth = 40;
-            renderComp.WorldHeight = 40;
-            renderComp.ZIndex = 100;
+            renderComp.WorldWidth = bulletConfigFileParser.GetAsFloat("SpriteWidth");
+            renderComp.WorldHeight = bulletConfigFileParser.GetAsFloat("SpriteHeight");
+            renderComp.ZIndex = bulletConfigFileParser.GetAsInt("ZIndex");
             gameObject.AddComponent(renderComp);
 
             gameObject.AddComponent(new ExplodesOnCollisionComponent(gameObject));
@@ -128,7 +137,7 @@ namespace Jeden.Game
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, SwordTexture);
-            renderComp.Position = position + new Vector2f(length * 0.5f * xdirection, 0);
+            renderComp.LocalPosition = position + new Vector2f(length * 0.5f * xdirection, 0);
             renderComp.WorldWidth = length;
             renderComp.WorldHeight = width;
             renderComp.ZIndex = 100;
@@ -156,7 +165,7 @@ namespace Jeden.Game
             GameState.GameObjects.Add(gameObject);
             gameObject.Position = position;
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 40, 40,
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 1, 1,
                 PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, true);
             physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * SPEED;
             physicsComp.Body.GravityScale = 0.0f;
@@ -169,8 +178,8 @@ namespace Jeden.Game
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, StingerTexture);
-            renderComp.WorldWidth = StingerTexture.Size.X;
-            renderComp.WorldHeight = StingerTexture.Size.Y;
+            renderComp.WorldWidth = 1;
+            renderComp.WorldHeight = 1;
             renderComp.ZIndex = 100;
             gameObject.AddComponent(renderComp);
 
@@ -194,16 +203,16 @@ namespace Jeden.Game
             AnimationSetRenderComponent arc = RenderMgr.MakeNewAnimationSetComponent(enemy);
 
             arc.AddFrame("Flying", EnemyTexture);
-            arc.WorldWidth = EnemyTexture.Size.X;
-            arc.WorldHeight = EnemyTexture.Size.Y;
+            arc.WorldWidth = 1;
+            arc.WorldHeight = 1;
             arc.ZIndex = 1000;
             arc.SetFrameTime("Flying", 2.0f);
             arc.SetAnimation("Flying");
             enemy.AddComponent(arc);
 
-            enemy.AddComponent(new HealthComponent(enemy, 100, 1));
+            enemy.AddComponent(new HealthComponent(enemy, 100));
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(enemy, 54, 128, PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, true);
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(enemy, 1, 1, PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, true);
             enemy.AddComponent(physicsComp);
 
             FlyingBugControllerComponent charControllerComp = new FlyingBugControllerComponent(arc, physicsComp, enemy);
@@ -232,8 +241,8 @@ namespace Jeden.Game
                     animationRenderComponent.AddFrame(ExplosionTexture1, new IntRect(x * 64, y * 64, 64, 64));
                 }
 
-            animationRenderComponent.WorldWidth = 64;
-            animationRenderComponent.WorldHeight = 64;
+            animationRenderComponent.WorldWidth = 1;
+            animationRenderComponent.WorldHeight = 1;
             animationRenderComponent.IsLooping = false;
             animationRenderComponent.ZIndex = 175;
             gameObject.AddComponent(animationRenderComponent);
@@ -241,10 +250,6 @@ namespace Jeden.Game
 
             return gameObject;
         }
-
-        public static Texture DeathTexture1 = new Texture("assets/death1.png");
-        public static Texture DeathTexture2 = new Texture("assets/death2.png");
-        public static Texture DeathTexture3 = new Texture("assets/death3.png");
 
         public static GameObject CreateDeadGuy(Vector2f position)
         {
@@ -252,14 +257,10 @@ namespace Jeden.Game
             gameObject.Position = position;
             GameState.GameObjects.Add(gameObject);
 
-            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent(gameObject);
-            animationRenderComponent.FrameTime = 0.5f;
-            animationRenderComponent.AddFrame(DeathTexture1);
-            animationRenderComponent.AddFrame(DeathTexture2);
-            animationRenderComponent.AddFrame(DeathTexture3);
+            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent("cfg/player_death_anim.txt", gameObject);
 
-            animationRenderComponent.WorldWidth = 200;
-            animationRenderComponent.WorldHeight = 142;
+            animationRenderComponent.WorldWidth = 1;
+            animationRenderComponent.WorldHeight = 2;
             animationRenderComponent.IsLooping = false;
             animationRenderComponent.ZIndex = 175;
             gameObject.AddComponent(animationRenderComponent);
@@ -267,12 +268,6 @@ namespace Jeden.Game
 
             return gameObject;
         }
-
-        public static Texture BugDeathTexture1 = new Texture("assets/bugdeath1.png");
-        public static Texture BugDeathTexture2 = new Texture("assets/bugdeath2.png");
-        public static Texture BugDeathTexture3 = new Texture("assets/bugdeath3.png");
-        public static Texture BugDeathTexture4 = new Texture("assets/bugdeath4.png");
-        public static Texture BugDeathTexture5 = new Texture("assets/bugdeath5.png");
 
         public static GameObject CreateDeadBug(Vector2f position)
         {
@@ -280,30 +275,18 @@ namespace Jeden.Game
             gameObject.Position = position;
             GameState.GameObjects.Add(gameObject);
 
-            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent(gameObject);
-            animationRenderComponent.FrameTime = 0.5f;
-            animationRenderComponent.AddFrame(BugDeathTexture1);
-            animationRenderComponent.AddFrame(BugDeathTexture2);
-            animationRenderComponent.AddFrame(BugDeathTexture3);
-            animationRenderComponent.AddFrame(BugDeathTexture4);
-            animationRenderComponent.AddFrame(BugDeathTexture5);
+            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent("cfg/flying_bug_death_anim.txt", gameObject);
 
-            animationRenderComponent.WorldWidth = BugDeathTexture1.Size.X; ;
-            animationRenderComponent.WorldHeight = BugDeathTexture1.Size.Y;
+            animationRenderComponent.WorldWidth = 1;
+            animationRenderComponent.WorldHeight = 1;
             animationRenderComponent.IsLooping = false;
             animationRenderComponent.ZIndex = 175;
+
             gameObject.AddComponent(animationRenderComponent);
             gameObject.AddComponent(new InvalidatesWhenAnimationIsFinishedComponent(gameObject));
 
             return gameObject;
         }
-
-        public static Texture ShieldTexture1 = new Texture("assets/shield1.png");
-        public static Texture ShieldTexture2 = new Texture("assets/shield2.png");
-        public static Texture ShieldTexture3 = new Texture("assets/shield3.png");
-        public static Texture ShieldTexture4 = new Texture("assets/shield4.png");
-        public static Texture ShieldTexture5 = new Texture("assets/shield5.png");
-        public static Texture ShieldTexture6 = new Texture("assets/shield6.png");
 
         public static GameObject CreateShieldDamgageFeedback(Vector2f position)
         {
@@ -311,17 +294,10 @@ namespace Jeden.Game
             gameObject.Position = position;
             GameState.GameObjects.Add(gameObject);
 
-            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent(gameObject);
-            animationRenderComponent.FrameTime = 0.1f;
-            animationRenderComponent.AddFrame(ShieldTexture1);
-            animationRenderComponent.AddFrame(ShieldTexture2);
-            animationRenderComponent.AddFrame(ShieldTexture3);
-            animationRenderComponent.AddFrame(ShieldTexture4);
-            animationRenderComponent.AddFrame(ShieldTexture5);
-            animationRenderComponent.AddFrame(ShieldTexture6);
+            AnimationRenderComponent animationRenderComponent = RenderMgr.MakeNewAnimationComponent("cfg/shield_anim.txt", gameObject);
 
-            animationRenderComponent.WorldWidth = 200;
-            animationRenderComponent.WorldHeight = 142;
+            animationRenderComponent.WorldWidth = 1;
+            animationRenderComponent.WorldHeight = 2;
             animationRenderComponent.IsLooping = false;
             animationRenderComponent.ZIndex = 1775;
             gameObject.AddComponent(animationRenderComponent);

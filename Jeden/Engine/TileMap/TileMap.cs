@@ -28,6 +28,8 @@ namespace Jeden.Engine.TileMap
         Dictionary<int, TmxTileset> idSheet;
         List<int[,]> layerID;     // for future use, 1 layer only for now
 
+        float Scale;
+
         public struct ParallaxSprite
         {
             public Vector2f Position;
@@ -50,9 +52,9 @@ namespace Jeden.Engine.TileMap
         TileMapRenderComponent.Tile[,] RenderTiles;
         public List<PhysicsObject> PhysicsObjects;
 
-        public TileMap(string mapName) 
+        public TileMap(string mapName, float scale) 
         {
-
+            Scale = scale;
 
             map = new TmxMap(mapName);
             MapWidth = map.Width;
@@ -142,7 +144,7 @@ namespace Jeden.Engine.TileMap
 
         public void SetRenderComponent(TileMapRenderComponent tmrc)
         {
-            tmrc.Set(MapWidth, MapHeight, TileWidth, TileHeight, RenderTiles);
+            tmrc.Set(MapWidth, MapHeight, TileWidth*Scale, TileHeight*Scale, RenderTiles);
         }
 
         void ParseTileLayer()
@@ -181,10 +183,10 @@ namespace Jeden.Engine.TileMap
             foreach (TmxObjectGroup.TmxObject obj in objectGroup.Objects)
             {
                 PhysicsObject pobj;
-                pobj.Position.X = obj.X + obj.Width / 2; // move xy from top left to center of shape
-                pobj.Position.Y = obj.Y + obj.Height / 2;
-                pobj.Width = obj.Width;
-                pobj.Height = obj.Height;
+                pobj.Position.X = (obj.X + obj.Width / 2) * Scale; // move xy from top left to center of shape
+                pobj.Position.Y = (obj.Y + obj.Height / 2) * Scale;
+                pobj.Width = obj.Width * Scale;
+                pobj.Height = obj.Height * Scale;
 
                 PhysicsObjects.Add(pobj);
             }
@@ -196,11 +198,11 @@ namespace Jeden.Engine.TileMap
             {
                 ParallaxSprite sprite;
                 sprite.Texture = spriteSheets[idSheet[obj.Tile.Gid]];
-                sprite.Position.X = obj.X + sprite.Texture.Size.X / 2; // move xy from top left to center of shape
-                sprite.Position.Y = obj.Y + sprite.Texture.Size.Y / 2;
+                sprite.Position.X = (obj.X + sprite.Texture.Size.X / 2) * Scale; // move xy from top left to center of shape
+                sprite.Position.Y = (obj.Y + sprite.Texture.Size.Y / 2) * Scale;
 
-                sprite.Width = sprite.Texture.Size.X;
-                sprite.Height = sprite.Texture.Size.Y;
+                sprite.Width = sprite.Texture.Size.X * Scale;
+                sprite.Height = sprite.Texture.Size.Y * Scale;
                 sprite.SubImageRect = subImageRects[obj.Tile.Gid];
 
 

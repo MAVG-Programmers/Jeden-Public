@@ -44,7 +44,7 @@ namespace Jeden.Engine
             GameStates = new Stack<GameState>();
             InputMgr = new InputManager(this);
             DeltaTime = new GameTime();
-            Window = new RenderWindow(new VideoMode(800, 600), "Jeden");
+            Window = new RenderWindow(new VideoMode(1280, 720), "Jeden");
 
         }
 

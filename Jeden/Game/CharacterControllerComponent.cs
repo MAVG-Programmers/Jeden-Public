@@ -35,7 +35,8 @@ namespace Jeden.Game
     /// </summary>
     class CharacterControllerComponent : Component
     {
-
+        public float WalkImpulse;
+        public float JumpImpulse;
 
         /// <summary>
         /// Constructor
@@ -54,6 +55,13 @@ namespace Jeden.Game
 
         public override void Update(Engine.GameTime gameTime)
         {
+            const float MaxVelocity = 20;
+            if(PhysicsComponent.Body.LinearVelocity.LengthSquared() > MaxVelocity * MaxVelocity)
+            {
+                PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity / PhysicsComponent.Body.LinearVelocity.Length();
+                PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity * MaxVelocity;
+            }
+
             if(AnimationSetRenderComponent.IsFinished())
             {
                 AnimationSetRenderComponent.SetAnimation("Walking");
@@ -65,21 +73,21 @@ namespace Jeden.Game
             //TODO: get magic numbers out of here.
             if(message is WalkLeftMessage)
             {
-                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-9000.0f, 0));
+                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-WalkImpulse, 0));
                 AnimationSetRenderComponent.FlipX = true;
             }
 
 
             if(message is WalkRightMessage)
             {
-                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(9000.0f, 0));
+                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(WalkImpulse, 0));
                 AnimationSetRenderComponent.FlipX = false;
             }
             if(message is JumpMessage)
             {
                 if (FeetColliders.Count > 0)
                 {
-                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(0.0f, -1600000));
+                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(0.0f, -JumpImpulse));
                 }
             }
 
@@ -101,7 +109,7 @@ namespace Jeden.Game
                 }
             }
 
-            if(message is InvalidatedMessage)
+            if(message is InvalidateMessage)
             {
                 GameObjectFactory.CreateDeadGuy(Parent.Position);
             }

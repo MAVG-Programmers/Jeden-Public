@@ -33,21 +33,16 @@ namespace Jeden.Game
         /// </summary>
         public float CurrentHealth { get; set; }
 
-        /// <summary>
-        /// The amount of health that is regenerated each second.
-        /// </summary>
-        public float RegenerationPerSecond { get; set; }
 
         /// <summary>
         /// A new instance of HealthComponent.
         /// </summary>
         /// <param name="parent">The GameObject that owns this HealthComponent.</param>
         /// <param name="hp">The parent's maximum health.</param>
-        public HealthComponent(GameObject parent, float maxHealth, float regenerationPerSecond)
+        public HealthComponent(GameObject parent, float maxHealth)
             : base(parent)
         {
             MaxHealth = maxHealth;
-            RegenerationPerSecond = regenerationPerSecond;
             CurrentHealth = maxHealth;
         }
 
@@ -71,15 +66,7 @@ namespace Jeden.Game
         {
             if (CurrentHealth <= 0)
             {
-                Parent.Invalidate();
-            }
-            else
-            {
-                //Check if cur health is < than max, if true regen health
-                if (CurrentHealth <= MaxHealth)
-                {
-                    CurrentHealth += (RegenerationPerSecond / 1000) * gameTime.ElapsedGameTime.Milliseconds;
-                }
+                Parent.HandleMessage(new InvalidateMessage(this));
             }
 
             //Truncate cur health to max health

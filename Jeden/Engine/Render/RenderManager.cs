@@ -211,6 +211,18 @@ namespace Jeden.Engine.Render
         }
 
         /// <summary>
+        ///Creates a single animation component for a GameObject to use
+        ///Also adds the new component to the list of those in use
+        ///</summary>
+        ///<returns> The new component.</returns>
+        public AnimationRenderComponent MakeNewAnimationComponent(String filename, GameObject owner)
+        {
+            AnimationRenderComponent component = new AnimationRenderComponent(filename, this, owner);
+            Components.Add(component);
+            return component;
+        }
+
+        /// <summary>
         ///Creates a set of animations component for a GameObject to use
         ///Also adds the new component to the list of those in use
         ///</summary>

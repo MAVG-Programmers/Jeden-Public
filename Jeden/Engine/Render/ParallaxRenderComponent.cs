@@ -36,7 +36,7 @@ namespace Jeden.Engine.Render
         /// <returns>The clip rect</returns>
         public override FloatRect GetScreenRect(Camera camera)
         {
-            Vector2f pos = (Position - camera.Center) * ParallaxFactor + camera.Center;
+            Vector2f pos = (WorldPosition - camera.Center) * ParallaxFactor + camera.Center;
             
             FloatRect rect;
             
@@ -56,7 +56,7 @@ namespace Jeden.Engine.Render
         public override void Draw(RenderManager renderMgr, Camera camera)
         {
             //add camera position to where we want to draw on the screen, and let the view transform just subtract it back off
-            renderMgr.DrawSprite(Texture, SubImageRect, (Position - camera.Center) * ParallaxFactor + camera.Center, 
+            renderMgr.DrawSprite(Texture, SubImageRect, (WorldPosition - camera.Center) * ParallaxFactor + camera.Center, 
                 WorldWidth, WorldHeight, FlipX, FlipY, Tint, ZIndex);
         }
     }

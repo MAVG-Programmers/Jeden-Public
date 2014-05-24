@@ -7,9 +7,8 @@ redditors with wildly varying amounts of skill and experience
 can come together and work as peers to produce an awesome game.
 
 Jeden uses the SFML library with .NET and a physics engine 
-called Farseer. The whole game is done in C# and thus only
-supports windows at the moment. Support for running under `mono` 
-has beeen suggested.
+called Farseer. The whole game is done in C# and only
+supports windows at the moment. Although porting to other platforms should be possible.
 
 Join us on our #MakeAVideoGame IRC channel on irc.coldfront.net
 with your favorite client, or use this [Mibbit widget](http://widget.mibbit.com/?server=irc.coldfront.net&channel=%23MakeAVideoGame).

@@ -1,26 +1,23 @@
-Jeden
+Project Jeden
 =====
-Jeden is a project developed by a group of people from the 
-internet forum [reddit.com](http://reddit.com/r/makeavideogame).
-This is a game that is developed by different people around the world 
+Project Jeden is a videogame developed by a group of redditors 
+from [/r/MakeAVideoGame](http://reddit.com/r/MakeAVideoGame). 
+It's a project intended to prove that an unorganized group of 
+redditors with wildly varying amounts of skill and experience 
+can come together and work as peers to produce an awesome game.
 
-The game uses the SFML library with .Net and a physics
-engine called Farseer. The whole game is done in C# and thus only
-support windows at the moment. Some people in the group suggest 
-that we add support for the game to run under `mono`.
+Jeden uses the SFML library with .NET and a physics engine 
+called Farseer. The whole game is done in C# and only
+supports windows at the moment. Although porting to other platforms should be possible.
+
+Join us on our #MakeAVideoGame IRC channel on irc.coldfront.net
+with your favorite client, or use this [Mibbit widget](http://widget.mibbit.com/?server=irc.coldfront.net&channel=%23MakeAVideoGame).
 
 Build
 =====
-The project is a complete project for Visual Studio 2012.
+This is a complete project for Visual Studio 2012.
 Open it and press `Build`.
-
-Install
-=======
-The game has no installer at the moment, see build instructions.
 
 Run
 ===
 Just click the exe file in the output directory.
-
-Collaborators
-=============

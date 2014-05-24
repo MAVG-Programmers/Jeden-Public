@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jeden.Engine.Object;
+using Jeden.Game.Physics;
 
 namespace Jeden.Game
 {
@@ -32,6 +33,15 @@ namespace Jeden.Game
         {
             Attacker = attacker;
             Damage = damage;
+        }
+
+        public override void HandleMessage(Message message)
+        {
+            if (message is CollisionMessage)
+            {
+                CollisionMessage collisionMsg = message as CollisionMessage;
+                 collisionMsg.GameObject.HandleMessage(new DamageMessage(this, Damage));
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Jeden.Game
 
     class DamageMessage : Message 
     {
-        float Damage { get; set; }
+        public float Damage { get; set; }
 
         public DamageMessage(Component sender, float damage) : base(sender)
         {
@@ -57,25 +57,15 @@ namespace Jeden.Game
         public override void HandleMessage(Message message)
         {
             base.HandleMessage(message);
-
-            if(message is CollisionMessage)
+            if (message is DamageMessage)
             {
+                DamageMessage damageMessage = message as DamageMessage;
+                CurrentHealth -= damageMessage.Damage;
 
-                CollisionMessage collisionMsg = message as CollisionMessage;
-                foreach(Component comp in collisionMsg.GameObject.Components)
-                {
-                    if (comp is AttackComponent)
-                    {
-                        AttackComponent attackComp = comp as AttackComponent;
+                GameObjectFactory.CreateShieldDamgageEffect(Parent.Position);
 
-                        CurrentHealth -= attackComp.Damage;
-
-                        Parent.HandleMessage(new DamageMessage(this, attackComp.Damage));
-
-                        GameObjectFactory.CreateShieldDamgageEffect(Parent.Position);
-                    }
-                }
             }
+
         }
     }
 

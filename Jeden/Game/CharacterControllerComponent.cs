@@ -102,6 +102,11 @@ namespace Jeden.Game
                 }
             }
 
+            if (message is DamageMessage)
+            {
+
+            }
+
             if (message is AttackMessage)
             {
 

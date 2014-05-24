@@ -1,0 +1,8 @@
+SpriteWidth=1
+SpriteHeight=1
+ZIndex=1000
+Health=100
+CollisionWidth=1
+CollisionHeight=1
+Mass=20
+MovementImpulse=1.0 

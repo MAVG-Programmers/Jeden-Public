@@ -19,7 +19,7 @@ namespace Jeden.Game
 
 
     /// <summary>
-    /// Represents a GameObjects health, armor and resistances.
+    /// Represents a GameObjects health
     /// </summary>
     class HealthComponent : Component
     {
@@ -34,11 +34,6 @@ namespace Jeden.Game
         public float CurrentHealth { get; set; }
 
 
-        /// <summary>
-        /// A new instance of HealthComponent.
-        /// </summary>
-        /// <param name="parent">The GameObject that owns this HealthComponent.</param>
-        /// <param name="hp">The parent's maximum health.</param>
         public HealthComponent(GameObject parent, float maxHealth)
             : base(parent)
         {
@@ -46,22 +41,6 @@ namespace Jeden.Game
             CurrentHealth = maxHealth;
         }
 
-        /// <summary>
-        /// Reduces the Health of the HealthComponent.
-        /// </summary>
-        /// <param name="amount">The amount of damage.</param>
-        public void Damage(float amount)
-        {
-            //TODO: Calculate resistances to damage taken
-            CurrentHealth -= amount;
-
-            Parent.HandleMessage(new DamageMessage(this, amount));
-        }
-
-        /// <summary>
-        /// Updates the HealthComponent
-        /// </summary>
-        /// <param name="gameTime">The time difference to the last frame.</param>
         public override void Update(GameTime gameTime)
         {
             if (CurrentHealth <= 0)
@@ -69,7 +48,6 @@ namespace Jeden.Game
                 Parent.HandleMessage(new InvalidateMessage(this));
             }
 
-            //Truncate cur health to max health
             if (CurrentHealth > MaxHealth)
             {
                 CurrentHealth = MaxHealth;
@@ -90,9 +68,11 @@ namespace Jeden.Game
                     {
                         AttackComponent attackComp = comp as AttackComponent;
 
-                        Damage(attackComp.Damage);
+                        CurrentHealth -= attackComp.Damage;
 
-                        GameObjectFactory.CreateShieldDamgageFeedback(Parent.Position);
+                        Parent.HandleMessage(new DamageMessage(this, attackComp.Damage));
+
+                        GameObjectFactory.CreateShieldDamgageEffect(Parent.Position);
                     }
                 }
             }

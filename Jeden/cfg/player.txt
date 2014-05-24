@@ -1,2 +1,13 @@
-WorldWidth=10
-WorldHeight=10
+SpriteWidth=1
+SpriteHeight=2
+CollisionWidth=1
+CollisionHeight=2
+WalkImpulse=40
+JumpImpulse=3000
+Friction=1
+GravityScale=1
+LinearDamping=1
+Mass=100
+Restitution=0
+ZIndex=175
+MaxHealth=100

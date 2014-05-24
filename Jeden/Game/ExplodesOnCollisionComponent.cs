@@ -23,8 +23,8 @@ namespace Jeden.Game
             if(message is CollisionMessage)
             {
                 CollisionMessage collisionMessage = message as CollisionMessage;
-                // suicide
                 GameObjectFactory.CreateExplosion(Parent.Position);
+                // suicide
                 Parent.HandleMessage(new InvalidateMessage(this));
             }
         }

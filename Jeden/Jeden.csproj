@@ -104,7 +104,7 @@
     <Compile Include="Game\FrameLifetimeComponent.cs" />
     <Compile Include="Game\GameObjectFactory.cs" />
     <Compile Include="Game\HealthComponent.cs" />
-    <Compile Include="Game\InvalidatesWhenIsFinishedComponent.cs" />
+    <Compile Include="Game\InvalidatesWhenAnimationIsFinishedComponent.cs" />
     <Compile Include="Game\JedenGameState.cs" />
     <Compile Include="Game\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\InputManager.cs" />

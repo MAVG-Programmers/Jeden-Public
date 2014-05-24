@@ -28,10 +28,10 @@ namespace Jeden.Game
         /// </summary>
         /// <param name="attacker">The GameObject that created the Attack</param>
         /// <param name="parent">The GameObject that holds the component</param>
-        public AttackComponent(GameObject attacker, GameObject parent) : base(parent)
+        public AttackComponent(GameObject attacker, float damage, GameObject parent) : base(parent)
         {
             Attacker = attacker;
-            Damage = 65;
+            Damage = damage;
         }
     }
 }

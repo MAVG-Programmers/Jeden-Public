@@ -1,0 +1,7 @@
+FrameTime=0.1
+Frame=assets/shield1.png
+Frame=assets/shield2.png
+Frame=assets/shield3.png
+Frame=assets/shield4.png
+Frame=assets/shield5.png
+Frame=assets/shield6.png

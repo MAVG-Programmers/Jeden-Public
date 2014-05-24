@@ -53,6 +53,9 @@ namespace Jeden.Engine.Render
                     string[] pair = line.Split('=');
                     if(pair.Count() == 2)
                     {
+                        pair[0].Trim();
+                        pair[1].Trim();
+
                         if(pair[0] == "FrameTime")
                         {
                             FrameTime = float.Parse(pair[1]);

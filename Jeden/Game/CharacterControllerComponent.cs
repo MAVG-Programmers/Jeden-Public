@@ -61,33 +61,44 @@ namespace Jeden.Game
                 PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity / PhysicsComponent.Body.LinearVelocity.Length();
                 PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity * MaxVelocity;
             }
-
-            if(AnimationSetRenderComponent.IsFinished())
-            {
-                AnimationSetRenderComponent.SetAnimation("Walking");
-            }
         }
 
         public override void HandleMessage(Message message)
         {
             //TODO: get magic numbers out of here.
-            if(message is WalkLeftMessage)
+            if (message is WalkLeftMessage)
             {
                 PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-WalkImpulse, 0));
                 AnimationSetRenderComponent.FlipX = true;
+                AnimationSetRenderComponent.SetAnimation("Walking"); // this will just set to falling later if the character is falling
             }
-
-
-            if(message is WalkRightMessage)
+            else if (message is WalkRightMessage)
             {
                 PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(WalkImpulse, 0));
                 AnimationSetRenderComponent.FlipX = false;
+                AnimationSetRenderComponent.SetAnimation("Walking");// this will just set to falling later if the character is falling
             }
-            if(message is JumpMessage)
+            else if (message is JumpMessage)
             {
                 if (FeetColliders.Count > 0)
                 {
                     PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(0.0f, -JumpImpulse));
+                    AnimationSetRenderComponent.SetAnimation("Jumping");
+                }
+            }
+            else
+                AnimationSetRenderComponent.SetAnimation("Idle");// this will just set to falling later if the character is falling
+
+            if (FeetColliders.Count == 0) // in the air
+            {
+                if (AnimationSetRenderComponent.CurrentKey == "Jumping")
+                {
+                    if (AnimationSetRenderComponent.IsFinished()) // finished jump animation so switch to falling
+                        AnimationSetRenderComponent.SetAnimation("Falling");
+                }
+                else
+                {
+                    AnimationSetRenderComponent.SetAnimation("Falling");
                 }
             }
 
@@ -111,7 +122,7 @@ namespace Jeden.Game
 
             if(message is InvalidateMessage)
             {
-                GameObjectFactory.CreateDeadGuy(Parent.Position);
+                GameObjectFactory.CreateDeadPlayer(Parent.Position);
             }
             if(message is CollisionMessage)
             {

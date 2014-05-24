@@ -1,0 +1,4 @@
+FrameTime=0.5
+Frame=assets/death1.png
+Frame=assets/death2.png
+Frame=assets/death3.png

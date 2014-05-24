@@ -1,4 +1,4 @@
-﻿
+﻿/*
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,6 +155,7 @@ namespace Jeden.Engine.Render
                 }
             }
              */
+/*
         }
 
         public void Step(Vector2f mouse, float dt)
@@ -265,3 +266,4 @@ namespace Jeden.Engine.Render
         }
     }
 }
+*/

@@ -1,0 +1,3 @@
+SpriteWidth=1
+SpriteHeight=2
+ZIndex=200

@@ -21,8 +21,12 @@ namespace Jeden.Engine
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] pair = line.Split('=');
-                    if(pair.Count() == 2)
+                    if (pair.Count() == 2)
+                    {
+                        pair[0].Trim();
+                        pair[1].Trim();
                         KeyValueMap[pair[0]] = pair[1];
+                    }
                 }
             }
         }

@@ -46,7 +46,7 @@ namespace Jeden.Game
 
             if(Dot(Parent.Position - TargetPosition, TargetDirection) <= 0) // don't keep overshooting target
             {
-                TargetPosition = AreaPosition + new Vector2f((float)Random.NextDouble() * 10, (float)Random.NextDouble() * 2);
+                TargetPosition = AreaPosition + new Vector2f((float)Random.NextDouble() * 20 - 10, (float)Random.NextDouble() * 2 - 1);
                 TargetDirection = TargetPosition - Parent.Position;
                 Parent.HandleMessage(new FlyMessage(TargetDirection, Parent));
             }

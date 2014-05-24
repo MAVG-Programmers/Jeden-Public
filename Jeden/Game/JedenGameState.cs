@@ -105,17 +105,10 @@ namespace Jeden.Game
             }
 
             for (int i = 0; i < 2; i++)
-                GameObjectFactory.CreateEnemy(new Vector2f(i * 4 + 13, 1));
-            
+                GameObjectFactory.CreateFlyingBug(new Vector2f(i * 4 + 13, 1));
 
-            GameObject cloth = new GameObject();
-            GameObjects.Add(cloth);
-            BandanaRenderComponent crc = new BandanaRenderComponent(RenderMgr, player, cloth);
-            crc.ZIndex = 150;
-            cloth.AddComponent(crc);
-            RenderMgr.Components.Add(crc);
 
-            Music = new SFML.Audio.Music("assets/Widzy.wav");
+            Music = new SFML.Audio.Music("assets/DesertSands_Overworld.wav");
        
             Music.Play();
         }
@@ -144,7 +137,7 @@ namespace Jeden.Game
             }
             if(InputMgr.IsKeyDown(Keyboard.Key.A))
             {
-                GameObjectFactory.CreateEnemy(player.Position + new Vector2f(2, 2));
+                GameObjectFactory.CreateFlyingBug(player.Position + new Vector2f(2, 2));
             }
         }
 

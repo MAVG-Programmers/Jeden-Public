@@ -1,0 +1,6 @@
+FrameTime=0.5
+Frame=assets/bugdeath1.png
+Frame=assets/bugdeath2.png
+Frame=assets/bugdeath3.png
+Frame=assets/bugdeath4.png
+Frame=assets/bugdeath5.png

@@ -1,0 +1,8 @@
+Speed=10
+CollisionWidth=1
+CollisionHeight=1
+GravityScale=0
+SpriteWidth=1
+SpriteHeight=1
+ZIndex=100
+Damage=10

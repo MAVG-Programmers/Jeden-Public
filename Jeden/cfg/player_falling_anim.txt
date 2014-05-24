@@ -1,0 +1,2 @@
+FrameTime=0.5
+Frame=assets/player.png

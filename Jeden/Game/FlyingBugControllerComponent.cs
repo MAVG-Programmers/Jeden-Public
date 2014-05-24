@@ -29,10 +29,10 @@ namespace Jeden.Game
         /// Constructor
         /// </summary>
         /// <param name="parent">GameObect that owns the component</param>
-        public FlyingBugControllerComponent(AnimationSetRenderComponent animSetComponent, PhysicsComponent physicsComponent, GameObject parent)
+        public FlyingBugControllerComponent(AnimationSetRenderComponent animSetComponent, PhysicsComponent physicsComponent, float movementImpulse, GameObject parent)
             : base(parent)
         {
-
+            MovementImpulse = movementImpulse;
             AnimationSetRenderComponent = animSetComponent;
             PhysicsComponent = physicsComponent;
 
@@ -56,17 +56,18 @@ namespace Jeden.Game
             if(message is FlyMessage)
             {
                 FlyMessage flyMessage = message as FlyMessage;
-                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(flyMessage.Direction.X, flyMessage.Direction.Y) * 0.2f);
+                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(flyMessage.Direction.X, flyMessage.Direction.Y) * MovementImpulse);
             }
 
             if(message is InvalidateMessage)
             {
-                GameObjectFactory.CreateDeadBug(Parent.Position);
+                GameObjectFactory.CreateDeadFlyingBug(Parent.Position);
             }
         }
 
 
         AnimationSetRenderComponent AnimationSetRenderComponent; 
         PhysicsComponent PhysicsComponent;
+        float MovementImpulse;
     }
 }

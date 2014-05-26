@@ -1,4 +1,4 @@
-FrameTime=1.2
+FrameTime=0.1
 Frame=assets/attacking_1.png
 Frame=assets/attacking_2.png
 Frame=assets/attacking_3.png

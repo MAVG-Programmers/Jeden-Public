@@ -14,9 +14,10 @@ namespace Jeden.Game
 
     class AttackMessage : Message
     {
-        public AttackMessage(Component sender) : base(sender) 
+        public bool Melee;
+        public AttackMessage(Component sender, bool melee) : base(sender) 
         {
-
+            Melee = melee;
         }
 
     }
@@ -32,20 +33,23 @@ namespace Jeden.Game
         
         protected double LastAttack;
         protected double Time;
-        protected Vector2f Position;
-        protected Vector2f AttackDirection;
+        protected int AttackDirection;
         protected GameObject Owner;
+        protected Vector2f Offset;
+        protected Vector2f SpawnOffset;
 
-        public WeaponComponent(GameObject owner, GameObject parent) : base(parent)
+        public WeaponComponent(GameObject owner, Vector2f offset, GameObject parent) : base(parent)
         {
-            AttackDirection = new Vector2f(1, 0);
+            AttackDirection = 1;
             Owner = owner;
+            Offset = offset;
+            SpawnOffset = offset;
         }
 
         public override void Update(Engine.GameTime gameTime)
         {
             Time = gameTime.TotalGameTime.TotalSeconds;
-            Position = Owner.Position; // + offset
+            Parent.Position = Owner.Position + new Vector2f(Offset.X * AttackDirection, Offset.Y);
         }
 
         public virtual bool TryAttack() { return false; }
@@ -62,25 +66,29 @@ namespace Jeden.Game
             }
             if(message is WalkLeftMessage)
             {
-                AttackDirection = new Vector2f(-1, 0);
+                AttackDirection = -1;
             }
             if(message is WalkRightMessage)
             {
-                AttackDirection = new Vector2f(1, 0);
+                AttackDirection = 1;
             }
         }
     }
 
     class MeleeWeaponComponent : WeaponComponent
     {
-        public MeleeWeaponComponent(GameObject owner, GameObject parent) : base(owner, parent) { }
+        public MeleeWeaponComponent(GameObject owner, Vector2f offset, GameObject parent) : base(owner, offset, parent) { }
 
         public override bool TryAttack()
         {
             if (Time > LastAttack + AttackDelay)
             {
                 LastAttack = Time;
-                GameObjectFactory.CreateSword(Owner, Position, 95, 35, Math.Sign(AttackDirection.X));
+                Vector2f actualOffset = new Vector2f(Offset.X * AttackDirection, Offset.Y);
+                GameObjectFactory.CreateJab(Owner, 
+                    this, 
+                    Owner.Position + actualOffset, 
+                    AttackDirection);
                 return true;
             }
 
@@ -90,14 +98,18 @@ namespace Jeden.Game
 
     class GunWeaponComponent : WeaponComponent 
     {
-        public GunWeaponComponent(GameObject owner, GameObject parent) : base(owner, parent) {  }
+        public GunWeaponComponent(GameObject owner, Vector2f offset, GameObject parent) : base(owner, offset, parent) {  }
 
         public override bool TryAttack()
         {
             if (Time > LastAttack + AttackDelay)
             {
                 LastAttack = Time;
-                GameObjectFactory.CreateBullet(Owner, Position + AttackDirection * 40.0f, AttackDirection);
+                Vector2f actualOffset = new Vector2f(Offset.X * AttackDirection, Offset.Y);
+                GameObjectFactory.CreateBullet(
+                    Owner, 
+                    Owner.Position + actualOffset, 
+                    AttackDirection);
                 return true;
             }
 

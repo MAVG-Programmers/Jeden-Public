@@ -110,6 +110,7 @@
     <Compile Include="Engine\InputManager.cs" />
     <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="Game\Physics\PhysicsComponent.cs" />
+    <Compile Include="Game\JabControllerComponent.cs" />
     <Compile Include="Game\WeaponComponent.cs" />
     <Compile Include="Game\WeaponHoldingComponent.cs" />
     <Compile Include="Program.cs" />

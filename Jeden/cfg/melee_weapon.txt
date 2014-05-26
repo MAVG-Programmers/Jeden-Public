@@ -1,0 +1,3 @@
+OffsetX=0.5
+OffsetY=0
+AttackDelay=1

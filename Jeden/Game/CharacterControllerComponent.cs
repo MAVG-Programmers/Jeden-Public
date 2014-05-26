@@ -61,44 +61,66 @@ namespace Jeden.Game
                 PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity / PhysicsComponent.Body.LinearVelocity.Length();
                 PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity * MaxVelocity;
             }
+
+            InAir = FeetColliders.Count == 0;
+
+            if (AnimationSetRenderComponent.CurrentKey == "Attacking" && !AnimationSetRenderComponent.IsFinished())
+            {
+
+            }
+            else
+            {
+
+                if (InAir && AnimationSetRenderComponent.CurrentKey != "Jumping")
+                {
+                    AnimationSetRenderComponent.SetAnimation("Falling");
+                }
+                if (AnimationSetRenderComponent.CurrentKey == "Jumping" && AnimationSetRenderComponent.IsFinished())
+                {
+                    AnimationSetRenderComponent.SetAnimation("Falling");
+                }
+
+                if (!IsWalking && !InAir)
+                    AnimationSetRenderComponent.SetAnimation("Idle");
+            }
+
+            IsWalking = false;
         }
 
         public override void HandleMessage(Message message)
         {
-            //TODO: get magic numbers out of here.
+
             if (message is WalkLeftMessage)
             {
                 PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-WalkImpulse, 0));
                 AnimationSetRenderComponent.FlipX = true;
-                AnimationSetRenderComponent.SetAnimation("Walking"); // this will just set to falling later if the character is falling
+                if (AnimationSetRenderComponent.CurrentKey != "Jumping" && 
+                    AnimationSetRenderComponent.CurrentKey != "Falling" && 
+                    AnimationSetRenderComponent.CurrentKey != "Attacking")
+                {
+                    IsWalking = true;
+                    AnimationSetRenderComponent.SetAnimation("Walking"); 
+                }
             }
             else if (message is WalkRightMessage)
             {
                 PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(WalkImpulse, 0));
                 AnimationSetRenderComponent.FlipX = false;
-                AnimationSetRenderComponent.SetAnimation("Walking");// this will just set to falling later if the character is falling
+                if (AnimationSetRenderComponent.CurrentKey != "Jumping" && 
+                    AnimationSetRenderComponent.CurrentKey != "Falling" && 
+                    AnimationSetRenderComponent.CurrentKey != "Attacking")
+                {
+                    IsWalking = true;
+                    AnimationSetRenderComponent.SetAnimation("Walking");
+                }
             }
             else if (message is JumpMessage)
             {
                 if (FeetColliders.Count > 0)
                 {
+                    FeetColliders.Clear();
                     PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(0.0f, -JumpImpulse));
                     AnimationSetRenderComponent.SetAnimation("Jumping");
-                }
-            }
-            else
-                AnimationSetRenderComponent.SetAnimation("Idle");// this will just set to falling later if the character is falling
-
-            if (FeetColliders.Count == 0) // in the air
-            {
-                if (AnimationSetRenderComponent.CurrentKey == "Jumping")
-                {
-                    if (AnimationSetRenderComponent.IsFinished()) // finished jump animation so switch to falling
-                        AnimationSetRenderComponent.SetAnimation("Falling");
-                }
-                else
-                {
-                    AnimationSetRenderComponent.SetAnimation("Falling");
                 }
             }
 
@@ -114,12 +136,26 @@ namespace Jeden.Game
                 {
                     if (comp is WeaponHoldingComponent)
                     {
-                        WeaponHoldingComponent weaponHoldingComp = comp as WeaponHoldingComponent;
-                        WeaponComponent weapon = weaponHoldingComp.WeaponComponent;
 
-                        if (weapon.TryAttack())
+                        WeaponHoldingComponent weaponHoldingComp = comp as WeaponHoldingComponent;
+
+
+                        AttackMessage attackMessage = message as AttackMessage;
                         {
-                            AnimationSetRenderComponent.SetAnimation("Attacking");
+                            if (attackMessage.Melee)
+                            {
+                                if (weaponHoldingComp.MeleeWeaponComponent.TryAttack())
+                                {
+                                    AnimationSetRenderComponent.SetAnimation("Attacking");
+                                }
+                            }
+                            else
+                            {
+                                if (weaponHoldingComp.GunWeaponComponent.TryAttack())
+                                {
+                                    AnimationSetRenderComponent.SetAnimation("Attacking");
+                                }
+                            }
                         }
                     }
                 }
@@ -135,6 +171,12 @@ namespace Jeden.Game
                 if(collisionMsg.Contact.Manifold.LocalNormal.Y > 0)
                 {
                     FeetColliders.Add(collisionMsg.GameObject);
+                    if (AnimationSetRenderComponent.CurrentKey == "Jumping" ||
+                        AnimationSetRenderComponent.CurrentKey == "Falling" &&
+                        AnimationSetRenderComponent.CurrentKey != "Attacking")
+                    {
+                        AnimationSetRenderComponent.SetAnimation("Idle");
+                    }
                 }
             }
             if (message is SeperationMessage)
@@ -150,6 +192,8 @@ namespace Jeden.Game
 
         AnimationSetRenderComponent AnimationSetRenderComponent; 
         PhysicsComponent PhysicsComponent;
+        bool InAir;
+        bool IsWalking;
         
 
         List<GameObject> FeetColliders; 

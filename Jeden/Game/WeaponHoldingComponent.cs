@@ -9,11 +9,13 @@ namespace Jeden.Game
 {
     class WeaponHoldingComponent : Component
     {
-        public WeaponComponent WeaponComponent { get; set; } 
-
-        public WeaponHoldingComponent(WeaponComponent weaponComponent, GameObject parent) : base(parent)
+        public MeleeWeaponComponent MeleeWeaponComponent { get; set; }
+        public GunWeaponComponent GunWeaponComponent { get; set; }
+        public WeaponHoldingComponent(MeleeWeaponComponent meleeWeaponComponent, GunWeaponComponent gunWeaponComponent, GameObject parent)
+            : base(parent)
         {
-            WeaponComponent = weaponComponent;
+            MeleeWeaponComponent = meleeWeaponComponent;
+            GunWeaponComponent = gunWeaponComponent;
         }
     }
 }

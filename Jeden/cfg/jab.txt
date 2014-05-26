@@ -1,0 +1,7 @@
+CollisionWidth=0.5
+CollisionHeight=0.1
+Damage=20
+ForwardX=0.5
+BackwardX=0.0
+ForwardTime=0.1
+BackwardTime=0.2

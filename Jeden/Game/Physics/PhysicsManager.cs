@@ -52,6 +52,7 @@ namespace Jeden.Game.Physics
             Components = new List<PhysicsComponent>();
             //Create world with regular gravity
             _world = new World(new Vector2(0f, 75));
+          
         }
 
         //Update tick all components owned by this manager
@@ -67,21 +68,17 @@ namespace Jeden.Game.Physics
             
         }
 
-        public PhysicsComponent MakeNewComponent(GameObject owner, float width, float height, Category categories, Category collidesWith, bool dynamic)
+        public PhysicsComponent MakeNewComponent(GameObject owner, float width, float height, Category categories, Category collidesWith, BodyType bodyType)
         {
 
            
             //Fixed density of 1.0
             var body = BodyFactory.CreateRectangle(_world, width, height, 1.0f);
             body.Position = new Vector2(owner.Position.X, owner.Position.Y);
-            if (dynamic)
-            {
-                body.BodyType = BodyType.Dynamic;
-            }
-            else
-            {
-                body.BodyType = BodyType.Static;
-            }
+
+            body.BodyType = bodyType;
+           
+
             //AABB, no rotation
             body.FixedRotation = true;
             PhysicsComponent comp = new PhysicsComponent(body, this, owner);

@@ -1,2 +1,2 @@
 FrameTime=0
-Frame=assets/bullet.txt
+Frame=assets/bullet.png

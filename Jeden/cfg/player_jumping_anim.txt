@@ -1,2 +1,2 @@
-FrameTime=0.5
-Frame=assets/player.png
+FrameTime=0.3
+Frame=assets/player_jumping.png

@@ -11,6 +11,7 @@ using SFML.Window;
 using SFML.Graphics;
 using Jeden.Engine.Object;
 using Jeden.Engine;
+using FarseerPhysics.Dynamics;
 
 namespace Jeden.Game
 {
@@ -20,12 +21,15 @@ namespace Jeden.Game
         static ConfigFileParser playerConfigFileParser = new ConfigFileParser("cfg/player.txt");
         static ConfigFileParser flyingBugConfigFileParser = new ConfigFileParser("cfg/flying_bug.txt");
         static ConfigFileParser bulletConfigFileParser = new ConfigFileParser("cfg/bullet.txt");
-        static ConfigFileParser swordConfigFileParser = new ConfigFileParser("cfg/sword.txt");
+        static ConfigFileParser jabConfigFileParser = new ConfigFileParser("cfg/jab.txt");
         static ConfigFileParser explosionConfigFileParser = new ConfigFileParser("cfg/explosion.txt");
         static ConfigFileParser stingerConfigFileParser = new ConfigFileParser("cfg/stinger.txt");
         static ConfigFileParser deadFlyingBugConfigFileParser = new ConfigFileParser("cfg/dead_flying_bug.txt");
         static ConfigFileParser deadPlayerConfigFileParser = new ConfigFileParser("cfg/dead_player.txt");
         static ConfigFileParser shieldDamageEffectConfigFileParser = new ConfigFileParser("cfg/shield_damage_effect.txt");
+        static ConfigFileParser meleeWeaponConfigFileParser = new ConfigFileParser("cfg/melee_weapon.txt");
+        static ConfigFileParser gunWeaponConfigFileParser = new ConfigFileParser("cfg/gun_weapon.txt");
+
         /// <summary>
         /// Create's the main player
         /// </summary>
@@ -36,24 +40,25 @@ namespace Jeden.Game
             GameObject player = new GameObject();
             player.Position = position;
 
-            AnimationSetRenderComponent arc = RenderMgr.MakeNewAnimationSetComponent(player);
+            AnimationSetRenderComponent anims = RenderMgr.MakeNewAnimationSetComponent(player);
 
-            arc.AddAnimation("Walking", "cfg/player_walking_anim.txt");
-            arc.AddAnimation("Attacking", "cfg/player_melee_attacking_anim.txt");
-            arc.AddAnimation("Idle", "cfg/player_idle_anim.txt");
-            arc.AddAnimation("Jumping", "cfg/player_jumping_anim.txt");
-            arc.AddAnimation("Falling", "cfg/player_falling_anim.txt");
+            anims.AddAnimation("Walking", "cfg/player_walking_anim.txt");
+            anims.AddAnimation("Attacking", "cfg/player_melee_attacking_anim.txt");
+            anims.AddAnimation("Idle", "cfg/player_idle_anim.txt");
+            anims.AddAnimation("Jumping", "cfg/player_jumping_anim.txt");
+            anims.AddAnimation("Falling", "cfg/player_falling_anim.txt");
             //idle
             //jumping
             //ducking
-            arc.SetIsLooping("Attacking", false);
+            anims.SetIsLooping("Attacking", false);
+            anims.SetIsLooping("Jumping", false);
 
-            arc.SetAnimation("Walking");
-            arc.ZIndex = playerConfigFileParser.GetAsInt("ZIndex");
+            anims.SetAnimation("Walking");
+            anims.ZIndex = playerConfigFileParser.GetAsInt("ZIndex");
 
-            arc.WorldWidth = playerConfigFileParser.GetAsFloat("SpriteWidth");
-            arc.WorldHeight = playerConfigFileParser.GetAsFloat("SpriteHeight");
-            player.AddComponent(arc);
+            anims.WorldWidth = playerConfigFileParser.GetAsFloat("SpriteWidth");
+            anims.WorldHeight = playerConfigFileParser.GetAsFloat("SpriteHeight");
+            player.AddComponent(anims);
 
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(
                 player,
@@ -61,7 +66,7 @@ namespace Jeden.Game
                 playerConfigFileParser.GetAsFloat("CollisionHeight"), 
                 PhysicsManager.PlayerCategory, 
                 PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, 
-                true);
+                BodyType.Dynamic);
 
 
             physicsComp.Body.Friction = playerConfigFileParser.GetAsFloat("Friction");
@@ -70,10 +75,9 @@ namespace Jeden.Game
             physicsComp.Body.Mass = playerConfigFileParser.GetAsFloat("Mass");
             physicsComp.Body.Restitution = playerConfigFileParser.GetAsFloat("Restitution");
 
-
             player.AddComponent(physicsComp);
 
-            CharacterControllerComponent controller = new CharacterControllerComponent(arc, physicsComp, player);
+            CharacterControllerComponent controller = new CharacterControllerComponent(anims, physicsComp, player);
             controller.WalkImpulse = playerConfigFileParser.GetAsFloat("WalkImpulse");
             controller.JumpImpulse = playerConfigFileParser.GetAsFloat("JumpImpulse");
 
@@ -94,7 +98,7 @@ namespace Jeden.Game
         /// <param name="position">The starting position of the bullet</param>
         /// <param name="direction">The direction in which the bullet was fired[needs to be unit length]</param>
         /// <returns></returns>
-        public static GameObject CreateBullet(GameObject attacker, Vector2f position, Vector2f direction)
+        public static GameObject CreateBullet(GameObject attacker, Vector2f position, int direction)
         {
 
             GameObject gameObject = new GameObject();
@@ -104,8 +108,8 @@ namespace Jeden.Game
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 
                 bulletConfigFileParser.GetAsFloat("CollisionWidth"), 
                 bulletConfigFileParser.GetAsFloat("CollisionHeight"),
-                PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, true);
-            physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * bulletConfigFileParser.GetAsFloat("Speed");
+                PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, BodyType.Kinematic);
+            physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction, 0) * bulletConfigFileParser.GetAsFloat("Speed");
             physicsComp.Body.GravityScale = bulletConfigFileParser.GetAsFloat("GravityScale");
             gameObject.AddComponent(physicsComp);
 
@@ -113,7 +117,7 @@ namespace Jeden.Game
             AttackComponent attackComp = new AttackComponent(attacker, bulletConfigFileParser.GetAsFloat("Damage"), gameObject);
             gameObject.AddComponent(attackComp);
 
-            AnimationRenderComponent renderComp = RenderMgr.MakeNewAnimationComponent("bullet_anim.txt", gameObject);
+            AnimationRenderComponent renderComp = RenderMgr.MakeNewAnimationComponent("cfg/bullet_anim.txt", gameObject);
             renderComp.WorldWidth = bulletConfigFileParser.GetAsFloat("SpriteWidth");
             renderComp.WorldHeight = bulletConfigFileParser.GetAsFloat("SpriteHeight");
             renderComp.ZIndex = bulletConfigFileParser.GetAsInt("ZIndex");
@@ -134,32 +138,78 @@ namespace Jeden.Game
         /// <param name="width">The width of the sword</param>
         /// <param name="xdirection">The x direction in which the sword extends(-1, 1).</param>
         /// <returns></returns>
-        public static GameObject CreateSword(GameObject attacker, Vector2f position, float length, float width, int xdirection)
+        public static GameObject CreateJab(GameObject attacker, MeleeWeaponComponent meleeWeapon, Vector2f position, int xdirection)
         {
+            float width = jabConfigFileParser.GetAsFloat("CollisionWidth");
+            float height = jabConfigFileParser.GetAsFloat("CollisionHeight");
+            float damage = jabConfigFileParser.GetAsFloat("Damage");
+            float forwardX = jabConfigFileParser.GetAsFloat("ForwardX");
+            float backwardX = jabConfigFileParser.GetAsFloat("BackwardX");
+            float forwardTime = jabConfigFileParser.GetAsFloat("ForwardTime");
+            float backwardTime = jabConfigFileParser.GetAsFloat("BackwardTime");
+
             GameObject gameObject = new GameObject();
             GameState.GameObjects.Add(gameObject);
-            gameObject.Position = position + new Vector2f(length * 0.5f * xdirection, 0);
+            gameObject.Position = position;
 
-            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, length, width,  
-            PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, true);
+            PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, width, height,  
+            PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, BodyType.Kinematic);
             physicsComp.Body.GravityScale = 0.0f;
+            physicsComp.Body.IsSensor = true;
+            
             gameObject.AddComponent(physicsComp);
 
-            AttackComponent attackComp = new AttackComponent(attacker, 10, gameObject);
+            AttackComponent attackComp = new AttackComponent(attacker, damage, gameObject);
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, SwordTexture);
-            renderComp.LocalPosition = position + new Vector2f(length * 0.5f * xdirection, 0);
-            renderComp.WorldWidth = length;
-            renderComp.WorldHeight = width;
+            renderComp.LocalPosition = position;
+            renderComp.WorldWidth = width;
+            renderComp.WorldHeight = height;
             renderComp.ZIndex = 100;
             gameObject.AddComponent(renderComp);
 
-            FrameLifetimeComponent frameLifetimeComponent = new FrameLifetimeComponent(1, gameObject);
-            gameObject.AddComponent(frameLifetimeComponent);
+            
+            JabControllerComponent scc = new JabControllerComponent(physicsComp, meleeWeapon, 
+                new Vector2f(forwardX * xdirection, 0), 
+                new Vector2f(backwardX * xdirection, 0), 
+                forwardTime, 
+                backwardTime, 
+                gameObject);
+            
+            gameObject.AddComponent(scc);
+
+            //FrameLifetimeComponent frameLifetimeComponent = new FrameLifetimeComponent(16, gameObject);
+            //gameObject.AddComponent(frameLifetimeComponent);
 
             return gameObject;
         }
+
+        public static GameObject CreateMeleeWeapon(GameObject player)
+        {
+            GameObject gameObject = new GameObject();
+            Vector2f offset = new Vector2f(meleeWeaponConfigFileParser.GetAsFloat("OffsetX"), meleeWeaponConfigFileParser.GetAsFloat("OffsetY"));
+            MeleeWeaponComponent meleeWeaponComponent = new MeleeWeaponComponent(player, offset, gameObject);
+            gameObject.AddComponent(meleeWeaponComponent);
+            GameState.GameObjects.Add(gameObject);
+
+            meleeWeaponComponent.AttackDelay = meleeWeaponConfigFileParser.GetAsFloat("AttackDelay");
+            return gameObject;
+        }
+
+        public static GameObject CreateGunWeapon(GameObject player)
+        {
+            GameObject gameObject = new GameObject();
+
+            Vector2f offset = new Vector2f(gunWeaponConfigFileParser.GetAsFloat("OffsetX"), gunWeaponConfigFileParser.GetAsFloat("OffsetY"));
+            GunWeaponComponent gunWeaponComponent = new GunWeaponComponent(player, offset, gameObject);
+            gameObject.AddComponent(gunWeaponComponent);
+            GameState.GameObjects.Add(gameObject);
+            gunWeaponComponent.AttackDelay = gunWeaponConfigFileParser.GetAsFloat("AttackDelay");
+
+            return gameObject;
+        }
+
 
         static Texture StingerTexture = new Texture("assets/stinger.png");
         /// <summary>
@@ -183,7 +233,7 @@ namespace Jeden.Game
                 stingerConfigFileParser.GetAsFloat("CollisionHeight"),
                 PhysicsManager.EnemyCategory, 
                 PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, 
-                true);
+                BodyType.Kinematic);
             physicsComp.Body.LinearVelocity = 
                 new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * stingerConfigFileParser.GetAsFloat("Speed");
             physicsComp.Body.LinearDamping = 0.0f;
@@ -234,7 +284,7 @@ namespace Jeden.Game
                 flyingBugConfigFileParser.GetAsFloat("CollisionWidth"),
                 flyingBugConfigFileParser.GetAsFloat("CollisionHeight"), 
                 PhysicsManager.EnemyCategory, PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, 
-                true);
+                BodyType.Dynamic);
             physicsComp.Body.Mass = flyingBugConfigFileParser.GetAsFloat("Mass");
             enemy.AddComponent(physicsComp);
 

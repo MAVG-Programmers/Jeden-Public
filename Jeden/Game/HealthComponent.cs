@@ -62,10 +62,11 @@ namespace Jeden.Game
                 DamageMessage damageMessage = message as DamageMessage;
                 CurrentHealth -= damageMessage.Damage;
 
-                GameObjectFactory.CreateShieldDamgageEffect(Parent.Position);
+                GameObjectFactory.CreateShieldDamgageEffect(Parent.Position); // Should be in shield component or something
+                                                                              // but I need damage feedback for testing and lack
+                                                                              // all of the proper animations
 
             }
-
         }
     }
 

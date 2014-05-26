@@ -1,2 +1,2 @@
 FrameTime=0.5
-Frame=assets/player.png
+Frame=assets/player_falling.png

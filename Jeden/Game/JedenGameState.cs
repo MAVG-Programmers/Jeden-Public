@@ -25,7 +25,8 @@ namespace Jeden.Game
     class JedenGameState : GameState
     {
         GameObject player;
-        GameObject weapon;
+        GameObject meleeWeapon;
+        GameObject gunWeapon;
 
         public PhysicsManager PhysicsMgr;
 
@@ -51,17 +52,31 @@ namespace Jeden.Game
 
             RenderMgr.Camera.Size = new Vector2f(1280 / 64, 720 / 64);
 
-            player = GameObjectFactory.CreatePlayer(new Vector2f(0, -10));
+            player = GameObjectFactory.CreatePlayer(new Vector2f(10, -10));
             RenderMgr.Camera.Target = player;
 
-            weapon = new GameObject();
-            MeleeWeaponComponent weaponComp = new MeleeWeaponComponent(player, weapon);
-            weapon.AddComponent(weaponComp);
-            GameObjects.Add(weapon);
-            weaponComp.AttackDelay = 1.0f;
+            meleeWeapon = GameObjectFactory.CreateMeleeWeapon(player);
+            MeleeWeaponComponent meleeWeaponComponent = null;
 
-            player.AddComponent(new WeaponHoldingComponent(weaponComp, player));
+            foreach(Component comp in meleeWeapon.Components)
+            {
+                if (comp is MeleeWeaponComponent)
+                    meleeWeaponComponent = comp as MeleeWeaponComponent;
+            }
 
+            gunWeapon = GameObjectFactory.CreateGunWeapon(player);
+
+            GunWeaponComponent gunWeaponComponent = null;
+
+            foreach (Component comp in gunWeapon.Components)
+            {
+                if (comp is GunWeaponComponent)
+                    gunWeaponComponent = comp as GunWeaponComponent;
+            }
+            
+
+
+            player.AddComponent(new WeaponHoldingComponent(meleeWeaponComponent, gunWeaponComponent, player));
 
             TileMap tileMap = new TileMap("assets/testmap.tmx", 1.0f/64);
 
@@ -100,7 +115,7 @@ namespace Jeden.Game
                     go, pobj.Width, pobj.Height,
                     PhysicsManager.MapCategory,
                     PhysicsManager.PlayerCategory | PhysicsManager.EnemyCategory,
-                    false);
+                    BodyType.Static);
                 GameObjects.Add(go);
             }
 
@@ -118,26 +133,33 @@ namespace Jeden.Game
             if (InputMgr.IsKeyDown(Keyboard.Key.Left))
             {
                 player.HandleMessage(new WalkLeftMessage(null));
-                weapon.HandleMessage(new WalkLeftMessage(null));
+                meleeWeapon.HandleMessage(new WalkLeftMessage(null));
+                gunWeapon.HandleMessage(new WalkLeftMessage(null));
             }
             if (InputMgr.IsKeyDown(Keyboard.Key.Right))
             {
                 player.HandleMessage(new WalkRightMessage(null));
-                weapon.HandleMessage(new WalkRightMessage(null));
+                meleeWeapon.HandleMessage(new WalkRightMessage(null));
+                gunWeapon.HandleMessage(new WalkRightMessage(null));
             }
             if (InputMgr.IsKeyDown(Keyboard.Key.Up))
             {
                 player.HandleMessage(new JumpMessage(null));
-                weapon.HandleMessage(new JumpMessage(null));
+                meleeWeapon.HandleMessage(new JumpMessage(null));
+                gunWeapon.HandleMessage(new JumpMessage(null));
             }
             if(InputMgr.IsKeyDown(Keyboard.Key.Space))
             {
-                player.HandleMessage(new AttackMessage(null));
+                player.HandleMessage(new AttackMessage(null, true));
               //  weapon.HandleMessage(new AttackMessage(null));
             }
             if(InputMgr.IsKeyDown(Keyboard.Key.A))
             {
-                GameObjectFactory.CreateFlyingBug(player.Position + new Vector2f(2, 2));
+                player.HandleMessage(new AttackMessage(null, false));
+            }
+            if(InputMgr.IsKeyDown(Keyboard.Key.A))
+            {
+               // GameObjectFactory.CreateFlyingBug(player.Position + new Vector2f(2, 2));
             }
         }
 
@@ -177,8 +199,11 @@ namespace Jeden.Game
         public override void Update(GameTime gameTime)
         {
             InputHack();
+            
             base.Update(gameTime);
 
+            gunWeapon.Position = player.Position;
+            meleeWeapon.Position = player.Position;
 
             PhysicsMgr.Update(gameTime);
       

@@ -38,14 +38,14 @@ namespace Jeden.Game
 
             Debug.Assert(AnimationSetRenderComponent != null);
             Debug.Assert(PhysicsComponent != null);
-            AnimationSetRenderComponent.SetAnimation("Walking");
+            AnimationSetRenderComponent.SetAnimation("Flying");
         }
 
         public override void Update(Engine.GameTime gameTime)
         {
             if(AnimationSetRenderComponent.IsFinished())
             {
-                AnimationSetRenderComponent.SetAnimation("Walking");
+                AnimationSetRenderComponent.SetAnimation("Flying");
             }
         }
 

@@ -60,7 +60,7 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
             //Update position from parent
-            LocalPosition = Parent.Position;
+            WorldPosition = Parent.Position;
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)

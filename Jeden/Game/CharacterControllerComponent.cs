@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Jeden.Engine.Object;
 using Jeden.Engine.Render;
 using Jeden.Game.Physics;
@@ -36,16 +35,25 @@ namespace Jeden.Game
     class CharacterControllerComponent : Component
     {
         public float WalkImpulse;
+        public float InAirMovementImpulse;
         public float JumpImpulse;
-
+        public float WalkingLinearDamping;
+        public float InAirLinearDamping;
+        Camera Camera;
+        
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="parent">GameObect that owns the component</param>
-        public CharacterControllerComponent(AnimationSetRenderComponent animSetComponent, PhysicsComponent physicsComponent, GameObject parent) : base(parent)
+        public CharacterControllerComponent(AnimationSetRenderComponent animSetComponent, 
+            PhysicsComponent physicsComponent,
+            Camera camera, // for camera shake
+            GameObject parent) : base(parent)
         {
             AnimationSetRenderComponent = animSetComponent;
             PhysicsComponent = physicsComponent;
+
+            Camera = camera;
 
             FeetColliders = new List<GameObject>();
 
@@ -55,13 +63,6 @@ namespace Jeden.Game
 
         public override void Update(Engine.GameTime gameTime)
         {
-            const float MaxVelocity = 20;
-            if(PhysicsComponent.Body.LinearVelocity.LengthSquared() > MaxVelocity * MaxVelocity)
-            {
-                PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity / PhysicsComponent.Body.LinearVelocity.Length();
-                PhysicsComponent.Body.LinearVelocity = PhysicsComponent.Body.LinearVelocity * MaxVelocity;
-            }
-
             InAir = FeetColliders.Count == 0;
 
             if (AnimationSetRenderComponent.CurrentKey == "Attacking" && !AnimationSetRenderComponent.IsFinished())
@@ -92,7 +93,11 @@ namespace Jeden.Game
 
             if (message is WalkLeftMessage)
             {
-                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-WalkImpulse, 0));
+                if (!InAir)
+                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-WalkImpulse, 0));
+                else
+                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(-InAirMovementImpulse, 0));
+
                 AnimationSetRenderComponent.FlipX = true;
                 if (AnimationSetRenderComponent.CurrentKey != "Jumping" && 
                     AnimationSetRenderComponent.CurrentKey != "Falling" && 
@@ -104,7 +109,11 @@ namespace Jeden.Game
             }
             else if (message is WalkRightMessage)
             {
-                PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(WalkImpulse, 0));
+                if (!InAir)
+                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(WalkImpulse, 0));
+                else
+                    PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(InAirMovementImpulse, 0));
+
                 AnimationSetRenderComponent.FlipX = false;
                 if (AnimationSetRenderComponent.CurrentKey != "Jumping" && 
                     AnimationSetRenderComponent.CurrentKey != "Falling" && 
@@ -118,7 +127,7 @@ namespace Jeden.Game
             {
                 if (FeetColliders.Count > 0)
                 {
-                    FeetColliders.Clear();
+                    //FeetColliders.Clear();
                     PhysicsComponent.Body.ApplyLinearImpulse(new Vector2(0.0f, -JumpImpulse));
                     AnimationSetRenderComponent.SetAnimation("Jumping");
                 }
@@ -126,7 +135,7 @@ namespace Jeden.Game
 
             if (message is DamageMessage)
             {
-
+                Camera.Shake();
             }
 
             if (message is AttackMessage)
@@ -153,7 +162,8 @@ namespace Jeden.Game
                             {
                                 if (weaponHoldingComp.GunWeaponComponent.TryAttack())
                                 {
-                                    AnimationSetRenderComponent.SetAnimation("Attacking");
+                                    // do nothing for gun attack.
+                                    //AnimationSetRenderComponent.SetAnimation("Attacking");
                                 }
                             }
                         }
@@ -168,7 +178,8 @@ namespace Jeden.Game
             if(message is CollisionMessage)
             {
                 CollisionMessage collisionMsg = message as CollisionMessage;
-                if(collisionMsg.Contact.Manifold.LocalNormal.Y > 0)
+
+                if(collisionMsg.Contact.Manifold.LocalNormal.Y > 0) // only friction the floor
                 {
                     FeetColliders.Add(collisionMsg.GameObject);
                     if (AnimationSetRenderComponent.CurrentKey == "Jumping" ||
@@ -177,6 +188,10 @@ namespace Jeden.Game
                     {
                         AnimationSetRenderComponent.SetAnimation("Idle");
                     }
+                }
+                else // don't friction walls or ceilings
+                {
+                    collisionMsg.Contact.Friction = 0.0f;
                 }
             }
             if (message is SeperationMessage)
@@ -187,6 +202,14 @@ namespace Jeden.Game
                     FeetColliders.Remove(seperationMsg.GameObject);
                 }
             }
+
+
+            InAir = FeetColliders.Count == 0;
+
+            if (InAir)
+                PhysicsComponent.Body.LinearDamping = InAirLinearDamping;
+            else
+                PhysicsComponent.Body.LinearDamping = WalkingLinearDamping;
         }
 
 

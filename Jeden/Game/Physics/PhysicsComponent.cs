@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Jeden.Engine.Object;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;

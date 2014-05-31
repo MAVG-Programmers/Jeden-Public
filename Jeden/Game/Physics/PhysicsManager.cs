@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Jeden.Engine;
 using Jeden.Engine.Object;
 using FarseerPhysics.Dynamics;
@@ -50,9 +49,12 @@ namespace Jeden.Game.Physics
         public PhysicsManager()
         {
             Components = new List<PhysicsComponent>();
-            //Create world with regular gravity
-            _world = new World(new Vector2(0f, 75));
-          
+
+            ConfigFileParser physicsConfigFileParser = new ConfigFileParser("cfg/physics_world.txt");
+
+        
+            _world = new World(new Vector2(0f, physicsConfigFileParser.GetAsFloat("Gravity")));
+
         }
 
         //Update tick all components owned by this manager

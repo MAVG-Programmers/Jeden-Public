@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using SFML.Graphics;
 using SFML.Audio;
 using Jeden.Engine.Object;
@@ -48,7 +47,6 @@ namespace Jeden.Engine
         /// <param name="gameTime">The time difference to the last frame.</param>
         public virtual void Update(GameTime gameTime)
         {
-            //Health components tied directly to GameObjects receive update here
             for(int i = 0; i < GameObjects.Count; i++)
             {
                 GameObjects[i].Update(gameTime);

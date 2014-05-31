@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using Jeden.Engine.Render;
 using Jeden.Game.Physics;
@@ -71,15 +70,22 @@ namespace Jeden.Game
 
             physicsComp.Body.Friction = playerConfigFileParser.GetAsFloat("Friction");
             physicsComp.Body.GravityScale = playerConfigFileParser.GetAsFloat("GravityScale");
-            physicsComp.Body.LinearDamping = playerConfigFileParser.GetAsFloat("LinearDamping");
             physicsComp.Body.Mass = playerConfigFileParser.GetAsFloat("Mass");
             physicsComp.Body.Restitution = playerConfigFileParser.GetAsFloat("Restitution");
 
             player.AddComponent(physicsComp);
 
-            CharacterControllerComponent controller = new CharacterControllerComponent(anims, physicsComp, player);
+            RectRenderComponent collisionRect = new RectRenderComponent(playerConfigFileParser.GetAsFloat("CollisionWidth"),
+                playerConfigFileParser.GetAsFloat("CollisionHeight"), new Color(255, 0, 0, 100), RenderMgr, player);
+            RenderMgr.Components.Add(collisionRect);
+            player.AddComponent(collisionRect);
+
+            CharacterControllerComponent controller = new CharacterControllerComponent(anims, physicsComp, RenderMgr.Camera, player);
+            controller.InAirMovementImpulse = playerConfigFileParser.GetAsFloat("InAirMovementImpulse");
             controller.WalkImpulse = playerConfigFileParser.GetAsFloat("WalkImpulse");
             controller.JumpImpulse = playerConfigFileParser.GetAsFloat("JumpImpulse");
+            controller.WalkingLinearDamping = playerConfigFileParser.GetAsFloat("WalkingLinearDamping");
+            controller.InAirLinearDamping = playerConfigFileParser.GetAsFloat("InAirLinearDamping");
 
             player.AddComponent(controller);
 
@@ -108,9 +114,10 @@ namespace Jeden.Game
             PhysicsComponent physicsComp = PhysicsMgr.MakeNewComponent(gameObject, 
                 bulletConfigFileParser.GetAsFloat("CollisionWidth"), 
                 bulletConfigFileParser.GetAsFloat("CollisionHeight"),
-                PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, BodyType.Kinematic);
+                PhysicsManager.PlayerCategory, PhysicsManager.EnemyCategory | PhysicsManager.MapCategory, BodyType.Dynamic);
             physicsComp.Body.LinearVelocity = new Microsoft.Xna.Framework.Vector2(direction, 0) * bulletConfigFileParser.GetAsFloat("Speed");
             physicsComp.Body.GravityScale = bulletConfigFileParser.GetAsFloat("GravityScale");
+            physicsComp.Body.LinearDamping = 0.0f;
             gameObject.AddComponent(physicsComp);
 
 
@@ -124,6 +131,11 @@ namespace Jeden.Game
             gameObject.AddComponent(renderComp);
 
             gameObject.AddComponent(new ExplodesOnCollisionComponent(gameObject));
+
+            RectRenderComponent collisionRect = new RectRenderComponent(bulletConfigFileParser.GetAsFloat("CollisionWidth"),
+    bulletConfigFileParser.GetAsFloat("CollisionHeight"), new Color(255, 0, 0, 100), RenderMgr, gameObject);
+            RenderMgr.Components.Add(collisionRect);
+            gameObject.AddComponent(collisionRect);
 
             return gameObject;
         }
@@ -163,7 +175,7 @@ namespace Jeden.Game
             gameObject.AddComponent(attackComp);
 
             SpriteRenderComponent renderComp = RenderMgr.MakeNewSpriteComponent(gameObject, SwordTexture);
-            renderComp.LocalPosition = position;
+            renderComp.WorldPosition = position;
             renderComp.WorldWidth = width;
             renderComp.WorldHeight = height;
             renderComp.ZIndex = 100;
@@ -179,8 +191,10 @@ namespace Jeden.Game
             
             gameObject.AddComponent(scc);
 
-            //FrameLifetimeComponent frameLifetimeComponent = new FrameLifetimeComponent(16, gameObject);
-            //gameObject.AddComponent(frameLifetimeComponent);
+            RectRenderComponent collisionRect = new RectRenderComponent(jabConfigFileParser.GetAsFloat("CollisionWidth"),
+jabConfigFileParser.GetAsFloat("CollisionHeight"), new Color(255, 0, 0, 100), RenderMgr, gameObject);
+            RenderMgr.Components.Add(collisionRect);
+            gameObject.AddComponent(collisionRect);
 
             return gameObject;
         }
@@ -233,7 +247,7 @@ namespace Jeden.Game
                 stingerConfigFileParser.GetAsFloat("CollisionHeight"),
                 PhysicsManager.EnemyCategory, 
                 PhysicsManager.PlayerCategory | PhysicsManager.MapCategory, 
-                BodyType.Kinematic);
+                BodyType.Dynamic);
             physicsComp.Body.LinearVelocity = 
                 new Microsoft.Xna.Framework.Vector2(direction.X, direction.Y) * stingerConfigFileParser.GetAsFloat("Speed");
             physicsComp.Body.LinearDamping = 0.0f;
@@ -251,6 +265,11 @@ namespace Jeden.Game
             gameObject.AddComponent(renderComp);
 
             gameObject.AddComponent(new ExplodesOnCollisionComponent(gameObject));
+
+            RectRenderComponent collisionRect = new RectRenderComponent(stingerConfigFileParser.GetAsFloat("CollisionWidth"),
+stingerConfigFileParser.GetAsFloat("CollisionHeight"), new Color(255, 0, 0, 100), RenderMgr, gameObject);
+            RenderMgr.Components.Add(collisionRect);
+            gameObject.AddComponent(collisionRect);
 
             return gameObject;
         }
@@ -297,6 +316,11 @@ namespace Jeden.Game
 
             FlyingBugAIComponent flyingBugAIComponent = new FlyingBugAIComponent(enemy.Position, enemy);
             enemy.AddComponent(flyingBugAIComponent);
+
+            RectRenderComponent collisionRect = new RectRenderComponent(flyingBugConfigFileParser.GetAsFloat("CollisionWidth"),
+flyingBugConfigFileParser.GetAsFloat("CollisionHeight"), new Color(255, 0, 0, 100), RenderMgr, enemy);
+            RenderMgr.Components.Add(collisionRect);
+            enemy.AddComponent(collisionRect);
 
             return enemy;
         }

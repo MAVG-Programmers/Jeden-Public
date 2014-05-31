@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Jeden.Engine;
 using Jeden.Game.Physics;
 using Jeden.Engine.Object;
@@ -157,9 +156,13 @@ namespace Jeden.Game
             {
                 player.HandleMessage(new AttackMessage(null, false));
             }
-            if(InputMgr.IsKeyDown(Keyboard.Key.A))
+            if(InputMgr.IsKeyDown(Keyboard.Key.T))
             {
-               // GameObjectFactory.CreateFlyingBug(player.Position + new Vector2f(2, 2));
+                GameObjectFactory.CreateFlyingBug(player.Position + new Vector2f(2, 0));
+            }
+            if(InputMgr.IsKeyPressed(Keyboard.Key.G))
+            {
+                RectRenderComponent.DebugDraw = !RectRenderComponent.DebugDraw;
             }
         }
 
@@ -199,7 +202,7 @@ namespace Jeden.Game
         public override void Update(GameTime gameTime)
         {
             InputHack();
-            
+
             base.Update(gameTime);
 
             gunWeapon.Position = player.Position;
@@ -209,6 +212,8 @@ namespace Jeden.Game
       
             //Draw frame last
             RenderMgr.Update(gameTime);
+
+
 
             RemoveInvalidGameObjects();
         }

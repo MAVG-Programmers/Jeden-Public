@@ -1,2 +1,2 @@
 FrameTime=0.5
-Frame=assets/player_idle.png
+Frame=assets/player.png

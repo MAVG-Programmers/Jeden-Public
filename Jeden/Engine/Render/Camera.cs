@@ -15,6 +15,13 @@ namespace Jeden.Engine.Render
     /// </summary>
     public class Camera : View
     {
+
+
+        float shakeTimer;
+        float maxShakeRadius = 0.2f;
+        bool Shaking;
+        const float TotalShakeTime = 0.2f;
+
         public Camera()
         {
 
@@ -24,6 +31,30 @@ namespace Jeden.Engine.Render
         {
             if(Target != null)
                 Center = Target.Position;
+
+            if(Shaking && Target != null)
+            {
+                shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (shakeTimer >= TotalShakeTime)
+                {
+                    Shaking = false;
+                }
+                else
+                {
+                    Random random = new Random();
+                    Center = Target.Position + new Vector2f((float)(random.NextDouble() * 2.0 - 1), (float)(random.NextDouble() * 2.0 - 1)) * maxShakeRadius;
+                }
+            }
+        }
+
+        public void Shake()
+        {
+            if (Shaking)
+                return;
+
+            Shaking = true;
+            shakeTimer = 0;
+
         }
 
         /// <summary>

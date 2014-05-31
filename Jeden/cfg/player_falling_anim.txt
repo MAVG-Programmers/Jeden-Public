@@ -1,2 +1,4 @@
-FrameTime=0.5
-Frame=assets/player_falling.png
+FrameTime=0.1
+Frame=assets/jump3.png
+Frame=assets/jump2.png
+Frame=assets/jump1.png

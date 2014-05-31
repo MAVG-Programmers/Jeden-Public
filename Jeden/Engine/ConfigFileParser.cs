@@ -20,6 +20,9 @@ namespace Jeden.Engine
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
+                    if (line[0] == '#')
+                        continue;
+                    
                     string[] pair = line.Split('=');
                     if (pair.Count() == 2)
                     {

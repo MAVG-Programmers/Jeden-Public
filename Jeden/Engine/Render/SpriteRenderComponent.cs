@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using SFML.Graphics;
 using Jeden.Engine.Object;
@@ -21,7 +20,7 @@ namespace Jeden.Engine.Render
         
         {
             Texture = texture;
-            LocalPosition = parent.Position;
+            WorldPosition = parent.Position;
             SubImageRect.Top = 0;
             SubImageRect.Left = 0;
             SubImageRect.Width = (int)texture.Size.X;
@@ -37,7 +36,7 @@ namespace Jeden.Engine.Render
             : base(renderMgr, parent)
         {
             Texture = texture;
-            LocalPosition = parent.Position;
+            WorldPosition = parent.Position;
             SubImageRect = subImageRect;
             WorldWidth = SubImageRect.Width;
             WorldHeight = SubImageRect.Height;
@@ -50,7 +49,8 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
             //Update position from parent
-            LocalPosition = Parent.Position;
+            
+            WorldPosition = Parent.Position;
         }
 
         public override void Draw(RenderManager renderMgr, Camera camera)

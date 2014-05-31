@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using SFML.Graphics;
 using Jeden.Engine.Object;
 using SFML.Window;
@@ -14,19 +13,8 @@ namespace Jeden.Engine.Render
     /// </summary>
     public class RenderComponent : Component 
     {
-        RenderComponent ParentComponent; 
-        List<RenderComponent> ChildComponents;
 
-        public Vector2f WorldPosition
-        {
-            get
-            {
-                if (ParentComponent == null)
-                    return LocalPosition;
-                else return ParentComponent.WorldPosition + LocalPosition;
-            }
-        }
-        public Vector2f LocalPosition { get; set; }
+        public Vector2f WorldPosition;
 
         public bool FlipX { get; set; }
         public bool FlipY { get; set; }
@@ -51,8 +39,6 @@ namespace Jeden.Engine.Render
         public RenderComponent(RenderManager renderMgr, GameObject parent) : base(parent)
         {
             Manager = renderMgr;
-            ParentComponent = null;
-            ChildComponents = new List<RenderComponent>();
 
             Tint = new Color(255, 255, 255, 255);
         }

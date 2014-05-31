@@ -112,7 +112,7 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
 
-            LocalPosition = Parent.Position;
+            WorldPosition = Parent.Position;
             CurrentAnimation.Update(gameTime.ElapsedGameTime.TotalSeconds);
         }
 

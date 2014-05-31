@@ -76,7 +76,7 @@ namespace Jeden.Engine.Render
         {
             base.Update(gameTime);
 
-            LocalPosition = Parent.Position;
+            WorldPosition = Parent.Position;
             Animation.Update(gameTime.ElapsedGameTime.TotalSeconds);
 
             if (Animation.IsFinished)

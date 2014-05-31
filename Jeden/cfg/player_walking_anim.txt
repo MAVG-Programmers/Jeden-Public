@@ -1,2 +1,11 @@
-FrameTime=0.5
-Frame=assets/player_walking.png
+FrameTime=0.08
+Frame=assets/run_9.png
+Frame=assets/run_10.png
+Frame=assets/run_1.png
+Frame=assets/run_2.png
+Frame=assets/run_3.png
+Frame=assets/run_4.png
+Frame=assets/run_5.png
+Frame=assets/run_6.png
+Frame=assets/run_7.png
+Frame=assets/run_8.png

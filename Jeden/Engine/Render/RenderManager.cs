@@ -17,6 +17,19 @@ namespace Jeden.Engine.Render
     public class RenderManager : Manager 
     {
         public Camera Camera { get; set; }
+        public View OverlayView { get; set; }
+        View CurrentView;
+
+        // always set back to Camrera after using overlay. It is assumed that Camera is the CurrentView in each draw call. 
+        public void SetOverlayView()
+        {
+            Target.SetView(OverlayView);
+        }
+
+        public void SetCameraView()
+        {
+            Target.SetView(Camera);
+        }
         
         public RenderTarget Target { get; set; }
 
@@ -32,6 +45,7 @@ namespace Jeden.Engine.Render
         {
             Components = new List<RenderComponent>();
             Camera = new Camera();
+            OverlayView = new View();
         }
 
         /// <summary>
@@ -60,8 +74,12 @@ namespace Jeden.Engine.Render
 
             foreach (RenderComponent rComp in Components)
             {
-                if(Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
-                    visibles.Add(rComp);
+                if (!rComp.AlwaysVisible)
+                {
+                    if (Camera.ViewRect.Intersects(rComp.GetScreenRect(Camera)))
+                        visibles.Add(rComp);
+                }
+                else visibles.Add(rComp);
             }
 
             //visibles.Sort(new TextureComparer());

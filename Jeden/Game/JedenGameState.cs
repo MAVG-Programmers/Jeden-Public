@@ -26,6 +26,7 @@ namespace Jeden.Game
         GameObject player;
         GameObject meleeWeapon;
         GameObject gunWeapon;
+        Lifebar lifebar;
 
         public PhysicsManager PhysicsMgr;
 
@@ -44,15 +45,21 @@ namespace Jeden.Game
 
         public void GenTestLevel()
         {
-            // Just making a bunch of random stuff for now...
 
             GameObjectFactory.RenderMgr = RenderMgr; // TODO: put somewhere better
 
 
+            //TODO: put this into a config file.
             RenderMgr.Camera.Size = new Vector2f(1280 / 64, 720 / 64);
+            RenderMgr.OverlayView.Size = new Vector2f(1280, 720);
+            RenderMgr.OverlayView.Center = new Vector2f(1280 / 2.0f, 720 / 2.0f);
 
             player = GameObjectFactory.CreatePlayer(new Vector2f(10, -10));
             RenderMgr.Camera.Target = player;
+
+            lifebar = new Lifebar(RenderMgr, player);
+            player.AddComponent(lifebar);
+            RenderMgr.Components.Add(lifebar);
 
             meleeWeapon = GameObjectFactory.CreateMeleeWeapon(player);
             MeleeWeaponComponent meleeWeaponComponent = null;

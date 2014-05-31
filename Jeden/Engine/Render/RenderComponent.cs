@@ -24,15 +24,24 @@ namespace Jeden.Engine.Render
         public Color Tint { get; set; }
         public int ZIndex { get; set; }
 
+        public bool AlwaysVisible;
 
         public virtual FloatRect GetScreenRect(Camera camera)
         {
-            FloatRect rect;
+            
+            FloatRect rect = new FloatRect();
+            
             rect.Width = WorldWidth;
             rect.Height = WorldHeight;
             rect.Top = WorldPosition.Y - WorldHeight * 0.5f;
             rect.Left = WorldPosition.X - WorldWidth * 0.5f;
-
+            
+            /*
+            rect.Width = float.PositiveInfinity;
+            rect.Width = float.PositiveInfinity;
+            rect.Top = 0;
+            rect.Left = 0;
+            */
             return rect;
         }
 

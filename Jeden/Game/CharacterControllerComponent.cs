@@ -47,7 +47,7 @@ namespace Jeden.Game
         /// <param name="parent">GameObect that owns the component</param>
         public CharacterControllerComponent(AnimationSetRenderComponent animSetComponent, 
             PhysicsComponent physicsComponent,
-            Camera camera, // for camera shake
+            Camera camera, // for camera shake, needs to be moved if there are other "Characters" than the player.
             GameObject parent) : base(parent)
         {
             AnimationSetRenderComponent = animSetComponent;
@@ -140,7 +140,7 @@ namespace Jeden.Game
 
             if (message is AttackMessage)
             {
-
+                //TODO: this is ugly.
                 foreach (Component comp in Parent.Components)
                 {
                     if (comp is WeaponHoldingComponent)
